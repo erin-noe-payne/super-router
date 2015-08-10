@@ -1,0 +1,18 @@
+{
+  "name": "super-router",
+  "main": "lib/superRouter.js",
+  "dependencies": {
+    "lodash": "^3.9.3",
+    "path-to-regexp": "^1.2.0"
+  },
+  "scripts":{
+    "test":"mocha  --compilers coffee:coffee-script/register -w"
+  },
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "coffee-script": "^1.9.3",
+    "mocha": "^2.2.5",
+    "sinon": "^1.15.4",
+    "sinon-chai": "^2.8.0"
+  }
+}
