@@ -5,22 +5,14 @@ var http = require('http'),
     path = require('path');
 
 var PORT = 8091;
-var superRouter = new SuperRouter();
-
-
-//load up protos
-var pathToFile = path.resolve(__dirname, 'protos.proto')
-var builder = ProtoBuf.loadProtoFile(pathToFile);
-var caseProtos = builder.build("Case");
+var pathToProtos = __dirname + '/'
+var superRouter = new SuperRouter(pathToProtos);
 
 // -- REGISTER ROUTES --
-
-//todo: protos for input and output on routes
-
-superRouter.addRoute('/case/:id', superRouter.METHODS.GET, caseProtos.GetReq, caseProtos.GetRes, function(headers, input, done){
-
-
+superRouter.addRoute('/case/:id', superRouter.METHODS.GET, 'Case.GetReq', 'Case.GetRes', function(headers, input, done){
   var resHeaders = {statusCode: 200};
+
+  //we could use input.id to go to a db or something, but we'll just return here.
   var resBody = {
     title: 'case #' + input.id,
     description: 'This is a description.',
@@ -31,12 +23,11 @@ superRouter.addRoute('/case/:id', superRouter.METHODS.GET, caseProtos.GetReq, ca
 
 });
 
-superRouter.addRoute('/case', superRouter.METHODS.POST, caseProtos.CreateReq, caseProtos.CreateRes, function(headers, input, done){
+superRouter.addRoute('/case', superRouter.METHODS.POST, 'Case.CreateReq', 'Case.CreateRes', function(headers, input, done){
 
   body = input;
   body.date_created = Date().toString();
   body.date_updated = Date().toString();
-
 
 
   var resHeaders = {statusCode: 200};
@@ -52,10 +43,6 @@ superRouter.addRoute('/', superRouter.METHODS.GET, null, null, function(headers,
   done(resHeaders, resBody);
 
 });
-
-
-
-
 
 // -- TRANSPORTS --
 //http transport
@@ -90,8 +77,6 @@ var server = http.createServer(function(req, res){
       res.end(JSON.stringify(resBody));
     });
   });
-
-
 });
 
 
