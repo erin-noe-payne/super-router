@@ -36,11 +36,34 @@ superRouter.addRoute('/case', superRouter.METHODS.POST, 'Case.CreateReq', 'Case.
 
 });
 
-superRouter.addRoute('/', superRouter.METHODS.GET, null, null, function(headers, input, done){
 
-  var resHeaders = {statusCode: 200};
-  var resBody = {message: "you hit the / route"};
-  done(resHeaders, resBody);
+//make a request to another service that impliments super router that we know will fail
+superRouter.addRoute('/forceError', superRouter.METHODS.GET, null, null, function(headers, input, done){
+
+  var options = {
+    host: 'localhost',
+    port: 8092,
+    path: '/forceErrorz',
+    method: 'GET'
+  };
+
+  var req = http.request(options, function(res) {
+    res.setEncoding('utf8');
+    res.on('data', function (chunk) {
+
+      var headers = {statusCode: 500};
+      var body = new superRouter.protos.Error({
+        id: "456",
+        code: 500,
+        message: "This is the second error",
+        prev_error: JSON.parse(chunk)
+      });
+      done(headers, body);
+
+    });
+  });
+
+  req.end();
 
 });
 
@@ -62,9 +85,7 @@ var server = http.createServer(function(req, res){
       body = JSON.parse(postBody);
     }
 
-
     superRouter.route(uri, method, headers, body, function(resHeaders, resBody) {
-
       //set the http response code to our statusCode
       res.statusCode = resHeaders.statusCode;
 
@@ -78,8 +99,6 @@ var server = http.createServer(function(req, res){
     });
   });
 });
-
-
 
 server.listen(PORT, function(){
     console.log("Server listening on: http://localhost:%s", PORT);

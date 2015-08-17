@@ -1,0 +1,25 @@
+package Case;
+
+
+message CreateReq {
+  required string title = 1;
+  optional string description = 2;
+}
+
+message CreateRes {
+  required string title = 1;
+  optional string description = 2;
+  required string date_created = 3;
+  required string date_updated = 4;
+}
+
+message GetReq {
+  required string id = 1;
+}
+
+message GetRes {
+  required string title = 1;
+  required string description = 2;
+  required string date_created = 3;
+  required string date_updated = 4;
+}

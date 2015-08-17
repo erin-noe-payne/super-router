@@ -5,4 +5,5 @@ message Error {
   required string id = 1;
   required int32 code = 2;
   required string message = 3;
+  optional Error prev_error = 4;
 }
