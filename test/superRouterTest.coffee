@@ -92,13 +92,22 @@ describe 'SuperRouter!', ->
         router.addRoute '/asdf', router.METHODS.POST, null, null, handler
 
   describe 'route', ->
-    cb = null
+    responseToClient = {}
+    transportCb = (superRouterResponseStream)->
+      responseToClient.headers = superRouterResponseStream.headers
+      superRouterResponseStream.on 'data', (chunk)->
+        responseToClient.body = chunk
 
     beforeEach ->
-      cb = sinon.spy()
+      responseToClient = {}
+
       createHandler = (s)->
-        return (headers, input, done)->
-          done(s, input)
+        return (headers, input, responseStream)->
+          responseStream.send({statusCode: 200},
+            {
+              handler: s,
+              inputReceived: input
+            });
 
       router.addRoute '/obj', router.METHODS.GET, null, null, createHandler('a')
       router.addRoute '/obj', router.METHODS.POST, null, null, createHandler('b')
@@ -106,43 +115,46 @@ describe 'SuperRouter!', ->
       router.addRoute '/obj/:id/action/:action', router.METHODS.GET, null, null, createHandler('d')
 
     it "should match on exact matches", ->
-      router.route '/obj', 'get', {}, {}, cb
-      expect(cb).to.have.been.calledWith('a')
+      router.route '/obj', 'get', {}, {}, transportCb
+      expect(responseToClient.body.handler).to.equal('a')
 
     it "should run the right handler for method", ->
-      router.route '/obj', 'post', {}, {}, cb
-      expect(cb).to.have.been.calledWith('b')
+      router.route '/obj', 'post', {}, {}, transportCb
+      expect(responseToClient.body.handler).to.equal('b')
 
     it "should not run a handler on a route that doesn't match", ->
-      router.route '/objBAD', 'get', {}, {}, cb
-      expect(cb).to.have.not.been.calledWith('a')
-      expect(cb).to.have.been.calledWith({ statusCode: 404 })
+      router.route '/objBAD', 'get', {}, {}, transportCb
+      expect(responseToClient.body.handler).to.not.equal('a')
+      expect(responseToClient.headers.statusCode).to.equal(404)
 
     it "should return a 405 if path matches, but not method", ->
-      router.route '/obj', 'put', {}, {}, cb
-      expect(cb).to.have.not.been.calledWith('a')
-      expect(cb).to.have.been.calledWith({ statusCode: 405 })
+      router.route '/obj', 'put', {}, {}, transportCb
+      expect(responseToClient.body).to.not.equal('a')
+      expect(responseToClient.headers.statusCode).to.equal(405)
 
     it "should return available routes on options method", ->
-      router.route '/obj', 'options', {}, {}, cb
-      expect(cb).to.have.not.been.calledWith('a')
+      router.route '/obj', 'options', {}, {}, transportCb
+      expect(responseToClient.body).to.not.equal('a')
       #TODO - check the format of available routes returned
-      expect(cb).to.have.been.calledWithMatch({statusCode: 200}, {})
+      expect(responseToClient.headers.statusCode).to.equal(200)
 
     it "should take params from URI and add them to input", ->
-      router.route '/obj/123', 'get', {}, {}, cb
-      expect(cb).to.have.been.calledWith('c', {id: "123"})
-      router.route '/obj/123/action/run', 'get', {}, {}, cb
-      expect(cb).to.have.been.calledWith('d', {id: "123", action: "run"})
+      router.route '/obj/123', 'get', {}, {}, transportCb
+      expect(responseToClient.body.handler).to.equal('c')
+      expect(responseToClient.body.inputReceived).to.eql({id: "123"})
+      router.route '/obj/123/action/run', 'get', {}, {}, transportCb
+      expect(responseToClient.body.handler).to.equal('d')
+      expect(responseToClient.body.inputReceived).to.eql({id: "123", action: "run"})
 
     it "should take params from input", ->
-      router.route '/obj', 'get', {}, {id: 123}, cb
-      expect(cb).to.have.been.calledWith('a', {id:123})
+      router.route '/obj', 'get', {}, {id: 123}, transportCb
+      expect(responseToClient.body.handler).to.equal('a')
+      expect(responseToClient.body.inputReceived).to.eql({id: 123})
 
     it "should return a 400 if a URI param with the same name as a body param has a different value", ->
-      router.route '/obj/123', 'get', {}, {id: "456"}, cb
-      expect(cb).to.have.been.calledWith({ statusCode: 400 })
+      router.route '/obj/123', 'get', {}, {id: "456"}, transportCb
+      expect(responseToClient.headers.statusCode).to.equal(400)
 
     it "should return a 200 if a URI param with the same name as a body param has the same value", ->
-      router.route '/obj/123', 'get', {}, {id: "123"}, cb
-      expect(cb).to.have.been.calledWith('c')
+      router.route '/obj/123', 'get', {}, {id: "123"}, transportCb
+      expect(responseToClient.body.handler).to.equal('c')

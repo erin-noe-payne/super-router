@@ -2,43 +2,50 @@ var http = require('http'),
     SuperRouter = require('../lib/superRouter.js'),
     _ = require('lodash'),
     ProtoBuf = require("protobufjs"),
-    path = require('path');
+    path = require('path'),
+    through2 = require('through2'),
+    util = require('util');
 
 var PORT = 8091;
 var pathToProtos = __dirname + '/'
-var superRouter = new SuperRouter(pathToProtos);
+var caseRouterV1 = new SuperRouter(pathToProtos);
+var caseRouterV2 = new SuperRouter(pathToProtos);
 
 // -- REGISTER ROUTES --
-superRouter.addRoute('/case/:id', superRouter.METHODS.GET, 'Case.GetReq', 'Case.GetRes', function(headers, input, done){
-  var resHeaders = {statusCode: 200};
+caseRouterV1.addRoute('/case/:id', caseRouterV1.METHODS.GET, 'Case.GetReq', 'Case.GetRes', function(headers, input, responseStream){
 
   //we could use input.id to go to a db or something, but we'll just return here.
+  var resHeaders = {statusCode: 200};
   var resBody = {
     title: 'case #' + input.id,
     description: 'This is a description.',
     date_created: Date().toString(),
     date_updated: Date().toString()
   };
-  done(resHeaders, resBody);
+  responseStream.send(resHeaders, resBody);
 
 });
 
-superRouter.addRoute('/case', superRouter.METHODS.POST, 'Case.CreateReq', 'Case.CreateRes', function(headers, input, done){
+caseRouterV1.addRoute('/case', caseRouterV1.METHODS.POST, 'Case.CreateReq', 'Case.CreateRes', function(headers, input, responseStream){
 
   body = input;
   body.date_created = Date().toString();
   body.date_updated = Date().toString();
 
 
-  var resHeaders = {statusCode: 200};
-  var resBody = body;
-  done(resHeaders, resBody);
+  responseStream.headers = {statusCode: 200};
+  responseStream.end(body);
 
+});
+
+caseRouterV2.addRoute('/onlyOnVersion2', caseRouterV2.METHODS.GET, null, null, function(headers, input, responseStream){
+  responseStream.headers = {statusCode: 200};
+  responseStream.end({message: 'you found me!'});
 });
 
 
 //make a request to another service that impliments super router that we know will fail
-superRouter.addRoute('/forceError', superRouter.METHODS.GET, null, null, function(headers, input, done){
+caseRouterV1.addRoute('/forceError', caseRouterV1.METHODS.GET, null, null, function(headers, input, responseStream){
 
   var options = {
     host: 'localhost',
@@ -51,14 +58,14 @@ superRouter.addRoute('/forceError', superRouter.METHODS.GET, null, null, functio
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
 
-      var headers = {statusCode: 500};
-      var body = new superRouter.protos.Error({
+      responseStream.headers = {statusCode: 500};
+      var body = new caseRouterV1.protos.Error({
         id: "456",
         code: 500,
         message: "This is the second error",
         prev_error: JSON.parse(chunk)
       });
-      done(headers, body);
+      responseStream.end(body);
 
     });
   });
@@ -67,14 +74,22 @@ superRouter.addRoute('/forceError', superRouter.METHODS.GET, null, null, functio
 
 });
 
+caseRouterV1.addRoute('/', caseRouterV1.METHODS.GET, null, null, function(headers, input, responseStream){
+  responseStream.headers = {statusCode: 200};
+  responseStream.end({message: 'Hello World.'});
+});
+
 // -- TRANSPORTS --
 //http transport
 var server = http.createServer(function(req, res){
+
+  //get body data
   var postBody = "";
   req.on('data', function(chunk){
     postBody += chunk.toString();
   });
 
+  //we're holding the whole request in memory now, so send it to the superrouter route
   req.on('end', function(){
     var uri = req.url,
         method = req.method,
@@ -85,18 +100,14 @@ var server = http.createServer(function(req, res){
       body = JSON.parse(postBody);
     }
 
-    superRouter.route(uri, method, headers, body, function(resHeaders, resBody) {
-      //set the http response code to our statusCode
-      res.statusCode = resHeaders.statusCode;
+    //branch on api verion being used
+    if(!_.isUndefined(headers.version) && headers.version == "2"){
+      caseRouterV2.route(uri, method, headers, body, _sendToClient(res));
+    }
+    else {
+      caseRouterV1.route(uri, method, headers, body, _sendToClient(res));
+    }
 
-      //copy all header values into the header of the http response
-      _.forEach(resHeaders, function(value, key){
-        res.setHeader(key, value);
-      });
-
-      //send the body
-      res.end(JSON.stringify(resBody));
-    });
   });
 });
 
@@ -104,6 +115,29 @@ server.listen(PORT, function(){
     console.log("Server listening on: http://localhost:%s", PORT);
 });
 
+
+function _sendToClient(res) {
+  return function(superRouterResponseStream){
+    //set the http response code to our statusCode
+    var resHeaders = superRouterResponseStream.headers;
+    res.statusCode = resHeaders.statusCode;
+    res.setHeader("Content-Type", "application/json");
+
+    //copy all header values into the header of the http response
+    _.forEach(resHeaders, function(value, key){
+      res.setHeader(key, value);
+    });
+    superRouterResponseStream.pipe(_transformToString()).pipe(res);
+  };
+};
+
+//This is a small transform used to push json to the client over http
+function _transformToString(){
+  return through2.obj(function(chunk, enc, done){
+      this.push(JSON.stringify(chunk));
+      done();
+  });
+}
 
 
 // var Router = require('lib/super-router'),
