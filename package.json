@@ -10,10 +10,12 @@
     "del": "~1.2.1",
     "lodash": "~3.9.3",
     "lr-logger": "~1.0.1",
+    "promise": "^7.0.4",
     "protobufjs": "~4.0.0",
     "route-parser": "0.0.4",
-    "through2": "^2.0.0",
-    "uuid": "^2.0.1"
+    "through2": "~2.0.0",
+    "uuid": "~2.0.1",
+    "zmq": "~2.13.0"
   },
   "scripts": {
     "test": "mocha  --compilers coffee:coffee-script/register -w"
@@ -21,10 +23,11 @@
   "devDependencies": {
     "babel-runtime": "^5.8.20",
     "chai": "~3.0.0",
+    "chai-as-promised": "~5.1.0",
     "coffee-script": "~1.9.3",
-    "gulp": "^3.9.0",
-    "gulp-babel": "^5.2.1",
-    "gulp-sourcemaps": "^1.5.2",
+    "gulp": "~3.9.0",
+    "gulp-babel": "~5.2.1",
+    "gulp-sourcemaps": "~1.5.2",
     "mocha": "~2.2.5",
     "sinon": "~1.15.4",
     "sinon-chai": "~2.8.0"

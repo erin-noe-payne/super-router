@@ -1,9 +1,13 @@
 _ = require('lodash')
 chai = require('chai')
+chaiAsPromised = require("chai-as-promised")
+Promise  = require('promise')
+chai.use(chaiAsPromised)
 expect = chai.expect
 sinon = require('sinon')
 sinonChai = require('sinon-chai')
 Router = require('./..')
+
 
 chai.use(sinonChai)
 
@@ -92,15 +96,15 @@ describe 'SuperRouter!', ->
         router.addRoute '/asdf', router.METHODS.POST, null, null, handler
 
   describe 'route', ->
-    responseToClient = {}
-    transportCb = (superRouterResponseStream)->
-      responseToClient.headers = superRouterResponseStream.headers
-      superRouterResponseStream.on 'data', (chunk)->
-        responseToClient.body = chunk
+    #helper to wrap our route method in a promise for tests
+    routeAsync = (path, method, headers, input)->
+      return new Promise (resolve, reject)->
+        router.route path, method, headers, input, (superRouterResponseStream)->
+          superRouterResponseStream.on 'data', (chunk)->
+            resolve({headers: superRouterResponseStream.headers, body: chunk})
 
     beforeEach ->
-      responseToClient = {}
-
+      #helper to create a "business logic" handler that echos back input
       createHandler = (s)->
         return (headers, input, responseStream)->
           responseStream.send({statusCode: 200},
@@ -115,46 +119,50 @@ describe 'SuperRouter!', ->
       router.addRoute '/obj/:id/action/:action', router.METHODS.GET, null, null, createHandler('d')
 
     it "should match on exact matches", ->
-      router.route '/obj', 'get', {}, {}, transportCb
-      expect(responseToClient.body.handler).to.equal('a')
+      expect(routeAsync('/obj', 'get', {}, {}))
+      .to.eventually.deep.equal({headers: {statusCode: 200}, body: {handler: 'a', inputReceived: {} }})
 
     it "should run the right handler for method", ->
-      router.route '/obj', 'post', {}, {}, transportCb
-      expect(responseToClient.body.handler).to.equal('b')
+      expect(routeAsync('/obj', 'post', {}, {}))
+      .to.eventually.deep.equal({headers: {statusCode: 200}, body: {handler: 'b', inputReceived: {} }})
 
     it "should not run a handler on a route that doesn't match", ->
-      router.route '/objBAD', 'get', {}, {}, transportCb
-      expect(responseToClient.body.handler).to.not.equal('a')
-      expect(responseToClient.headers.statusCode).to.equal(404)
+      expect(routeAsync('/objBAD', 'get', {}, {}))
+      .to.eventually.not.have.deep.property('body.handler')
+
+      expect(routeAsync('/objBAD', 'get', {}, {}))
+      .to.eventually.have.deep.property('headers.statusCode', 404)
 
     it "should return a 405 if path matches, but not method", ->
-      router.route '/obj', 'put', {}, {}, transportCb
-      expect(responseToClient.body).to.not.equal('a')
-      expect(responseToClient.headers.statusCode).to.equal(405)
+      expect(routeAsync('/obj', 'put', {}, {}))
+      .to.eventually.not.have.deep.property('body.handler')
+
+      expect(routeAsync('/obj', 'put', {}, {}))
+      .to.eventually.have.deep.property('headers.statusCode', 405)
 
     it "should return available routes on options method", ->
-      router.route '/obj', 'options', {}, {}, transportCb
-      expect(responseToClient.body).to.not.equal('a')
+      expect(routeAsync('/obj', 'options', {}, {}))
+      .to.eventually.not.have.deep.property('body.handler')
+
+      expect(routeAsync('/obj', 'options', {}, {}))
+      .to.eventually.have.deep.property('headers.statusCode', 200)
       #TODO - check the format of available routes returned
-      expect(responseToClient.headers.statusCode).to.equal(200)
 
     it "should take params from URI and add them to input", ->
-      router.route '/obj/123', 'get', {}, {}, transportCb
-      expect(responseToClient.body.handler).to.equal('c')
-      expect(responseToClient.body.inputReceived).to.eql({id: "123"})
-      router.route '/obj/123/action/run', 'get', {}, {}, transportCb
-      expect(responseToClient.body.handler).to.equal('d')
-      expect(responseToClient.body.inputReceived).to.eql({id: "123", action: "run"})
+      expect(routeAsync('/obj/123', 'get', {}, {}))
+      .to.eventually.deep.equal({headers: {statusCode: 200}, body: {handler: 'c', inputReceived: {id: "123"} }})
+
+      expect(routeAsync('/obj/123/action/run', 'get', {}, {}))
+      .to.eventually.deep.equal({headers: {statusCode: 200}, body: {handler: 'd', inputReceived: {id: "123", action: "run"} }})
 
     it "should take params from input", ->
-      router.route '/obj', 'get', {}, {id: 123}, transportCb
-      expect(responseToClient.body.handler).to.equal('a')
-      expect(responseToClient.body.inputReceived).to.eql({id: 123})
+      expect(routeAsync('/obj', 'get', {}, {id: 123}))
+      .to.eventually.deep.equal({headers: {statusCode: 200}, body: {handler: 'a', inputReceived: {id: 123} }})
 
     it "should return a 400 if a URI param with the same name as a body param has a different value", ->
-      router.route '/obj/123', 'get', {}, {id: "456"}, transportCb
-      expect(responseToClient.headers.statusCode).to.equal(400)
+      expect(routeAsync('/obj/123', 'get', {}, {id: 456}))
+      .to.eventually.have.deep.property('headers.statusCode', 400)
 
     it "should return a 200 if a URI param with the same name as a body param has the same value", ->
-      router.route '/obj/123', 'get', {}, {id: "123"}, transportCb
-      expect(responseToClient.body.handler).to.equal('c')
+      expect(routeAsync('/obj/123', 'get', {}, {id: "123"}))
+      .to.eventually.deep.equal({headers: {statusCode: 200}, body: {handler: 'c', inputReceived: {id: "123"} }})
