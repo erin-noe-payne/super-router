@@ -14,7 +14,7 @@
     "protobufjs": "~4.0.0",
     "route-parser": "0.0.4",
     "through2": "~2.0.0",
-    "uuid": "~2.0.1",
+    "uuid": "~2.0.1"
   },
   "scripts": {
     "test": "mocha  --compilers coffee:coffee-script/register -w"
