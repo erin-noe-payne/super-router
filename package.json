@@ -1,6 +1,6 @@
 {
   "name": "super-router",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "repository": {
     "type": "git",
     "url": "http://github.schq.secious.com/WebUI/super-router"
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "babel-runtime": "^5.8.20",
+    "blanket": "^1.1.7",
     "chai": "~3.0.0",
     "chai-as-promised": "~5.1.0",
     "coffee-script": "~1.9.3",
@@ -40,5 +41,11 @@
   ],
   "publishConfig": {
     "registry": "http://usbo1part01:8081/artifactory/api/npm/npm-local"
+  },
+  "config":{
+    "blanket": {
+      "pattern": "lib",
+      "data-cover-never": "node_modules"
+    }
   }
 }
