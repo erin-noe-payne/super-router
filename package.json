@@ -1,6 +1,6 @@
 {
   "name": "super-router",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "repository": {
     "type": "git",
     "url": "http://github.schq.secious.com/WebUI/super-router"
@@ -15,7 +15,6 @@
     "route-parser": "0.0.4",
     "through2": "~2.0.0",
     "uuid": "~2.0.1",
-    "zmq": "~2.13.0"
   },
   "scripts": {
     "test": "mocha  --compilers coffee:coffee-script/register -w"
@@ -26,9 +25,6 @@
     "chai": "~3.0.0",
     "chai-as-promised": "~5.1.0",
     "coffee-script": "~1.9.3",
-    "gulp": "~3.9.0",
-    "gulp-babel": "~5.2.1",
-    "gulp-sourcemaps": "~1.5.2",
     "mocha": "~2.2.5",
     "sinon": "~1.15.4",
     "sinon-chai": "~2.8.0"
