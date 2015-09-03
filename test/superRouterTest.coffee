@@ -7,6 +7,7 @@ expect = chai.expect
 sinon = require('sinon')
 sinonChai = require('sinon-chai')
 Router = require('./..')
+PassThrough = require('stream').PassThrough
 
 
 chai.use(sinonChai)
@@ -98,19 +99,21 @@ describe 'SuperRouter!', ->
   describe 'route', ->
     #helper to wrap our route method in a promise for tests
     routeAsync = (path, method, headers, input)->
+      inputStream = new PassThrough(); #passthrough stream to write test objects to a stream
+      inputStream.end(JSON.stringify(input));
       return new Promise (resolve, reject)->
-        router.route path, method, headers, input, (superRouterResponseStream)->
+        router.route path, method, headers, inputStream, (superRouterResponseStream)->
           superRouterResponseStream.on 'data', (chunk)->
             resolve({headers: superRouterResponseStream.headers, body: chunk})
 
     beforeEach ->
       #helper to create a "business logic" handler that echos back input
       createHandler = (s)->
-        return (headers, input, responseStream)->
+        return (requestStream, responseStream)->
           responseStream.send({statusCode: 200},
             {
               handler: s,
-              inputReceived: input
+              inputReceived: requestStream.input
             });
 
       router.addRoute '/obj', router.METHODS.GET, null, null, createHandler('a')

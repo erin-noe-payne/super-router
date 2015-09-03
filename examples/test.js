@@ -12,12 +12,12 @@ var caseRouterV1 = new SuperRouter(pathToProtos);
 var caseRouterV2 = new SuperRouter(pathToProtos);
 
 // -- REGISTER ROUTES --
-caseRouterV1.addRoute('/case/:id', caseRouterV1.METHODS.GET, 'Case.GetReq', 'Case.GetRes', function(headers, input, responseStream){
+caseRouterV1.addRoute('/case/:id', caseRouterV1.METHODS.GET, 'Case.GetReq', 'Case.GetRes', function(requestStream, responseStream){
 
   //we could use input.id to go to a db or something, but we'll just return here.
   var resHeaders = {statusCode: 200};
   var resBody = {
-    title: 'case #' + input.id,
+    title: 'case #' + requestStream.input.id,
     description: 'This is a description.',
     date_created: Date().toString(),
     date_updated: Date().toString()
@@ -42,7 +42,6 @@ caseRouterV2.addRoute('/onlyOnVersion2', caseRouterV2.METHODS.GET, null, null, f
   responseStream.headers = {statusCode: 200};
   responseStream.end({message: 'you found me!'});
 });
-
 
 //make a request to another service that impliments super router that we know will fail
 caseRouterV1.addRoute('/forceError', caseRouterV1.METHODS.GET, null, null, function(headers, input, responseStream){
@@ -74,7 +73,8 @@ caseRouterV1.addRoute('/forceError', caseRouterV1.METHODS.GET, null, null, funct
 
 });
 
-caseRouterV1.addRoute('/', caseRouterV1.METHODS.GET, null, null, function(headers, input, responseStream){
+
+caseRouterV1.addRoute('/', caseRouterV1.METHODS.GET, null, null, function(requestStream, responseStream){
   responseStream.headers = {statusCode: 200};
   responseStream.end({message: 'Hello World.'});
 });
@@ -83,32 +83,34 @@ caseRouterV1.addRoute('/', caseRouterV1.METHODS.GET, null, null, function(header
 //http transport
 var server = http.createServer(function(req, res){
 
+  caseRouterV1.route(req.url, req.method, req.headers, req, _sendToClient(res));
+
   //get body data
-  var postBody = "";
-  req.on('data', function(chunk){
-    postBody += chunk.toString();
-  });
+  // var postBody = "";
+  // req.on('data', function(chunk){
+  //   postBody += chunk.toString();
+  // });
+  //
+  // //we're holding the whole request in memory now, so send it to the superrouter route
+  // req.on('end', function(){
+  //   var uri = req.url,
+  //       method = req.method,
+  //       headers = req.headers,
+  //       body = {};
+  //
+  //   if(postBody != ""){
+  //     body = JSON.parse(postBody);
+  //   }
+  //
+  //   //branch on api verion being used
+  //   if(!_.isUndefined(headers.version) && headers.version == "2"){
+  //     caseRouterV2.route(uri, method, headers, body, _sendToClient(res));
+  //   }
+  //   else {
+  //     caseRouterV1.route(uri, method, headers, body, _sendToClient(res));
+  //   }
 
-  //we're holding the whole request in memory now, so send it to the superrouter route
-  req.on('end', function(){
-    var uri = req.url,
-        method = req.method,
-        headers = req.headers,
-        body = {};
-
-    if(postBody != ""){
-      body = JSON.parse(postBody);
-    }
-
-    //branch on api verion being used
-    if(!_.isUndefined(headers.version) && headers.version == "2"){
-      caseRouterV2.route(uri, method, headers, body, _sendToClient(res));
-    }
-    else {
-      caseRouterV1.route(uri, method, headers, body, _sendToClient(res));
-    }
-
-  });
+  // });
 });
 
 server.listen(PORT, function(){
@@ -120,7 +122,9 @@ function _sendToClient(res) {
   return function(superRouterResponseStream){
     //set the http response code to our statusCode
     var resHeaders = superRouterResponseStream.headers;
-    res.statusCode = resHeaders.statusCode;
+    if(resHeaders.statusCode){
+      res.statusCode = resHeaders.statusCode;
+    }
     res.setHeader("Content-Type", "application/json");
 
     //copy all header values into the header of the http response
@@ -134,8 +138,10 @@ function _sendToClient(res) {
 //This is a small transform used to push json to the client over http
 function _transformToString(){
   return through2.obj(function(chunk, enc, done){
-      this.push(JSON.stringify(chunk));
-      done();
+    console.log("chunk");
+    console.log(chunk);
+    this.push(JSON.stringify(chunk));
+    done();
   });
 }
 
