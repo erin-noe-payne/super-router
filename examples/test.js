@@ -4,7 +4,8 @@ var http = require('http'),
     ProtoBuf = require("protobufjs"),
     path = require('path'),
     through2 = require('through2'),
-    util = require('util');
+    util = require('util'),
+    fs = require('fs');
 
 var PORT = 8091;
 var pathToProtos = __dirname + '/'
@@ -26,9 +27,9 @@ caseRouterV1.addRoute('/case/:id', caseRouterV1.METHODS.GET, 'Case.GetReq', 'Cas
 
 });
 
-caseRouterV1.addRoute('/case', caseRouterV1.METHODS.POST, 'Case.CreateReq', 'Case.CreateRes', function(headers, input, responseStream){
+caseRouterV1.addRoute('/case', caseRouterV1.METHODS.POST, 'Case.CreateReq', 'Case.CreateRes', function(requestStream, responseStream){
 
-  body = input;
+  body = requestStream.input;
   body.date_created = Date().toString();
   body.date_updated = Date().toString();
 
@@ -79,38 +80,26 @@ caseRouterV1.addRoute('/', caseRouterV1.METHODS.GET, null, null, function(reques
   responseStream.end({message: 'Hello World.'});
 });
 
+
+caseRouterV1.addRoute('/upload', 'POST', null, null, function(requestStream, responseStream){
+
+  responseStream.headers = {statusCode: 200};
+  responseStream.headers['Content-Disposition'] = 'attachment; filename="Case.proto"'
+
+  requestStream.pipe(responseStream);
+});
+
+caseRouterV1.addRoute('/download', 'GET', null, null, function(requestStream, responseStream){
+  responseStream.headers = {statusCode: 200};
+  responseStream.headers['Content-Disposition'] = 'attachment; filename="rbsp_launch_1080p.mp4"'
+  var file = fs.createReadStream('/Users/chris.langager/Downloads/rbsp_launch_1080p.mp4');
+  file.pipe(responseStream);
+});
+
 // -- TRANSPORTS --
 //http transport
 var server = http.createServer(function(req, res){
-
   caseRouterV1.route(req.url, req.method, req.headers, req, _sendToClient(res));
-
-  //get body data
-  // var postBody = "";
-  // req.on('data', function(chunk){
-  //   postBody += chunk.toString();
-  // });
-  //
-  // //we're holding the whole request in memory now, so send it to the superrouter route
-  // req.on('end', function(){
-  //   var uri = req.url,
-  //       method = req.method,
-  //       headers = req.headers,
-  //       body = {};
-  //
-  //   if(postBody != ""){
-  //     body = JSON.parse(postBody);
-  //   }
-  //
-  //   //branch on api verion being used
-  //   if(!_.isUndefined(headers.version) && headers.version == "2"){
-  //     caseRouterV2.route(uri, method, headers, body, _sendToClient(res));
-  //   }
-  //   else {
-  //     caseRouterV1.route(uri, method, headers, body, _sendToClient(res));
-  //   }
-
-  // });
 });
 
 server.listen(PORT, function(){
@@ -120,31 +109,45 @@ server.listen(PORT, function(){
 
 function _sendToClient(res) {
   return function(superRouterResponseStream){
-    //set the http response code to our statusCode
-    var resHeaders = superRouterResponseStream.headers;
-    if(resHeaders.statusCode){
-      res.statusCode = resHeaders.statusCode;
-    }
-    res.setHeader("Content-Type", "application/json");
+    var headersSet = false;
 
-    //copy all header values into the header of the http response
-    _.forEach(resHeaders, function(value, key){
-      res.setHeader(key, value);
-    });
-    superRouterResponseStream.pipe(_transformToString()).pipe(res);
+    //superRouterResponseStream -> set headers transform -> object to string transform -> http response stream
+    superRouterResponseStream.pipe(through2.obj(function (chunk, enc, done) {
+      if(!headersSet){
+        var resHeaders = superRouterResponseStream.headers;
+        if(resHeaders.statusCode){
+          res.statusCode = resHeaders.statusCode;
+        }
+
+        //copy all header values into the header of the http response
+        _.forEach(resHeaders, function(value, key){
+          res.setHeader(key, value);
+        });
+
+        //default to json content-type
+        if(!res.getHeader['content-type']){
+          res.setHeader("content-type", "application/json");
+        }
+      }
+      headersSet = true;
+      this.push(chunk);
+      done();
+    })).pipe(_transformToString()).pipe(res);
   };
 };
 
 //This is a small transform used to push json to the client over http
 function _transformToString(){
   return through2.obj(function(chunk, enc, done){
-    console.log("chunk");
-    console.log(chunk);
-    this.push(JSON.stringify(chunk));
+    if(chunk instanceof Buffer){
+      this.push(chunk);
+    }
+    else {
+      this.push(JSON.stringify(chunk));
+    }
     done();
   });
 }
-
 
 // var Router = require('lib/super-router'),
 //   router = new Router();
