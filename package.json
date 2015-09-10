@@ -38,7 +38,7 @@
   "publishConfig": {
     "registry": "http://usbo1part01:8081/artifactory/api/npm/npm-local"
   },
-  "config":{
+  "config": {
     "blanket": {
       "pattern": "lib",
       "data-cover-never": "node_modules"

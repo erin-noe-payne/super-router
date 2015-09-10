@@ -16,7 +16,6 @@ var caseRouterV2 = new SuperRouter(pathToProtos);
 caseRouterV1.addRoute('/case/:id', caseRouterV1.METHODS.GET, 'Case.GetReq', 'Case.GetRes', function(requestStream, responseStream){
 
   //we could use input.id to go to a db or something, but we'll just return here.
-  var resHeaders = {statusCode: 200};
   var resBody = {
     title: 'case #' + requestStream.input.id,
     description: 'This is a description.',
@@ -33,8 +32,6 @@ caseRouterV1.addRoute('/case', caseRouterV1.METHODS.POST, 'Case.CreateReq', 'Cas
   body.date_created = Date().toString();
   body.date_updated = Date().toString();
 
-
-  responseStream.headers = {statusCode: 200};
   responseStream.end(body);
 
 });
@@ -76,21 +73,18 @@ caseRouterV1.addRoute('/forceError', caseRouterV1.METHODS.GET, null, null, funct
 
 
 caseRouterV1.addRoute('/', caseRouterV1.METHODS.GET, null, null, function(requestStream, responseStream){
-  responseStream.setHeaders({statusCode: 200});
   responseStream.end({message: 'Hello World.'});
 });
 
 
 caseRouterV1.addRoute('/upload', 'POST', null, null, function(requestStream, responseStream){
 
-  responseStream.headers = {statusCode: 200};
   responseStream.headers['Content-Disposition'] = 'attachment; filename="Case.proto"'
 
   requestStream.pipe(responseStream);
 });
 
 caseRouterV1.addRoute('/download', 'GET', null, null, function(requestStream, responseStream){
-  responseStream.headers = {statusCode: 200};
   responseStream.headers['Content-Disposition'] = 'attachment; filename="rbsp_launch_1080p.mp4"'
   var file = fs.createReadStream('/Users/chris.langager/Downloads/rbsp_launch_1080p.mp4');
   file.pipe(responseStream);

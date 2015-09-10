@@ -99,7 +99,7 @@ describe 'SuperRouter!', ->
 
   describe 'route', ->
     #helper to wrap our route method in a promise for tests
-    routeAsync = (path, method, headers, input, done)->
+    routeAsync = (path, method, headers, input)->
       inputStream = new PassThrough(); #passthrough stream to write test objects to a stream
       inputStream.end(JSON.stringify(input));
       return new Promise (resolve, reject)->
@@ -112,9 +112,10 @@ describe 'SuperRouter!', ->
       #helper to create a "business logic" handler that echos back input
       createHandler = (s)->
         return (requestStream, responseStream)->
-          responseStream.send({statusCode: 200},
+          responseStream.send(
             {
               handler: s,
+              headersReceived: requestStream.getHeaders(),
               inputReceived: requestStream.input
             });
 
@@ -122,18 +123,14 @@ describe 'SuperRouter!', ->
       router.addRoute '/obj', router.METHODS.POST, null, null, createHandler('b')
       router.addRoute '/obj/:id', router.METHODS.GET, null, null, createHandler('c')
       router.addRoute '/obj/:id/action/:action', router.METHODS.GET, null, null, createHandler('d')
-      # router.addRoute '/person', router.METHODS.POST, '', '', (req, res)->
-      #   person = req.input;
-      #   person.id = 123;
-      #   res.send({statusCode: 200}, person)
 
     it "should match on exact matches", ->
       expect(routeAsync('/obj', 'get', {}, {}))
-      .to.eventually.deep.equal({headers: {statusCode: 200}, body: {handler: 'a', inputReceived: {} }})
+      .to.eventually.have.deep.property('body.handler', 'a')
 
     it "should run the right handler for method", ->
       expect(routeAsync('/obj', 'post', {}, {}))
-      .to.eventually.deep.equal({headers: {statusCode: 200}, body: {handler: 'b', inputReceived: {} }})
+      .to.eventually.have.deep.property('body.handler', 'b')
 
     it "should not run a handler on a route that doesn't match", ->
       expect(routeAsync('/objBAD', 'get', {}, {}))
@@ -158,14 +155,17 @@ describe 'SuperRouter!', ->
 
     it "should take params from URI and add them to input", ->
       expect(routeAsync('/obj/123', 'get', {}, {}))
-      .to.eventually.deep.equal({headers: {statusCode: 200}, body: {handler: 'c', inputReceived: {id: "123"} }})
+      .to.eventually.have.deep.property('body.inputReceived.id', '123')
 
       expect(routeAsync('/obj/123/action/run', 'get', {}, {}))
-      .to.eventually.deep.equal({headers: {statusCode: 200}, body: {handler: 'd', inputReceived: {id: "123", action: "run"} }})
+      .to.eventually.have.deep.property('body.inputReceived.id', '123')
+
+      expect(routeAsync('/obj/123/action/run', 'get', {}, {}))
+      .to.eventually.have.deep.property('body.inputReceived.action', 'run')
 
     it "should take params from input", ->
       expect(routeAsync('/obj', 'get', {}, {id: 123}))
-      .to.eventually.deep.equal({headers: {statusCode: 200}, body: {handler: 'a', inputReceived: {id: 123} }})
+      .to.eventually.have.deep.property('body.inputReceived.id', 123)
 
     it "should return a 400 if a URI param with the same name as a body param has a different value", ->
       expect(routeAsync('/obj/123', 'get', {}, {id: 456}))
@@ -173,25 +173,15 @@ describe 'SuperRouter!', ->
 
     it "should return a 200 if a URI param with the same name as a body param has the same value", ->
       expect(routeAsync('/obj/123', 'get', {}, {id: "123"}))
-      .to.eventually.deep.equal({headers: {statusCode: 200}, body: {handler: 'c', inputReceived: {id: "123"} }})
+      .to.eventually.have.deep.property('headers.statusCode', 200)
 
-    it.skip "should throw an error if headers are set after stuff is written to the response stream", ->
-      router.addRoute '/temp', router.METHODS.GET, null, null, (req, res)->
-        res.send({statusCode: 5000}, {message: 'hi there!'});
-        res.setHeader('thisIsA', 'badTime') #this should cause an error
-        throw new Error('fdasfdas')
+      expect(routeAsync('/obj/123', 'get', {}, {id: "123"}))
+      .to.eventually.have.deep.property('body.inputReceived.id', '123')
 
+    it "should take params from headers", ->
+      expect(routeAsync('/obj', 'post', {boggle: 'at the situation'}, {}))
+      .to.eventually.have.deep.property('body.headersReceived.boggle', 'at the situation')
 
-      fn = ->
-        inputStream = new PassThrough(); #passthrough stream to write test objects to a stream
-        inputStream.end(JSON.stringify({'blah'}));
-        return new Promise (resolve, reject)->
-          router.route '/temp', 'get', {}, inputStream, (superRouterResponseStream)->
-            superRouterResponseStream.on 'data', (chunk)->
-              resolve({headers: superRouterResponseStream.getHeaders(), body: chunk})
-
-
-      expect(fn).to.throw(Error)
 
     describe 'proto stuff', ->
       beforeEach (done)->
@@ -200,12 +190,12 @@ describe 'SuperRouter!', ->
         router.addRoute '/person', router.METHODS.POST, 'Person.CreateReq', 'Person.CreateRes', (req, res)->
           person = req.input;
           person.id = 123;
-          res.send({statusCode: 200}, person)
+          res.send(person)
 
         router.addRoute '/personRouteWithProgrammerError', router.METHODS.POST, 'Person.CreateReq', 'Person.CreateRes', (req, res)->
           person = req.input;
           person.idzzzzzzz = 123;
-          res.send({statusCode: 200}, person)
+          res.send(person)
 
         #give the router a sec to load protofiles
         setTimeout ->
@@ -236,5 +226,9 @@ describe 'SuperRouter!', ->
         .to.eventually.have.deep.property('headers.statusCode', 400)
 
       it.skip "should throw an error if the output of a route does not match proto", ->
-        expect(routeAsync('/personRouteWithProgrammerError', 'post', {}, {name: 'John', title: 'The Destroyer'}))
-        .to.be.rejectedWith(Error)
+        fn = ->
+            passThrough = new PassThrough();
+            passThrough.end(JSON.stringify({name: 'John', title: 'The Destroyer'}));
+            router.route '/personRouteWithProgrammerError', 'post', {}, passThrough, (res)->
+
+        expect(fn).to.throw()
