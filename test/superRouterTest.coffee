@@ -8,6 +8,7 @@ sinon = require('sinon')
 sinonChai = require('sinon-chai')
 Router = require('./..')
 PassThrough = require('stream').PassThrough
+path = require('path')
 
 
 chai.use(sinonChai)
@@ -98,15 +99,16 @@ describe 'SuperRouter!', ->
 
   describe 'route', ->
     #helper to wrap our route method in a promise for tests
-    routeAsync = (path, method, headers, input)->
+    routeAsync = (path, method, headers, input, done)->
       inputStream = new PassThrough(); #passthrough stream to write test objects to a stream
       inputStream.end(JSON.stringify(input));
       return new Promise (resolve, reject)->
         router.route path, method, headers, inputStream, (superRouterResponseStream)->
           superRouterResponseStream.on 'data', (chunk)->
-            resolve({headers: superRouterResponseStream.headers, body: chunk})
+            resolve({headers: superRouterResponseStream.getHeaders(), body: chunk})
 
     beforeEach ->
+      router = new Router()
       #helper to create a "business logic" handler that echos back input
       createHandler = (s)->
         return (requestStream, responseStream)->
@@ -120,6 +122,10 @@ describe 'SuperRouter!', ->
       router.addRoute '/obj', router.METHODS.POST, null, null, createHandler('b')
       router.addRoute '/obj/:id', router.METHODS.GET, null, null, createHandler('c')
       router.addRoute '/obj/:id/action/:action', router.METHODS.GET, null, null, createHandler('d')
+      # router.addRoute '/person', router.METHODS.POST, '', '', (req, res)->
+      #   person = req.input;
+      #   person.id = 123;
+      #   res.send({statusCode: 200}, person)
 
     it "should match on exact matches", ->
       expect(routeAsync('/obj', 'get', {}, {}))
@@ -149,7 +155,6 @@ describe 'SuperRouter!', ->
 
       expect(routeAsync('/obj', 'options', {}, {}))
       .to.eventually.have.deep.property('headers.statusCode', 200)
-      #TODO - check the format of available routes returned
 
     it "should take params from URI and add them to input", ->
       expect(routeAsync('/obj/123', 'get', {}, {}))
@@ -169,3 +174,67 @@ describe 'SuperRouter!', ->
     it "should return a 200 if a URI param with the same name as a body param has the same value", ->
       expect(routeAsync('/obj/123', 'get', {}, {id: "123"}))
       .to.eventually.deep.equal({headers: {statusCode: 200}, body: {handler: 'c', inputReceived: {id: "123"} }})
+
+    it.skip "should throw an error if headers are set after stuff is written to the response stream", ->
+      router.addRoute '/temp', router.METHODS.GET, null, null, (req, res)->
+        res.send({statusCode: 5000}, {message: 'hi there!'});
+        res.setHeader('thisIsA', 'badTime') #this should cause an error
+        throw new Error('fdasfdas')
+
+
+      fn = ->
+        inputStream = new PassThrough(); #passthrough stream to write test objects to a stream
+        inputStream.end(JSON.stringify({'blah'}));
+        return new Promise (resolve, reject)->
+          router.route '/temp', 'get', {}, inputStream, (superRouterResponseStream)->
+            superRouterResponseStream.on 'data', (chunk)->
+              resolve({headers: superRouterResponseStream.getHeaders(), body: chunk})
+
+
+      expect(fn).to.throw(Error)
+
+    describe 'proto stuff', ->
+      beforeEach (done)->
+        pathToProtos = path.resolve('./test/') + '/'
+        router = new Router(pathToProtos);
+        router.addRoute '/person', router.METHODS.POST, 'Person.CreateReq', 'Person.CreateRes', (req, res)->
+          person = req.input;
+          person.id = 123;
+          res.send({statusCode: 200}, person)
+
+        router.addRoute '/personRouteWithProgrammerError', router.METHODS.POST, 'Person.CreateReq', 'Person.CreateRes', (req, res)->
+          person = req.input;
+          person.idzzzzzzz = 123;
+          res.send({statusCode: 200}, person)
+
+        #give the router a sec to load protofiles
+        setTimeout ->
+          done()
+        , 0
+
+
+      it "should throw an error if a route is added with proto locations, but no proto directory was given to the router", ->
+        fn = ->
+          testRouter = new Router();
+          testRouter.addRoute('/temp', 'get', 'test.test', 'test.test', (req, res)->)
+        expect(fn).to.throw()
+
+      it "should reutrn 400 when input doesn't match proto", ->
+          expect(routeAsync('/person', 'post', {}, {}))
+          .to.eventually.have.deep.property('headers.statusCode', 400)
+
+      it "should reutrn 200 when input does match proto", ->
+          expect(routeAsync('/person', 'post', {}, {name: 'John', title: 'The Destroyer'}))
+          .to.eventually.have.deep.property('headers.statusCode', 200)
+
+      it "should not care about missing optional stuff", ->
+        expect(routeAsync('/person', 'post', {}, {name: 'John'}))
+        .to.eventually.have.deep.property('headers.statusCode', 200)
+
+      it "should return 400 if a required field is missing", ->
+        expect(routeAsync('/person', 'post', {}, {title: 'The Destroyer'}))
+        .to.eventually.have.deep.property('headers.statusCode', 400)
+
+      it.skip "should throw an error if the output of a route does not match proto", ->
+        expect(routeAsync('/personRouteWithProgrammerError', 'post', {}, {name: 'John', title: 'The Destroyer'}))
+        .to.be.rejectedWith(Error)

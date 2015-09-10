@@ -76,7 +76,7 @@ caseRouterV1.addRoute('/forceError', caseRouterV1.METHODS.GET, null, null, funct
 
 
 caseRouterV1.addRoute('/', caseRouterV1.METHODS.GET, null, null, function(requestStream, responseStream){
-  responseStream.headers = {statusCode: 200};
+  responseStream.setHeaders({statusCode: 200});
   responseStream.end({message: 'Hello World.'});
 });
 
@@ -109,30 +109,38 @@ server.listen(PORT, function(){
 
 function _sendToClient(res) {
   return function(superRouterResponseStream){
-    var headersSet = false;
+    var headersSet = false,
+        pipeSet = false;
 
-    //superRouterResponseStream -> set headers transform -> object to string transform -> http response stream
-    superRouterResponseStream.pipe(through2.obj(function (chunk, enc, done) {
-      if(!headersSet){
-        var resHeaders = superRouterResponseStream.headers;
-        if(resHeaders.statusCode){
-          res.statusCode = resHeaders.statusCode;
-        }
 
-        //copy all header values into the header of the http response
-        _.forEach(resHeaders, function(value, key){
-          res.setHeader(key, value);
-        });
+    // superRouterResponseStream.on('readable', function () {
+    //   if(!pipeSet){
+    //     pipeSet = true;
+        //superRouterResponseStream -> set headers transform -> object to string transform -> http response stream
+        superRouterResponseStream.pipe(through2.obj(function (chunk, enc, done) {
+          if(!headersSet){
+            var resHeaders = superRouterResponseStream.getHeaders();
+            if(resHeaders.statusCode){
+              res.statusCode = resHeaders.statusCode;
+            }
 
-        //default to json content-type
-        if(!res.getHeader['content-type']){
-          res.setHeader("content-type", "application/json");
-        }
-      }
-      headersSet = true;
-      this.push(chunk);
-      done();
-    })).pipe(_transformToString()).pipe(res);
+            //copy all header values into the header of the http response
+            _.forEach(resHeaders, function(value, key){
+              res.setHeader(key, value);
+            });
+
+            //default to json content-type
+            if(!res.getHeader['content-type']){
+              res.setHeader("content-type", "application/json");
+            }
+          }
+          headersSet = true;
+          this.push(chunk);
+          done();
+        })).pipe(_transformToString()).pipe(res);
+    //   }
+    // });
+
   };
 };
 
