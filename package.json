@@ -12,6 +12,7 @@
     "lr-logger": "~1.0.1",
     "promise": "^7.0.4",
     "protobufjs": "~4.0.0",
+    "q": "^1.4.1",
     "route-parser": "0.0.4",
     "through2": "~2.0.0",
     "uuid": "~2.0.1"
