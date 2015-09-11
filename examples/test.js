@@ -79,13 +79,13 @@ caseRouterV1.addRoute('/', caseRouterV1.METHODS.GET, null, null, function(reques
 
 caseRouterV1.addRoute('/upload', 'POST', null, null, function(requestStream, responseStream){
 
-  responseStream.headers['Content-Disposition'] = 'attachment; filename="Case.proto"'
+  responseStream.setHeader('Content-Disposition', 'attachment; filename="Case.proto"');
 
   requestStream.pipe(responseStream);
 });
 
 caseRouterV1.addRoute('/download', 'GET', null, null, function(requestStream, responseStream){
-  responseStream.headers['Content-Disposition'] = 'attachment; filename="rbsp_launch_1080p.mp4"'
+  responseStream.setHeader('Content-Disposition', 'attachment; filename="rbsp_launch_1080p.mp4"');
   var file = fs.createReadStream('/Users/chris.langager/Downloads/rbsp_launch_1080p.mp4');
   file.pipe(responseStream);
 });
