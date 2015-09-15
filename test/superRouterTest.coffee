@@ -41,61 +41,47 @@ describe 'SuperRouter!', ->
     it "should throw an error if path is not defined", ->
       expect( ->
         router.addRoute()
-      ).to.throw("First argument: path must be defined.");
+      ).to.throw("route must be defined")
 
     it "should throw an error if path is not a string", ->
-      notString = -> router.addRoute(76);
-
-      expect(notString).to.throw("First argument: path must be a string.")
+      notString = -> router.addRoute({path: 76});
+      expect(notString).to.throw("route.path must be a string")
 
     it "should throw an error if method is not defined", ->
-      noMethod = -> router.addRoute('/asdf')
-
-      expect(noMethod).to.throw("Second argument: method must be defined.")
+      noMethod = -> router.addRoute({path: '/obj'})
+      expect(noMethod).to.throw("route.method must be defined")
 
     it "should throw an error if method is not defined in the METHODS enum", ->
-      _.each [7, 'asdf', ->], (badMethod) ->
-        expect(-> router.addRoute('/asdf', badMethod)).to.throw "Second argument: method must be defined in the METHODS enum."
+        expect(-> router.addRoute({path: '/asdf', method: 'badMethod'})).to.throw "route.method must be defined in the METHODS enum"
 
     it "should accept a method that is a reference to the METHODS enum", ->
-      router.addRoute '/asdf', router.METHODS.GET, null, null, ->
+      router.addRoute {path: '/asdf', method: router.METHODS.GET, handler: (req, res)->}
 
     it "should accept a method string defined in the METHODS enum", ->
-      router.addRoute '/asdf', 'get', null, null, ->
+      router.addRoute {path: '/asdf', method: 'get', handler: (req, res)->}
 
     it "should accept a method string defined in the METHODS enum, case insensitive", ->
-      router.addRoute '/asdf', 'GeT', null, null, ->
+      router.addRoute {path: '/asdf', method: 'geT', handler: (req, res)->}
 
     it "should accept a custom method added to the METHODS enum", ->
       router.METHODS.OTHER = 'other'
-      router.addRoute '/asdf', 'other', null, null, ->
-
-    it "should throw an error if the input is undefined", ->
-      expect(-> router.addRoute '/asdf', 'get').to.throw "Third argument: input must be defined."
-
-    it "should throw an error if the output is undefined", ->
-      expect(-> router.addRoute '/asdf', 'get', null).to.throw "Fourth argument: output must be defined."
+      router.addRoute {path: '/asdf', method: 'other', handler: (req, res)->}
 
     it "should throw an error if the handler is undefined", ->
-
-    it "should accept a null inputProto and outputProto", ->
-      router.addRoute '/asdf', 'get', null, null, (headers, input, done)->
-
-    it "should throw an error if the handler is undefined", ->
-      expect(-> router.addRoute '/asdf', 'get', null, null).to.throw "Fifth argument: handler must be defined."
+      fn = -> router.addRoute {path: '/asdf', method: 'get'}
+      expect(fn).to.throw 'route.handler must be defined'
 
     it "should throw an error if the handler is not a function", ->
-      expect(-> router.addRoute '/asdf', 'get', null, null, 'asdf').to.throw "Fifth argument: handler must be a function."
+      fn = -> router.addRoute {path: '/asdf', method: 'get', handler: 'blah'}
+      expect(fn).to.throw 'route.handler must be a function'
 
     it "should throw an error if the same path+method combo is added twice", ->
-      handler = (headers, input, done) ->
-      router.addRoute '/asdf', router.METHODS.GET, null, null, handler
-      expect(-> router.addRoute '/asdf', router.METHODS.GET, null, null, handler).to.throw "Duplicate path and method registered: \"/asdf\" get"
+      router.addRoute {path: '/asdf', method: 'get', handler: (req, res)->}
+      expect(-> router.addRoute {path: '/asdf', method: 'get', handler: (req, res)->}).to.throw "Duplicate path and method registered: \"/asdf\" get"
 
     it "should allow the same path with different methods", ->
-        handler = (headers, input, done) ->
-        router.addRoute '/asdf', router.METHODS.GET, null, null, handler
-        router.addRoute '/asdf', router.METHODS.POST, null, null, handler
+        router.addRoute {path: '/asdf', method: 'get', handler: (req, res)->}
+        router.addRoute {path: '/asdf', method: 'post', handler: (req, res)->}
 
   describe 'route', ->
     #helper to wrap our route method in a promise for tests
@@ -116,17 +102,64 @@ describe 'SuperRouter!', ->
             {
               handler: s,
               headersReceived: requestStream.getHeaders(),
-              inputReceived: requestStream.input
+              inputReceived: requestStream.input,
+              routeInfoReceived: requestStream.routeInfo
             });
 
-      router.addRoute '/obj', router.METHODS.GET, null, null, createHandler('a')
-      router.addRoute '/obj', router.METHODS.POST, null, null, createHandler('b')
-      router.addRoute '/obj/:id', router.METHODS.GET, null, null, createHandler('c')
-      router.addRoute '/obj/:id/action/:action', router.METHODS.GET, null, null, createHandler('d')
+      router.addRoute {path: '/obj', method: router.METHODS.GET, handler: createHandler('a')}
+      router.addRoute {path: '/obj', method: router.METHODS.POST, handler: createHandler('b')}
+      router.addRoute {path: '/obj/:id', method: router.METHODS.GET, handler: createHandler('c')}
+      router.addRoute {path: '/obj/:id/action/:action', method: router.METHODS.GET, handler: createHandler('d')}
+      router.addRoute {path: '/matchOnAnyPath', method: router.METHODS.ALL, handler: createHandler('e')}
+      router.addRoute {path: '/matchOnAnyPath(/*_optionalPathPart)', method: router.METHODS.ALL, handler: createHandler('f')}
+      router.addRoute {path: '/passThrough(/*_restOfRoute)', method: router.METHODS.ALL, handler: (req, res)->
+        router.route '/'+req.routeInfo._restOfRoute, req.method, req.getHeaders(), req, (responseStream)->
+          responseStream.pipe(res);
+        }
+
 
     it "should match on exact matches", ->
       expect(routeAsync('/obj', 'get', {}, {}))
       .to.eventually.have.deep.property('body.handler', 'a')
+
+    it "should match on any path if the ALL method was specified for the route", ->
+        expect(routeAsync('/matchOnAnyPath', 'get', {}, {}))
+        .to.eventually.have.deep.property('body.handler', 'e')
+
+        expect(routeAsync('/matchOnAnyPath', 'put', {}, {}))
+        .to.eventually.have.deep.property('body.handler', 'e')
+
+        expect(routeAsync('/matchOnAnyPath', 'post', {}, {}))
+        .to.eventually.have.deep.property('body.handler', 'e')
+
+        expect(routeAsync('/matchOnAnyPath', 'delete', {}, {}))
+        .to.eventually.have.deep.property('body.handler', 'e')
+
+    it "should add any URI params with _ to routeInfo instead of input", ->
+        expect(routeAsync('/matchOnAnyPath/_thisIsExtra', 'get', {}, {}))
+        .to.eventually.have.deep.property('body.handler', 'f')
+
+        expect(routeAsync('/matchOnAnyPath/this/is/optional', 'get', {}, {}))
+        .to.eventually.have.deep.property('body.routeInfoReceived._optionalPathPart', 'this/is/optional')
+
+    it "should be able to passthrough and pipe to other routes", ->
+          expect(routeAsync('/passThrough/obj', 'get', {}, {}))
+          .to.eventually.have.deep.property('body.handler', 'a')
+
+          expect(routeAsync('/passThrough/obj', 'post', {}, {}))
+          .to.eventually.have.deep.property('body.handler', 'b')
+
+          expect(routeAsync('/passThrough/obj/123', 'get', {headerParam: 'foo'}, {bodyParam:'bar'}))
+          .to.eventually.have.deep.property('body.inputReceived.id', '123')
+
+          expect(routeAsync('/passThrough/obj/123', 'get', {headerParam: 'foo'}, {bodyParam:'bar'}))
+          .to.eventually.have.deep.property('body.inputReceived.bodyParam', 'bar')
+
+          expect(routeAsync('/passThrough/obj/123', 'get', {headerParam: 'foo'}, {bodyParam:'bar'}))
+          .to.eventually.have.deep.property('body.headersReceived.headerParam', 'foo')
+
+          expect(routeAsync('/passThrough/obj/123', 'get', {headerParam: 'foo'}, {bodyParam:'bar'}))
+          .to.eventually.have.deep.property('body.routeInfoReceived.originPath', '/passThrough/obj/123')
 
     it "should run the right handler for method", ->
       expect(routeAsync('/obj', 'post', {}, {}))
@@ -182,11 +215,40 @@ describe 'SuperRouter!', ->
       expect(routeAsync('/obj', 'post', {boggle: 'at the situation'}, {}))
       .to.eventually.have.deep.property('body.headersReceived.boggle', 'at the situation')
 
+    describe 'validateInput', ->
+      beforeEach ->
+        router.addRoute({
+          path: '/validate/:id'
+          method: 'get'
+          handler: (req, res)->
+            res.send({idReceived: req.input.id})
+          validateInput: (input, deferred)->
+            idAsInt = parseInt(input.id);
+            if isNaN(idAsInt)
+              return deferred.reject("id must be a number")
+            return deferred.resolve();
+          });
 
-    describe 'proto stuff', ->
+      it 'should return 400 if validation fails', ->
+
+        expect(routeAsync('/validate/bad', 'get', {}, {}))
+        .to.eventually.have.deep.property('headers.statusCode', 400)
+
+      it 'should have an error message if validation fails', ->
+        expect(routeAsync('/validate/bad', 'get', {}, {}))
+        .to.eventually.have.deep.property('body.message', 'id must be a number')
+
+      it 'should return 200 if validation passes', ->
+        expect(routeAsync('/validate/123', 'get', {}, {}))
+        .to.eventually.have.deep.property('headers.statusCode', 200)
+
+
+
+    #skipping this for now, since we are not using protovalidation
+    describe.skip 'proto stuff', ->
       beforeEach (done)->
         pathToProtos = path.resolve('./test/') + '/'
-        router = new Router(pathToProtos);
+        router = new Router({protosLocation: pathToProtos});
         router.addRoute '/person', router.METHODS.POST, 'Person.CreateReq', 'Person.CreateRes', (req, res)->
           person = req.input;
           person.id = 123;
