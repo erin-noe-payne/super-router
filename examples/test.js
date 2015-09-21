@@ -12,6 +12,7 @@ var pathToProtos = __dirname + '/'
 var caseRouterV1 = new SuperRouter(pathToProtos);
 var caseRouterV2 = new SuperRouter(pathToProtos);
 
+
 // -- REGISTER ROUTES --
 caseRouterV1.addRoute('/case/:id', caseRouterV1.METHODS.GET, 'Case.GetReq', 'Case.GetRes', function(requestStream, responseStream){
 
