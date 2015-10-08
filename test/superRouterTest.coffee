@@ -83,6 +83,22 @@ describe 'SuperRouter!', ->
         router.addRoute {path: '/asdf', method: 'get', handler: (req, res)->}
         router.addRoute {path: '/asdf', method: 'post', handler: (req, res)->}
 
+  describe 'childRoutes', ->
+    beforeEach ->
+      router = new Router()
+      router.addRoute {path: '/a', method: router.METHODS.GET, handler: (req, res)->}
+      router.addRoute {path: '/a/:param/b', method: router.METHODS.GET, handler: (req, res)->}
+      router.addRoute {path: '/a/b', method: router.METHODS.GET, handler: (req, res)->}
+      router.addRoute {path: '/a/bb', method: router.METHODS.GET, handler: (req, res)->}
+      router.addRoute {path: '/a/bb/:param', method: router.METHODS.GET, handler: (req, res)->}
+      router.addRoute {path: '/a/bb/c', method: router.METHODS.GET, handler: (req, res)->}
+      router.addRoute {path: '/a/:param/b/c', method: router.METHODS.GET, handler: (req, res)->}
+
+    it 'should return child routes', ->
+      childRoutes = router._childRoutes('/a')
+      console.log(JSON.stringify(_.map(childRoutes, (route) -> route.path), null, 2));
+
+
   describe 'route', ->
     #helper to wrap our route method in a promise for tests
     routeAsync = (path, method, headers, input)->
@@ -110,6 +126,7 @@ describe 'SuperRouter!', ->
       router.addRoute {path: '/obj', method: router.METHODS.POST, handler: createHandler('b')}
       router.addRoute {path: '/obj/:id', method: router.METHODS.GET, handler: createHandler('c')}
       router.addRoute {path: '/obj/:id/action/:action', method: router.METHODS.GET, handler: createHandler('d')}
+
       router.addRoute {path: '/matchOnAnyPath', method: router.METHODS.ALL, handler: createHandler('e')}
       router.addRoute {path: '/matchOnAnyPath(/*_optionalPathPart)', method: router.METHODS.ALL, handler: createHandler('f')}
       router.addRoute {path: '/passThrough(/*_restOfRoute)', method: router.METHODS.ALL, handler: (req, res)->
@@ -117,6 +134,26 @@ describe 'SuperRouter!', ->
           responseStream.pipe(res);
         }
 
+    describe 'options requests', ->
+      it '1', ->
+        expect(routeAsync('/', 'options', {}, {}))
+        .to.eventually.have.deep.property('body.child_routes[0].path', '/obj')
+
+      it '2', ->
+        expect(routeAsync('/', 'options', {}, {}))
+        .to.eventually.have.deep.property('body.child_routes[1].path', '/obj')
+
+      it '3', ->
+        expect(routeAsync('/obj', 'options', {}, {}))
+        .to.eventually.have.deep.property('body.child_routes[0].path', '/obj/:id')
+
+      it '4', ->
+        expect(routeAsync('/notaroute', 'options', {}, {}))
+        .to.eventually.have.deep.property('headers.statusCode', 404)
+
+      it '5', ->
+        expect(routeAsync('/matchOnAnyPath', 'options', {}, {}))
+        .to.eventually.have.deep.property('body.child_routes.length', 0)
 
     it "should match on exact matches", ->
       expect(routeAsync('/obj', 'get', {}, {}))
