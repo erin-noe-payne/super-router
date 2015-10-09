@@ -83,22 +83,6 @@ describe 'SuperRouter!', ->
         router.addRoute {path: '/asdf', method: 'get', handler: (req, res)->}
         router.addRoute {path: '/asdf', method: 'post', handler: (req, res)->}
 
-  describe 'childRoutes', ->
-    beforeEach ->
-      router = new Router()
-      router.addRoute {path: '/a', method: router.METHODS.GET, handler: (req, res)->}
-      router.addRoute {path: '/a/:param/b', method: router.METHODS.GET, handler: (req, res)->}
-      router.addRoute {path: '/a/b', method: router.METHODS.GET, handler: (req, res)->}
-      router.addRoute {path: '/a/bb', method: router.METHODS.GET, handler: (req, res)->}
-      router.addRoute {path: '/a/bb/:param', method: router.METHODS.GET, handler: (req, res)->}
-      router.addRoute {path: '/a/bb/c', method: router.METHODS.GET, handler: (req, res)->}
-      router.addRoute {path: '/a/:param/b/c', method: router.METHODS.GET, handler: (req, res)->}
-
-    it 'should return child routes', ->
-      childRoutes = router._childRoutes('/a')
-      console.log(JSON.stringify(_.map(childRoutes, (route) -> route.path), null, 2));
-
-
   describe 'route', ->
     #helper to wrap our route method in a promise for tests
     routeAsync = (path, method, headers, input)->
