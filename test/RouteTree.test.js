@@ -1,7 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
-const util = require('util');
 const chai = require('chai');
 const expect = chai.expect;
 
@@ -15,14 +13,14 @@ describe('Route Tree Node', function () {
   it('should throw an error if you try to create a node without a path', function () {
     const fn = () => {
       const node = new RouteTreeNode();
-    }
+    };
     expect(fn).to.throw();
   });
 
   it('should throw an error if you try to create a node with a path without a /', function () {
     const fn = () => {
       const node = new RouteTreeNode('a');
-    }
+    };
     expect(fn).to.throw();
   });
 
@@ -35,7 +33,7 @@ describe('Route Tree Node', function () {
     const fn = () => {
       const node = new RouteTreeNode('a');
       node.path = 'something else';
-    }
+    };
     expect(fn).to.throw();
   });
 

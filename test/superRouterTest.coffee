@@ -157,9 +157,6 @@ describe 'SuperRouter!', ->
         .to.eventually.have.deep.property('body.handler', 'e')
 
     it "should add any URI params with _ to routeInfo instead of input", ->
-        expect(routeAsync('/matchOnAnyPath/_thisIsExtra', 'get', {}, {}))
-        .to.eventually.have.deep.property('body.handler', 'f')
-
         expect(routeAsync('/matchOnAnyPath/this/is/optional', 'get', {}, {}))
         .to.eventually.have.deep.property('body.routeInfoReceived._optionalPathPart', 'this/is/optional')
 
@@ -200,12 +197,6 @@ describe 'SuperRouter!', ->
       expect(routeAsync('/obj', 'put', {}, {}))
       .to.eventually.have.deep.property('headers.statusCode', 405)
 
-    it "should return available routes on options method", ->
-      expect(routeAsync('/obj', 'options', {}, {}))
-      .to.eventually.not.have.deep.property('body.handler')
-
-      expect(routeAsync('/obj', 'options', {}, {}))
-      .to.eventually.have.deep.property('headers.statusCode', 200)
 
     it "should take params from URI and add them to input", ->
       expect(routeAsync('/obj/123', 'get', {}, {}))
@@ -262,8 +253,6 @@ describe 'SuperRouter!', ->
       it 'should return 200 if validation passes', ->
         expect(routeAsync('/validate/123', 'get', {}, {}))
         .to.eventually.have.deep.property('headers.statusCode', 200)
-
-
 
     #skipping this for now, since we are not using protovalidation
     describe.skip 'proto stuff', ->
