@@ -3,8 +3,8 @@
 const chai = require('chai');
 const expect = chai.expect;
 
-const RouteTree = require('./../lib/RouteTree.js');
-const RouteTreeNode = require('./../lib/RouteTreeNode.js');
+const RouteTree = require('././RouteTree.js');
+const RouteTreeNode = require('././RouteTreeNode.js');
 
 let tree = null;
 

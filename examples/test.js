@@ -1,5 +1,5 @@
 var http = require('http'),
-    SuperRouter = require('../lib/superRouter.js'),
+    SuperRouter = require('./superRouter.js'),
     _ = require('lodash'),
     ProtoBuf = require("protobufjs"),
     path = require('path'),
