@@ -108,8 +108,14 @@ describe.only('App', () => {
       middleware1 = sinon.createStubInstance(Route);
       middleware2 = sinon.createStubInstance(Route);
 
-      errMiddleware1 = sinon.createStubInstance(Route);
-      errMiddleware2 = sinon.createStubInstance(Route);
+      errMiddleware1 = new Route({
+        handler : sinon.spy()
+      });
+      sandbox.stub(errMiddleware1, 'execute');
+      errMiddleware2 = new Route({
+        handler : sinon.spy()
+      });
+      sandbox.stub(errMiddleware2, 'execute');
 
       app.use(middleware1);
       app.use(middleware2);
@@ -223,6 +229,26 @@ describe.only('App', () => {
         expect(errMiddleware1.execute.firstCall.args[0].error).to.equal(err1);
         expect(errMiddleware2.execute).to.have.been.calledOnce;
         expect(errMiddleware2.execute.firstCall.args[0].error).to.equal(err2);
+      });
+    });
+    
+    it('should not allow a path specific error middleware to swallow a valid error condition', () => {
+      app = new App();
+
+      app.use(middleware1);
+      errMiddleware1 = new Route({
+        path : '/a/b/c',
+        method : 'get',
+        handler : sinon.spy()
+      });
+      app.useError(errMiddleware1);
+      app.useError(errMiddleware2);
+
+      const err1 = new Error('uhoh');
+      middleware1.execute.throws(err1);
+      return app.processRequest(request).then(() => {
+        expect(errMiddleware1.handler).to.not.have.been.called;
+        expect(errMiddleware2.execute).to.have.been.calledOnce;
       });
     });
 
