@@ -76,6 +76,21 @@ describe('SuperRouterRequest', () => {
         new Request({ headers : {}, path : '/', method : 'heart!' });
       }).to.throw(METHOD_ERROR);
     });
+
+    it('should allow arbitrary properties from constructor', () => {
+      const request = new Request({ headers : {}, path : '/', method : 'get', a : 1 });
+      expect(request.a).to.equal(1);
+    });
+
+    it('should allow construction from an existing request instance', () => {
+      const req1 = new Request({ headers : { b : 2 }, path : '/', method : 'get', a : 1 });
+      const req2 = new Request(req1);
+
+      expect(req2.headers).to.eql({ b : 2 });
+      expect(req2.path).to.equal('/');
+      expect(req2.method).to.equal('get');
+      expect(req2.a).to.equal(1);
+    });
   });
 
   describe('properties', () => {
@@ -106,12 +121,26 @@ describe('SuperRouterRequest', () => {
       expect(request.getHeader('a')).to.eql(undefined);
     });
 
-    _.each(['path', 'method'], (propertyName) => {
-      it(`should throw on assignment to the ${propertyName} property`, () => {
-        expect(() => {
-          request[propertyName] = 7;
-        }).to.throw('Cannot set property');
-      });
+    it('should throw if an invalid path is set', () => {
+      expect(() => {
+        request.path = 7;
+      }).to.throw('path must be a string.');
+    });
+
+    it('should normalize path when set', () => {
+      request.path = '/WoNkY/';
+      expect(request.path).to.equal('/wonky');
+    });
+
+    it('should throw if an invalid method is set', () => {
+      expect(() => {
+        request.method = 'adsf';
+      }).to.throw('method must be a valid method string.');
+    });
+
+    it('should normalize method when set', () => {
+      request.method = 'GET';
+      expect(request.method).to.equal('get');
     });
 
     it('should allow assignment of arbitrary properties', () => {
@@ -132,8 +161,8 @@ describe('SuperRouterRequest', () => {
 
     it('should be readable and writable', (done) => {
       const PassThrough = require('stream').PassThrough;
-      const inStream = new PassThrough();
-      const outStream = new PassThrough();
+      const inStream    = new PassThrough();
+      const outStream   = new PassThrough();
 
       inStream.pipe(request).pipe(outStream);
 

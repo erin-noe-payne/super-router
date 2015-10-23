@@ -265,12 +265,6 @@ describe('A Route', () => {
         });
       });
 
-      it('should not mutate the request and response objects', () => {
-        Object.freeze(request);
-        Object.freeze(response);
-        return route.execute({ request, response });
-      });
-
     });
 
     describe('on match', () => {
@@ -351,6 +345,54 @@ describe('A Route', () => {
         return route.execute({ request, response }).then(() => {
           expect(request.a).to.equal(1);
           expect(response.b).to.equal(2);
+        });
+      });
+
+      describe('routeParams', () => {
+        beforeEach(() => {
+          route = new Route({
+            path    : '/case(/:type)/:id(/*rest)',
+            method  : 'get',
+            handler : sinon.spy()
+          });
+        });
+
+        it('should create a routeParams property on the request', () => {
+          request = new Request({
+            path    : '/',
+            method  : 'get',
+            headers : {}
+          });
+          route.execute({ request, response });
+          expect(request.routeParams).to.exist;
+          expect(request.routeParams).to.eql({});
+        });
+
+        it('should overwrite an existing routeParams property', () => {
+          request             = new Request({
+            path    : '/',
+            method  : 'get',
+            headers : {}
+          });
+          request.routeParams = { a : 1 };
+          route.execute({ request, response });
+          expect(request.routeParams).to.exist;
+          expect(request.routeParams).to.eql({});
+        });
+
+        it('should represent each match from the route path on the routeParams property', () => {
+          request = new Request({
+            path    : '/case/red/17/a/b/c',
+            method  : 'get',
+            headers : {}
+          });
+          route.execute({ request, response });
+          expect(request.routeParams).to.exist;
+          expect(request.routeParams).to.eql({
+            type : 'red',
+            id   : '17',
+            rest : 'a/b/c'
+          });
         });
       });
     });

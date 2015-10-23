@@ -12,8 +12,9 @@ chai.use(sinonChai);
 
 const expect = chai.expect;
 
-const Node  = require('../lib/Node');
-const Route = require('../lib/Route');
+const Node    = require('../lib/Node');
+const Route   = require('../lib/Route');
+const Request = require('../lib/Request');
 let sandbox;
 
 describe('Node ', () => {
@@ -61,15 +62,22 @@ describe('Node ', () => {
     });
 
     it('should set the path property from the constructor', () => {
-      const node = new Node({ path : '/stuff' });
-      expect(node.path).to.equal('/stuff');
+      const node = new Node({ path : '/case' });
+      expect(node.path).to.equal('/case');
     });
 
     it('should throw on assignment to path', () => {
-      const node = new Node({ path : '/stuff' });
+      const node = new Node({ path : '/case' });
       expect(() => {
         node.path = '/asdfa';
       }).to.throw('Cannot set property');
+    });
+    
+    it('should add an options route', () => {
+      const node = new Node({ path : '/case' });
+      expect(node.getRoutes()).to.have.length(1);
+      const optsRoute = node.getRoutes()[0];
+      expect(optsRoute.method).to.equal('options');
     });
   });
 
@@ -79,16 +87,23 @@ describe('Node ', () => {
 
     beforeEach(() => {
       route = {
-        path    : '/stuff',
+        path    : '/case',
         method  : 'get',
         handler : () => {
 
         }
       };
-      node  = new Node({ path : '/stuff' });
+      node  = new Node({ path : '/case' });
+    });
+
+    describe('#_optionsHandler', () => {
+
     });
 
     describe('#addRoute', () => {
+      it('should throw if the route path does not match the node path pattern', () => {
+
+      });
 
       it('should throw if the path of the route does not match the path of the node', () => {
         route.path = '/junk';
@@ -101,40 +116,20 @@ describe('Node ', () => {
         node.addRoute(route);
         expect(() => {
           node.addRoute(route);
-        }).to.throw('duplicate method "get" added for path "/stuff"');
-      });
-    });
-
-    describe('#getRoute', () => {
-      it('should throw if input is not a string', () => {
-        expect(() => {
-          node.getRoute(7);
-        }).to.throw('First argument: method must be a string.');
-      });
-
-      it('should return an added route', () => {
-        node.addRoute(route);
-        expect(node.getRoute('get').method).to.eql(route.method);
-      });
-
-      it('should lowercase the method name', () => {
-        node.addRoute(route);
-        expect(node.getRoute('GET').method).to.eql(route.method);
+        }).to.throw('duplicate method "get" added for path "/case"');
       });
     });
 
     describe('#addChild', () => {
 
-      it('should be able to add children and be returned with getChild', () => {
+      it('should be able to add children and be returned with getChildren', () => {
         const child1 = new Node({ path : '/child1' });
         const child2 = new Node({ path : '/child2' });
         const child3 = new Node({ path : '/child3' });
         node.addChild(child1);
         node.addChild(child2);
         node.addChild(child3);
-        expect(node.getChild('/child1').path).to.equal('/child1');
-        expect(node.getChild('/child2').path).to.equal('/child2');
-        expect(node.getChild('/child3').path).to.equal('/child3');
+        expect(node.getChildren()).to.eql([child1, child2, child3]);
       });
 
       it('should throw an error if a child with a duplicate path is added', () => {
@@ -147,7 +142,7 @@ describe('Node ', () => {
 
     });
 
-    describe('#insert', () => {
+    describe('tree walkers', () => {
       let root, a, ab, az, abc, abd;
       let route;
       beforeEach(() => {
@@ -155,7 +150,7 @@ describe('Node ', () => {
         a    = new Node({ path : '/a' });
         abc  = new Node({ path : '/a/b/c' });
         abd  = new Node({ path : '/a/b/d' });
-        az  = new Node({ path : '/a/z' });
+        az   = new Node({ path : '/a/z' });
 
         root.addChild(a);
         a.addChild(az);
@@ -163,93 +158,165 @@ describe('Node ', () => {
         a.addChild(abd);
       });
 
-      it('should throw an error if the route path is not contained in the nodes path', () => {
-        const route = new Route({
-          path    : '/',
-          method  : 'get',
-          handler : sinon.spy()
+      describe('#insert', () => {
+
+        it('should throw an error if the route path is not contained in the nodes path', () => {
+          const route = new Route({
+            path    : '/',
+            method  : 'get',
+            handler : sinon.spy()
+          });
+
+          expect(() => {
+            abc.insert(route);
+          }).to.throw('Cannot insert');
         });
 
-        expect(() => {
-          abc.insert(route);
-        }).to.throw('Cannot insert');
+        it('should throw an error if the node path does not start the route path', () => {
+          const route = new Route({
+            path    : '/b/c',
+            method  : 'get',
+            handler : sinon.spy()
+          });
+
+          expect(() => {
+            abd.insert(route);
+          }).to.throw('Cannot insert');
+        });
+
+        it('should add the route to the node if the paths match', () => {
+          sandbox.spy(root, 'addRoute');
+          const route = new Route({
+            path    : '/',
+            method  : 'get',
+            handler : sinon.spy()
+          });
+          root.insert(route);
+
+          expect(root.addRoute).to.have.been.calledOnce;
+          expect(root.addRoute).to.have.been.calledWith(route);
+        });
+
+        it('should insert on a child node, if possible', () => {
+          const route = new Route({
+            path    : '/a/b/c/e',
+            method  : 'get',
+            handler : sinon.spy()
+          });
+          sinon.spy(a, 'insert');
+          sinon.spy(abc, 'insert');
+          sinon.spy(abd, 'insert');
+
+          root.insert(route);
+          expect(a.insert).to.have.been.calledWith(route);
+          expect(abc.insert).to.have.been.calledWith(route);
+          expect(abd.insert).to.not.have.been.calledWith(route);
+        });
+
+        it('should add a new child otherwise', () => {
+          const route   = new Route({
+            path    : '/a/b',
+            method  : 'get',
+            handler : sinon.spy()
+          });
+          sinon.spy(a, 'insert');
+          sinon.spy(a, 'addChild');
+
+          root.insert(route);
+          expect(a.insert).to.have.been.calledWith(route);
+          expect(a.addChild).to.have.been.calledOnce;
+          const newNode = a.addChild.firstCall.args[0];
+          expect(newNode.path).to.equal('/a/b');
+          expect(newNode.getRoutes()).to.contain(route);
+        });
+
+        it('should reassign children as needed', () => {
+          const route  = new Route({
+            path    : '/a/b',
+            method  : 'get',
+            handler : sinon.spy()
+          });
+
+          root.insert(route);
+          expect(root.getChildren()).to.eql([a]);
+          const aChildren = a.getChildren();
+          expect(aChildren).to.have.length(2);
+          expect(aChildren).to.contain(az);
+          const ab = _.find(aChildren, (child) => {
+            return child !== az;
+          });
+          expect(ab.getChildren()).to.eql([abc, abd]);
+        });
+        
+        it('should insert correctly on route patterns, regardless of param names', () => {
+          const node = new Node({ path : '/cases/:id' });
+          const route1 = new Route({
+            path    : '/cases/:id',
+            method  : 'get',
+            handler : sinon.spy()
+          });
+          const route2 = new Route({
+            path    : '/cases/:caseId',
+            method  : 'put',
+            handler : sinon.spy()
+          });
+          node.insert(route1);
+          node.insert(route2);
+
+          expect(node.getRoutes()).to.contain(route1);
+          expect(node.getRoutes()).to.contain(route2);
+        });
       });
 
-      it('should throw an error if the node path does not start the route path', () => {
-        const route = new Route({
-          path    : '/b/c',
-          method  : 'get',
-          handler : sinon.spy()
+
+      describe('#find', () => {
+        let rootGet, aGet;
+        beforeEach(() => {
+          rootGet = new Route({
+            path    : '/',
+            method  : 'get',
+            handler : sinon.spy()
+          });
+          root.addRoute(rootGet);
+
+          aGet = new Route({
+            path    : '/a',
+            method  : 'get',
+            handler : sinon.spy()
+          });
+          a.addRoute(aGet);
         });
 
-        expect(() => {
-          abd.insert(route);
-        }).to.throw('Cannot insert');
-      });
+        it('should return a match from its routes, if it exists', () => {
+          const request = new Request({
+            path    : '/',
+            method  : 'get',
+            headers : {}
+          });
 
-      it('should add the route to the node if the paths match', () => {
-        sandbox.spy(root, 'addRoute');
-        const route = new Route({
-          path    : '/',
-          method  : 'get',
-          handler : sinon.spy()
-        });
-        root.insert(route);
-
-        expect(root.addRoute).to.have.been.calledOnce;
-        expect(root.addRoute).to.have.been.calledWith(route);
-      });
-      
-      it('should insert on a child node, if possible', () => {
-        const route = new Route({
-          path    : '/a/b/c/e',
-          method  : 'get',
-          handler : sinon.spy()
-        });
-        sinon.spy(a, 'insert');
-        sinon.spy(abc, 'insert');
-        sinon.spy(abd, 'insert');
-
-        root.insert(route);
-        expect(a.insert).to.have.been.calledWith(route);
-        expect(abc.insert).to.have.been.calledWith(route);
-        expect(abd.insert).to.not.have.been.calledWith(route);
-      });
-
-      it('should add a new child otherwise', () => {
-        const route = new Route({
-          path    : '/a/b',
-          method  : 'get',
-          handler : sinon.spy()
-        });
-        sinon.spy(a, 'insert');
-        sinon.spy(a, 'addChild');
-
-        root.insert(route);
-        expect(a.insert).to.have.been.calledWith(route);
-        expect(a.addChild).to.have.been.calledOnce;
-        const newNode = a.addChild.firstCall.args[0];
-        expect(newNode.path).to.equal('/a/b');
-        expect(newNode.getRoute('get')).to.equal(route);
-      });
-
-      it('should reassign children as needed', () => {
-        const route = new Route({
-          path    : '/a/b',
-          method  : 'get',
-          handler : sinon.spy()
+          expect(root.find(request)).to.equal(rootGet);
         });
 
-        root.insert(route);
-        const abNode = a.getChild('/a/b');
-        expect(abNode).to.exist;
-        expect(a.getChild('/a/z')).to.be.exist;
-        expect(a.getChild('/a/b/c')).to.be.undefined;
-        expect(a.getChild('/a/b/d')).to.be.undefined;
-        expect(abNode.getChild('/a/b/c')).to.equal(abc);
-        expect(abNode.getChild('/a/b/d')).to.equal(abd);
+        it('should return undefined if request matches the path, but the route doesnt exist', () => {
+          const request = new Request({
+            path    : '/',
+            method  : 'post',
+            headers : {}
+          });
+
+          expect(root.find(request)).to.be.null;
+        });
+
+        it('should return a match from its children', () => {
+          const request = new Request({
+            path    : '/a',
+            method  : 'get',
+            headers : {}
+          });
+
+          expect(root.find(request)).to.equal(aGet);
+        });
       });
     });
-
   });
 });

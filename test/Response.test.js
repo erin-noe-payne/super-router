@@ -22,6 +22,79 @@ describe('SuperRouterResponse', () => {
     response = new Response();
   });
 
+  describe('constructor', () => {
+    it('should use defaults if no options are provided', () => {
+      expect(() => {
+        new Response();
+      }).to.not.throw();
+    });
+
+    it('should throw if options.headers is not defined', () => {
+      expect(() => {
+        new Response({});
+      }).to.throw('headers must be an object');
+    });
+
+    it('should throw if options.headers is not an object', () => {
+      expect(() => {
+        new Response({ headers : 7 });
+      }).to.throw('headers must be an object');
+    });
+
+    it('should throw if options.headers is not defined', () => {
+      expect(() => {
+        new Response({headers : {}});
+      }).to.throw('statusCode must be a number');
+    });
+
+    it('should throw if options.headers is not an object', () => {
+      expect(() => {
+        new Response({ headers : {}, statusCode : 'asdf' });
+      }).to.throw('statusCode must be a number');
+    });
+
+    it('should allow construction from a previous response instance', () => {
+      response.statusCode = 500;
+      response.setHeader('Content-Type', 'application/json');
+
+      const res2 = new Response(response);
+      expect(res2.statusCode).to.equal(500);
+      expect(res2.headers).to.eql({
+        'Content-Type' : 'application/json'
+      });
+    });
+
+    it('should allow arbitrary properties from the constructor', () => {
+      response.thing = 7;
+
+      const res2 = new Response(response);
+      expect(res2.thing).to.equal(7);
+    });
+
+    it('should not propagate changes from the original response to the new one', () => {
+      response.statusCode = 500;
+      response.setHeader('Content-Type', 'application/json');
+      response.a          = { b : 3 };
+      const res2          = new Response(response);
+      response.statusCode = 600;
+      response.setHeader('Content-Type', 'application/xml');
+      response.a.b        = 4;
+
+      expect(res2.statusCode).to.equal(500);
+      expect(res2.headers).to.eql({
+        'Content-Type' : 'application/json'
+      });
+      expect(res2.a.b).to.equal(4);
+    });
+
+    it('should not inherit internal state from the original response', () => {
+      response._locked = true;
+
+      const res2 = new Response(response);
+      expect(res2._locked).to.be.false;
+    });
+  });
+
   describe('statusCode', () => {
     it('should default to 200', () => {
       expect(response.statusCode).to.equal(200);

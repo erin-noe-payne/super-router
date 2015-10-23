@@ -22,7 +22,7 @@ const Route    = require('../lib/Route');
 let App;
 let app;
 
-describe.only('App', () => {
+describe('App', () => {
 
   beforeEach(() => {
     App = require('../lib/App');
@@ -134,16 +134,20 @@ describe.only('App', () => {
       expect(Q.isPromise(app.processRequest(request))).to.be.true;
     });
 
-    it('should create a new response object', () => {
+    it('should create a new response object before each execution', () => {
       const mockResponse = sinon.spy();
       App                = proxyquire('../lib/App', {
         './Response' : mockResponse
       });
       app                = new App();
 
-      app.processRequest(request);
-      expect(mockResponse).to.have.been.calledOnce;
-      expect(mockResponse).to.have.been.calledWithNew;
+      app.use(middleware1);
+      app.use(middleware2);
+
+      return app.processRequest(request).then(() => {
+        expect(mockResponse).to.have.been.calledTwice;
+        expect(mockResponse).to.have.been.calledWithNew;
+      });
     });
 
     it('should execute each route with request in the order declared', () => {
@@ -157,7 +161,7 @@ describe.only('App', () => {
       });
     });
 
-    it('should not execute the second middleware before the first one resolves', () => {
+    it('should not execute the second middleware before the first one completes', () => {
       middleware1.execute.returnsPromise();
       middleware1.execute.rejects(new Error());
 
@@ -177,6 +181,21 @@ describe.only('App', () => {
     it('should resolve with the created response object', () => {
       return app.processRequest(request).then((response) => {
         expect(response).to.be.instanceof(Response);
+      });
+    });
+
+    it('should ', () => {
+      const response = new Response({
+        headers    : {},
+        statusCode : 200,
+        a          : { b : 1 }
+      });
+
+      middleware1.execute.returnsPromise();
+      middleware1.execute.resolves(response);
+
+      return app.processRequest(request).then((response) => {
+        expect(response.a.b).to.equal(1);
       });
     });
 
@@ -231,14 +250,14 @@ describe.only('App', () => {
         expect(errMiddleware2.execute.firstCall.args[0].error).to.equal(err2);
       });
     });
-    
+
     it('should not allow a path specific error middleware to swallow a valid error condition', () => {
-      app = new App();
+      app            = new App();
 
       app.use(middleware1);
       errMiddleware1 = new Route({
-        path : '/a/b/c',
-        method : 'get',
+        path    : '/a/b/c',
+        method  : 'get',
         handler : sinon.spy()
       });
       app.useError(errMiddleware1);
