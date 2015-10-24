@@ -11,12 +11,14 @@ const fs       = require('fs');
 const path     = require('path')
 
 
+
 app.use({
   handler : (opts) => {
     const request  = opts.request;
     const response = opts.response;
 
-    fs.createReadStream(path.resolve(__dirname, 'test.txt')).pipe(response);
+    //fs.createReadStream(path.resolve(__dirname, 'test.txt')).pipe(response);
+    return fs.createReadStream(path.resolve(__dirname, 'test.txt'));
   }
 });
 
@@ -25,7 +27,22 @@ app.use({
     const request  = opts.request;
     const response = opts.response;
 
-    fs.createReadStream(path.resolve(__dirname, 'test.txt')).pipe(response);
+    return response.pipe(through2(function (chunk, enc, callback) {
+      this.push(chunk.toString().toUpperCase());
+      callback();
+    }));
+  }
+});
+
+app.use({
+  handler : (opts) => {
+    const request  = opts.request;
+    const response = opts.response;
+
+    return response.pipe(through2(function (chunk, enc, callback) {
+      this.push(`and then ${chunk.toString()}`);
+      callback();
+    }));
   }
 });
 

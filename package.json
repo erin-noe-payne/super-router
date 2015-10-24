@@ -8,6 +8,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "del": "~1.2.1",
+    "isstream": "^0.1.2",
     "lodash": "~3.9.3",
     "lr-logger": "~1.0.1",
     "promise": "^7.0.4",

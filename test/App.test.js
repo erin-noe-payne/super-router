@@ -5,8 +5,8 @@ const sinonChai         = require('sinon-chai');
 const sinonStubPromises = require('lr-sinon-promises');
 const chaiAsPromised    = require('chai-as-promised');
 const proxyquire        = require('proxyquire');
-const _                 = require('lodash');
 const Q                 = require('q');
+const Stream            = require('stream');
 
 sinonStubPromises(sinon);
 chai.use(chaiAsPromised);
@@ -134,10 +134,14 @@ describe('App', () => {
       expect(Q.isPromise(app.processRequest(request))).to.be.true;
     });
 
-    it('should create a new response object before each execution', () => {
-      const mockResponse = sinon.spy();
+    it('should create a new response object before & after each execution', () => {
+      const Response     = sinon.stub();
+      const mockResponse = {
+        pipe : sinon.spy()
+      };
+      Response.returns(mockResponse);
       App                = proxyquire('../lib/App', {
-        './Response' : mockResponse
+        './Response' : Response
       });
       app                = new App();
 
@@ -145,8 +149,11 @@ describe('App', () => {
       app.use(middleware2);
 
       return app.processRequest(request).then(() => {
-        expect(mockResponse).to.have.been.calledTwice;
-        expect(mockResponse).to.have.been.calledWithNew;
+        expect(Response).to.have.callCount(4);
+        expect(Response).to.have.been.calledWithNew;
+        expect(Response.getCall(1)).to.have.been.calledWith(mockResponse);
+        expect(Response.getCall(2)).to.have.been.calledWith(mockResponse);
+        expect(Response.getCall(3)).to.have.been.calledWith(mockResponse);
       });
     });
 
@@ -184,18 +191,15 @@ describe('App', () => {
       });
     });
 
-    it('should ', () => {
-      const response = new Response({
-        headers    : {},
-        statusCode : 200,
-        a          : { b : 1 }
-      });
+    it('should pipe into the next response if execution returns a stream', () => {
+      const stream = new Stream.Transform();
+      sinon.spy(stream, 'pipe');
 
       middleware1.execute.returnsPromise();
-      middleware1.execute.resolves(response);
+      middleware1.execute.resolves(stream);
 
       return app.processRequest(request).then((response) => {
-        expect(response.a.b).to.equal(1);
+        expect(stream.pipe).to.have.been.calledOnce;
       });
     });
 
