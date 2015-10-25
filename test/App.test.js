@@ -60,6 +60,16 @@ describe('App', () => {
       app.use(route);
       expect(mockRoute).to.not.have.been.called;
     });
+
+    it('should accept a function input and use it as a route handler', () => {
+      const opts = sinon.spy();
+      app.use(opts);
+      expect(mockRoute).to.have.been.calledOnce;
+      expect(mockRoute).to.have.been.calledWithNew;
+      expect(mockRoute).to.have.been.calledWith({
+        handler : opts
+      });
+    });
   });
 
   describe('useError', () => {
@@ -88,6 +98,16 @@ describe('App', () => {
 
       app.useError(route);
       expect(mockRoute).to.not.have.been.called;
+    });
+
+    it('should accept a function input and use it as a route handler', () => {
+      const opts = sinon.spy();
+      app.useError(opts);
+      expect(mockRoute).to.have.been.calledOnce;
+      expect(mockRoute).to.have.been.calledWithNew;
+      expect(mockRoute).to.have.been.calledWith({
+        handler : opts
+      });
     });
   });
 

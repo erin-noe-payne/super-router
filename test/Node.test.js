@@ -317,6 +317,10 @@ describe('Node ', () => {
           expect(root.find(request)).to.equal(aGet);
         });
       });
+
+      describe('#toJs', () => {
+
+      });
     });
   });
 });
