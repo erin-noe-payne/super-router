@@ -1,49 +1,41 @@
 {
   "name": "super-router",
-  "version": "1.5.6",
+  "version": "2.0.0",
   "repository": {
     "type": "git",
     "url": "http://github.schq.secious.com/WebUI/super-router"
   },
-  "main": "lib/superRouter.js",
+  "main": "lib/index.js",
   "dependencies": {
-    "del": "~1.2.1",
+    "isstream": "^0.1.2",
     "lodash": "~3.9.3",
-    "lr-logger": "~1.0.1",
-    "promise": "^7.0.4",
-    "protobufjs": "~4.0.0",
     "q": "^1.4.1",
-    "route-parser": "0.0.4",
-    "through2": "~2.0.0",
-    "uuid": "~2.0.1"
+    "route-parser": "0.0.4"
   },
   "scripts": {
     "test": "mocha test/**/*.js -w"
   },
   "devDependencies": {
-    "babel-runtime": "^5.8.20",
-    "blanket": "^1.1.7",
     "chai": "~3.0.0",
     "chai-as-promised": "~5.1.0",
-    "coffee-script": "~1.9.3",
     "eslint-config-logrhythm": "^2.0.0",
+    "lr-sinon-promises": "0.0.1",
     "mocha": "~2.2.5",
-    "sinon": "~1.15.4",
+    "proxyquire": "^1.7.3",
+    "sinon": "^1.17.2",
     "sinon-chai": "~2.8.0"
   },
   "maintainers": [
     {
-      "name": "admin",
+      "name": "Erin Noe-Payne",
+      "email": "saizul@gmail.com"
+    },
+    {
+      "name": "Chris Langager",
       "email": "chris.langager@logrhythm.com"
     }
   ],
   "publishConfig": {
     "registry": "http://usbo1part01:8081/artifactory/api/npm/npm-local"
-  },
-  "config": {
-    "blanket": {
-      "pattern": "lib",
-      "data-cover-never": "node_modules"
-    }
   }
 }
