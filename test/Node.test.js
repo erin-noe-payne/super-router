@@ -2,7 +2,7 @@
 const chai              = require('chai');
 const sinon             = require('sinon');
 const sinonChai         = require('sinon-chai');
-const sinonStubPromises = require('lr-sinon-promises');
+const sinonStubPromises = require('sinon-promises');
 const chaiAsPromised    = require('chai-as-promised');
 const _                 = require('lodash');
 
