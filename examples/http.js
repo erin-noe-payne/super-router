@@ -12,33 +12,41 @@ const path     = require('path');
 const Q        = require('q');
 
 
+
+const ContentNegotiation = SuperRouter.Middleware.ContentNegotiation;
+
+
+
+
 /*
  Objects
  */
 
+// app.use((opts) => {
+//   const request  = opts.request;
+//   const response = opts.response;
+//   const onWire   = '{"a":1}';
+//   const deferred = Q.defer();
+//
+//   setTimeout(() => {
+//     try {
+//       request.body = JSON.parse(onWire);
+//       deferred.resolve();
+//     }
+//     catch (err) {
+//       deferred.reject(err);
+//     }
+//   }, 200);
+//
+//   return deferred.promise;
+// });
+
+app.use(ContentNegotiation.request);
+
 app.use((opts) => {
   const request  = opts.request;
   const response = opts.response;
-  const onWire   = '{"a":1}';
-  const deferred = Q.defer();
 
-  setTimeout(() => {
-    try {
-      request.body = JSON.parse(onWire);
-      deferred.resolve();
-    }
-    catch (err) {
-      deferred.reject(err);
-    }
-  }, 200);
-
-  return deferred.promise;
-});
-
-app.use((opts) => {
-  const request  = opts.request;
-  const response = opts.response;
-  console.log(request.body);
   response.setBody(request.body);
 });
 
@@ -50,13 +58,7 @@ app.use((opts) => {
   response.setBody(_.extend(body, { c : 3 }));
 });
 
-app.use((opts) => {
-  const response = opts.response;
-
-  const body = response.getBody();
-
-  response.setBody(JSON.stringify(body));
-});
+app.use(ContentNegotiation.response);
 
 /*
  Router
@@ -86,17 +88,17 @@ router.addRoute({
   }
 });
 
-app.use(router.match);
-app.use(router.execute);
-app.use((opts) => {
-  const request  = opts.request;
-  const response = opts.response;
-
-  return response.pipe(through2.obj(function (chunk, enc, callback) {
-    this.push(JSON.stringify(chunk));
-    callback();
-  }));
-})
+// app.use(router.match);
+// app.use(router.execute);
+// app.use((opts) => {
+//   const request  = opts.request;
+//   const response = opts.response;
+//
+//   return response.pipe(through2.obj(function (chunk, enc, callback) {
+//     this.push(JSON.stringify(chunk));
+//     callback();
+//   }));
+// })
 
 /*
  Object stream

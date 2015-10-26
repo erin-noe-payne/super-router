@@ -96,10 +96,10 @@ describe('Request', () => {
     });
 
     it('should allow construction from an existing request instance', () => {
-      const req1 = new Request({ headers : { b : 2 }, path : '/', method : 'get', a : 1 });
+      const req1 = new Request({ headers : { 'b' : 'c' }, path : '/', method : 'get', a : 1 });
       const req2 = new Request(req1);
 
-      expect(req2.headers).to.eql({ b : 2 });
+      expect(req2.headers).to.eql({ 'b' : 'c' });
       expect(req2.path).to.equal('/');
       expect(req2.method).to.equal('get');
       expect(req2.a).to.equal(1);
@@ -109,7 +109,9 @@ describe('Request', () => {
   describe('properties', () => {
     beforeEach(() => {
       request = new Request({
-        headers : { hello : 'world' },
+        headers : { hello : 'world',
+                    HeY : 'BuDdY'
+                  },
         path    : '/',
         method  : 'get'
       });
@@ -184,6 +186,14 @@ describe('Request', () => {
     it('should allow assignment of arbitrary properties', () => {
       request.asdf = {};
       expect(request.asdf).to.eql({});
+    });
+
+    it('getting headers should not be case sensitive', () => {
+      expect(request.getHeader('HeLlO')).to.equal('world');
+    });
+
+    it('header values should be stored as lowercase', () => {
+      expect(request.getHeader('hey')).to.equal('buddy');
     });
 
   });
