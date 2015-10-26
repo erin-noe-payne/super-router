@@ -59,16 +59,17 @@ app.use({
   handler : (opts) => {
     const request  = opts.request;
     const response = opts.response;
+    const body = response.body;
+    console.log('a');
 
-    return Q().delay(500).then(() => {
-      console.log('write');
-      return response.body.write({ a : 1 });
+    console.log('write1');
+    body.write({ a : 1 });
+    Q().delay(500).then(() => {
+      console.log('write2');
+      body.write({ b : 2 });
     }).delay(500).then(() => {
-      console.log('write');
-      return response.body.write({ b : 2 });
-    }).delay(500).then(() => {
-      console.log('end');
-      return response.body.end({ c : 3 });
+      console.log('end3');
+      body.end({ c : 3 });
     });
   }
 });
@@ -77,8 +78,10 @@ app.use({
   handler : (opts) => {
     const request  = opts.request;
     const response = opts.response;
+    console.log('b');
 
     const transformed = response.body.pipe(through2.obj(function (chunk, enc, callback) {
+      console.log('2');
       this.push(_.map(chunk, (v, k) => {
         return `${v}${k}`;
       }));
@@ -92,8 +95,10 @@ app.use({
   handler : (opts) => {
     const request  = opts.request;
     const response = opts.response;
+    console.log('c');
 
     const transformed = response.body.pipe(through2.obj(function (chunk, enc, callback) {
+      console.log('3');
       this.push(JSON.stringify(chunk));
       callback();
     }));
@@ -109,7 +114,7 @@ app.use({
 //    const request  = opts.request;
 //    const response = opts.response;
 //
-//    return fs.createReadStream(path.resolve(__dirname, 'test.txt'));
+//    response.setBody(fs.createReadStream(path.resolve(__dirname, 'test.txt')));
 //  }
 //});
 //
@@ -118,9 +123,21 @@ app.use({
 //    const request  = opts.request;
 //    const response = opts.response;
 //
-//    return response.pipe(through2(function (chunk, enc, callback) {
+//    response.statusCode = (201);
+//    Q().delay(10).then(() => {
+//
+//    });
+//    let i               = 0;
+//    response.setBody(response.body.pipe(through2(function (chunk, enc, callback) {
+//      i++;
+//      if (i === 17) {
+//        callback(new Error('okokok'));
+//        //response.body.emit('error', new Error('ohfuck'));
+//      }
 //      this.push(chunk.toString().toUpperCase());
 //      callback();
+//    })).on('error', (err) => {
+//      response.body.emit('error', err);
 //    }));
 //  }
 //});
@@ -130,11 +147,19 @@ app.use({
 //    const request  = opts.request;
 //    const response = opts.response;
 //
-//    return response.pipe(through2(function (chunk, enc, callback) {
+//    response.setBody(response.body.pipe(through2(function (chunk, enc, callback) {
+//      console.log('c');
 //      this.push(` + ${chunk.toString()}`);
 //      callback();
-//    }));
+//    })));
 //  }
+//});
+//
+//app.useError((opts) => {
+//  const response = opts.response;
+//
+//  response.statusCode = 500;
+//  response.setBody('there was an error');
 //});
 
 const server = http.createServer((req, res) => {

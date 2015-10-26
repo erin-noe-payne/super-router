@@ -4,7 +4,6 @@ const sinon             = require('sinon');
 const sinonChai         = require('sinon-chai');
 const sinonStubPromises = require('lr-sinon-promises');
 const chaiAsPromised    = require('chai-as-promised');
-const _                 = require('lodash');
 const PassThrough       = require('stream').PassThrough;
 const Transform         = require('stream').Transform;
 
