@@ -144,17 +144,24 @@ describe('App', () => {
       app.useError(errMiddleware2);
     });
 
-    it('should throw if the input is not a Request object', () => {
-      expect(() => {
-        app.processRequest();
-      }).to.throw('request must be instance of a SuperRouter Request object.');
+    it('should create a new Request object if the input is not a Request object', () => {
+      const mockRequest = sinon.stub();
+      const opts        = {};
+      App               = proxyquire('../lib/App', {
+        './Request' : mockRequest
+      });
+      app = new App();
+
+      app.processRequest(opts);
+      expect(mockRequest).to.have.been.calledOnce;
+      expect(mockRequest).to.have.been.calledWith(opts);
     });
 
     it('should return a promise', () => {
       expect(Q.isPromise(app.processRequest(request))).to.be.true;
     });
 
-    it('should create a new response object before & after each execution', () => {
+    it('should create a new response object', () => {
       const Response     = sinon.stub();
       const mockResponse = {
         pipe : sinon.spy()
@@ -169,11 +176,7 @@ describe('App', () => {
       app.use(middleware2);
 
       return app.processRequest(request).then(() => {
-        expect(Response).to.have.callCount(4);
-        expect(Response).to.have.been.calledWithNew;
-        expect(Response.getCall(1)).to.have.been.calledWith(mockResponse);
-        expect(Response.getCall(2)).to.have.been.calledWith(mockResponse);
-        expect(Response.getCall(3)).to.have.been.calledWith(mockResponse);
+        expect(Response).to.have.calledOnce;
       });
     });
 
@@ -208,18 +211,6 @@ describe('App', () => {
     it('should resolve with the created response object', () => {
       return app.processRequest(request).then((response) => {
         expect(response).to.be.instanceof(Response);
-      });
-    });
-
-    it('should pipe into the next response if execution returns a stream', () => {
-      const stream = new Stream.Transform();
-      sinon.spy(stream, 'pipe');
-
-      middleware1.execute.returnsPromise();
-      middleware1.execute.resolves(stream);
-
-      return app.processRequest(request).then((response) => {
-        expect(stream.pipe).to.have.been.calledOnce;
       });
     });
 

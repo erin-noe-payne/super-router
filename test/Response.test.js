@@ -6,6 +6,7 @@ const sinonStubPromises = require('lr-sinon-promises');
 const chaiAsPromised    = require('chai-as-promised');
 const _                 = require('lodash');
 const PassThrough       = require('stream').PassThrough;
+const Transform         = require('stream').Transform;
 
 sinonStubPromises(sinon);
 chai.use(chaiAsPromised);
@@ -20,79 +21,6 @@ describe('SuperRouterResponse', () => {
 
   beforeEach(() => {
     response = new Response();
-  });
-
-  describe('constructor', () => {
-    it('should use defaults if no options are provided', () => {
-      expect(() => {
-        new Response();
-      }).to.not.throw();
-    });
-
-    it('should throw if options.headers is not defined', () => {
-      expect(() => {
-        new Response({});
-      }).to.throw('headers must be an object');
-    });
-
-    it('should throw if options.headers is not an object', () => {
-      expect(() => {
-        new Response({ headers : 7 });
-      }).to.throw('headers must be an object');
-    });
-
-    it('should throw if options.headers is not defined', () => {
-      expect(() => {
-        new Response({headers : {}});
-      }).to.throw('statusCode must be a number');
-    });
-
-    it('should throw if options.headers is not an object', () => {
-      expect(() => {
-        new Response({ headers : {}, statusCode : 'asdf' });
-      }).to.throw('statusCode must be a number');
-    });
-
-    it('should allow construction from a previous response instance', () => {
-      response.statusCode = 500;
-      response.setHeader('Content-Type', 'application/json');
-
-      const res2 = new Response(response);
-      expect(res2.statusCode).to.equal(500);
-      expect(res2.headers).to.eql({
-        'Content-Type' : 'application/json'
-      });
-    });
-
-    it('should allow arbitrary properties from the constructor', () => {
-      response.thing = 7;
-
-      const res2 = new Response(response);
-      expect(res2.thing).to.equal(7);
-    });
-
-    it('should not propagate changes from the original response to the new one', () => {
-      response.statusCode = 500;
-      response.setHeader('Content-Type', 'application/json');
-      response.a          = { b : 3 };
-      const res2          = new Response(response);
-      response.statusCode = 600;
-      response.setHeader('Content-Type', 'application/xml');
-      response.a.b        = 4;
-
-      expect(res2.statusCode).to.equal(500);
-      expect(res2.headers).to.eql({
-        'Content-Type' : 'application/json'
-      });
-      expect(res2.a.b).to.equal(4);
-    });
-
-    it('should not inherit internal state from the original response', () => {
-      response._locked = true;
-
-      const res2 = new Response(response);
-      expect(res2._locked).to.be.false;
-    });
   });
 
   describe('statusCode', () => {
@@ -154,18 +82,18 @@ describe('SuperRouterResponse', () => {
     });
   });
 
-  describe('streaming', () => {
+  describe('body', () => {
     let inStream;
     let outStream;
 
     beforeEach(() => {
       inStream  = new PassThrough();
       outStream = new PassThrough();
-      inStream.pipe(response).pipe(outStream);
+      inStream.pipe(response.body).pipe(outStream);
     });
 
     it('should extend Transform stream', () => {
-      expect(response).to.be.instanceof(require('stream').Transform);
+      expect(response.body).to.be.instanceof(Transform);
     });
 
     it('should be readable and writable', (done) => {
@@ -212,7 +140,56 @@ describe('SuperRouterResponse', () => {
       });
     });
 
+    it('should throw if you assign to body', () => {
+      expect(() => {
+        response.body = 'asdf';
+      }).to.throw('Cannot set property');
+    });
+  });
 
+  describe('#setBody', () => {
+    let inStream;
+    let outStream;
+
+    beforeEach(() => {
+      inStream  = new PassThrough();
+      outStream = new PassThrough();
+    });
+
+    it('should pipe if the input is a readable stream', (done) => {
+      inStream.end('hello world');
+
+      response.setBody(inStream);
+      response.body.pipe(outStream);
+
+      outStream.on('data', (chunk) => {
+        expect(chunk.toString()).to.equal('hello world');
+        done();
+      });
+    });
+
+    it('should .end to itself with the input value otherwise', () => {
+      response.setBody('goodbye cruel world');
+      response.body.pipe(outStream);
+
+      outStream.on('data', (chunk) => {
+        expect(chunk.toString()).to.equal('goodbye cruel world');
+        done();
+      });
+    });
+
+    it('should break piping from previous sources', (done) => {
+      inStream.end('hello world');
+      inStream.pipe(response.body);
+
+      response.setBody('goodbye cruel world');
+      response.body.pipe(outStream);
+
+      outStream.on('data', (chunk) => {
+        expect(chunk.toString()).to.equal('goodbye cruel world');
+        done();
+      });
+    });
   });
 
 });

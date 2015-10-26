@@ -22,6 +22,7 @@ describe('SuperRouterRequest', () => {
     const HEADERS_ERROR = 'headers must be an object.';
     const PATH_ERROR    = 'path must be a string.';
     const METHOD_ERROR  = 'method must be a valid method string.';
+    const BODY_ERROR    = 'body must be a readable stream.';
 
     it('should throw if options is undefined', () => {
       expect(() => {
@@ -35,13 +36,13 @@ describe('SuperRouterRequest', () => {
       }).to.throw(OPTIONS_ERROR);
     });
 
-    it('should throw if options.headers is undefined', () => {
+    it('should not throw if options.headers is undefined', () => {
       expect(() => {
         new Request({});
-      }).to.throw(HEADERS_ERROR);
+      }).to.not.throw(HEADERS_ERROR);
     });
 
-    it('should throw if options.headers is not an object', () => {
+    it('should throw if options.headers is defined and not an object', () => {
       expect(() => {
         new Request({ headers : 'asdf' });
       }).to.throw(HEADERS_ERROR);
@@ -75,6 +76,18 @@ describe('SuperRouterRequest', () => {
       expect(() => {
         new Request({ headers : {}, path : '/', method : 'heart!' });
       }).to.throw(METHOD_ERROR);
+    });
+
+    it('should not throw if options.body is undefined', () => {
+      expect(() => {
+        new Request({ headers : {}, path : '/', method : 'get' });
+      }).to.not.throw();
+    });
+
+    it('should throw if options.body is defined but not a readable stream', () => {
+      expect(() => {
+        new Request({ headers : {}, path : '/', method : 'get', body : 'asdf' });
+      }).to.throw(BODY_ERROR);
     });
 
     it('should allow arbitrary properties from constructor', () => {
@@ -143,20 +156,45 @@ describe('SuperRouterRequest', () => {
       expect(request.method).to.equal('get');
     });
 
+    it('should expose an originalPath property', () => {
+      expect(request.originalPath).to.exist;
+    });
+
+    it('should throw on assignment to originalPath', () => {
+      expect(() => {
+        request.originalPath = '/asdf';
+      }).to.throw('Cannot set property');
+    });
+
+    it('should initialize originalPath to the value of path', () => {
+      expect(request.originalPath).to.equal('/');
+    });
+
+    it('should initialize originalPath to the input originalPath, if provided', () => {
+      request.path = '/a/b/c';
+      const newReq = new Request(request);
+      expect(newReq.originalPath).to.equal('/');
+    });
+
+    it('should allow the body property to be overwritten', () => {
+      request.body = { hello : 'world' };
+      expect(request.body).to.eql({ hello : 'world' });
+    });
+
     it('should allow assignment of arbitrary properties', () => {
-      request.body = {};
-      expect(request.body).to.eql({});
+      request.asdf = {};
+      expect(request.asdf).to.eql({});
     });
 
   });
 
-  describe('streaming', () => {
+  describe('streaming body', () => {
     beforeEach(() => {
-      request = new Request({ headers : {}, path : '/', method : 'get' });
+      request = new Request({ path : '/', method : 'get' });
     });
 
-    it('should extend Transform stream', () => {
-      expect(request).to.be.instanceof(require('stream').Transform);
+    it('should be an instance of transform stream', () => {
+      expect(request.body).to.be.instanceof(require('stream').Transform);
     });
 
     it('should be readable and writable', (done) => {
@@ -164,7 +202,7 @@ describe('SuperRouterRequest', () => {
       const inStream    = new PassThrough();
       const outStream   = new PassThrough();
 
-      inStream.pipe(request).pipe(outStream);
+      inStream.pipe(request.body).pipe(outStream);
 
       inStream.end('hello world');
       outStream.on('data', (chunk) => {
