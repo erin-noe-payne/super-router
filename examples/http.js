@@ -11,10 +11,56 @@ const fs       = require('fs');
 const path     = require('path');
 const Q        = require('q');
 
+
+/*
+ Objects
+ */
+
+app.use((opts) => {
+  const request  = opts.request;
+  const response = opts.response;
+  const onWire   = '{"a":1}';
+  const deferred = Q.defer();
+
+  setTimeout(() => {
+    try {
+      request.body = JSON.parse(onWire);
+      deferred.resolve();
+    }
+    catch (err) {
+      deferred.reject(err);
+    }
+  }, 200);
+
+  return deferred.promise;
+});
+
+app.use((opts) => {
+  const request  = opts.request;
+  const response = opts.response;
+  console.log(request.body)
+  response.setBody(request.body);
+});
+
+app.use((opts) => {
+  const response = opts.response;
+
+  const body = response.getBody();
+
+  response.setBody(_.extend(body, { c : 3 }));
+});
+
+app.use((opts) => {
+  const response = opts.response;
+
+  const body = response.getBody();
+
+  response.setBody(JSON.stringify(body));
+});
+
 /*
  Router
  */
-//
 //router.addRoute({
 //  path    : '/cases',
 //  method  : 'get',
@@ -55,56 +101,67 @@ const Q        = require('q');
 /*
  Object stream
  */
-app.use({
-  handler : (opts) => {
-    const request  = opts.request;
-    const response = opts.response;
-    const body = response.body;
-    console.log('a');
-
-    console.log('write1');
-    body.write({ a : 1 });
-    Q().delay(500).then(() => {
-      console.log('write2');
-      body.write({ b : 2 });
-    }).delay(500).then(() => {
-      console.log('end3');
-      body.end({ c : 3 });
-    });
-  }
-});
-
-app.use({
-  handler : (opts) => {
-    const request  = opts.request;
-    const response = opts.response;
-    console.log('b');
-
-    const transformed = response.body.pipe(through2.obj(function (chunk, enc, callback) {
-      console.log('2');
-      this.push(_.map(chunk, (v, k) => {
-        return `${v}${k}`;
-      }));
-      callback();
-    }));
-    response.setBody(transformed);
-  }
-});
-
-app.use({
-  handler : (opts) => {
-    const request  = opts.request;
-    const response = opts.response;
-    console.log('c');
-
-    const transformed = response.body.pipe(through2.obj(function (chunk, enc, callback) {
-      console.log('3');
-      this.push(JSON.stringify(chunk));
-      callback();
-    }));
-    response.setBody(transformed);
-  }
-});
+//app.use({
+//  handler : (opts) => {
+//    const request  = opts.request;
+//    const response = opts.response;
+//    const body = response.body;
+//    console.log('a');
+//
+//    console.log('write1');
+//    body.write({ a : 1 });
+//    Q().delay(100).then(() => {
+//      console.log('write2');
+//      body.write({ b : 2 });
+//    }).delay(100).then(() => {
+//      console.log('end3');
+//      body.end({ c : 3 });
+//    });
+//  }
+//});
+//
+//app.use({
+//  handler : (opts) => {
+//    const request  = opts.request;
+//    const response = opts.response;
+//    console.log('b');
+//
+//    //Q.delay(200).then(() => {
+//    //  throw new Error('asdfasdf');
+//    //}).done();
+//
+//    setTimeout(() => {
+//      throw new Error('asdfasdf');
+//    }, 200);
+//
+//    const transform = through2.obj(function (chunk, enc, callback) {
+//      console.log('2');
+//      this.push(_.map(chunk, (v, k) => {
+//        return `${v}${k}`;
+//      }));
+//      callback();
+//    });
+//    response.body.pipe(transform);
+//    response.setBody(transform);
+//    return Q.delay(100);
+//  }
+//});
+//
+//app.use({
+//  handler : (opts) => {
+//    const request  = opts.request;
+//    const response = opts.response;
+//    console.log('c');
+//
+//    const transformed = response.body.pipe(through2.obj(function (chunk, enc, callback) {
+//      console.log('3');
+//      this.push(JSON.stringify(chunk));
+//      callback();
+//    }));
+//    response.setBody(transformed);
+//    return Q.delay(250);
+//  }
+//});
 
 /*
  Text string
@@ -171,11 +228,17 @@ const server = http.createServer((req, res) => {
   });
 
   app.processRequest(request).then((response) => {
+    // TODO: at this time all middleware is evaluated, but maybe nothing is written to the response body yet.
     res.statusCode = response.statusCode;
     _.each(response.headers, (value, key) => {
       res.setHeader(key, value);
     });
+    console.log('piped');
     response.body.pipe(res);
+    response.body.once('error', (err) => {
+      console.log('an error!', err);
+      res.end();
+    });
   }).catch((err) => {
     res.statusCode = 500;
     res.end(err.stack);

@@ -88,107 +88,89 @@ describe('SuperRouterResponse', () => {
     beforeEach(() => {
       inStream  = new PassThrough();
       outStream = new PassThrough();
-      inStream.pipe(response.body).pipe(outStream);
     });
 
-    it('should extend Transform stream', () => {
-      expect(response.body).to.be.instanceof(Transform);
-    });
-
-    it('should be readable and writable', (done) => {
-      inStream.end('hello world');
-      outStream.on('data', (chunk) => {
-        expect(chunk.toString()).to.equal('hello world');
-        done();
+    describe('property', () => {
+      beforeEach(() => {
+        inStream.pipe(response.body).pipe(outStream);
       });
-    });
 
-    it('should lock headers once data is written to the pipe', (done) => {
-      response.setHeader('Content-Type', 'application/json');
+      it('should extend Transform stream', () => {
+        expect(response.body).to.be.instanceof(Transform);
+      });
 
-      inStream.end('chunk');
-      outStream.on('data', () => {
+      it('should be readable and writable', (done) => {
+        inStream.end('hello world');
+        outStream.on('data', (chunk) => {
+          expect(chunk.toString()).to.equal('hello world');
+          done();
+        });
+      });
+
+      it('should throw if you assign to body', () => {
         expect(() => {
-          response.setHeader('Content-Type', 'application/xml');
-        }).to.throw('Cannot set headers after writing to the response.');
-        done();
+          response.body = 'asdf';
+        }).to.throw('Cannot set property');
       });
     });
 
-    it('should error on clear header once data is written to the pipe', (done) => {
-      response.setHeader('Content-Type', 'application/json');
+    describe('#setBody', () => {
 
-      inStream.end('chunk');
-      outStream.on('data', () => {
-        expect(() => {
-          response.clearHeader('Content-Type');
-        }).to.throw('Cannot set headers after writing to the response.');
-        done();
+      it('should pipe if the input is a readable stream', (done) => {
+        inStream.end('hello world');
+
+        response.setBody(inStream);
+        response.body.pipe(outStream);
+
+        outStream.on('data', (chunk) => {
+          expect(chunk.toString()).to.equal('hello world');
+          done();
+        });
+      });
+
+      it('should .end to itself with the input value otherwise', (done) => {
+        response.setBody('goodbye cruel world');
+        response.body.pipe(outStream);
+
+        outStream.on('data', (chunk) => {
+          expect(chunk.toString()).to.equal('goodbye cruel world');
+          done();
+        });
+      });
+
+      it('should break piping from previous sources', (done) => {
+        inStream.end('hello world');
+        inStream.pipe(response.body);
+
+        response.setBody('goodbye cruel world');
+        response.body.pipe(outStream);
+
+        outStream.on('data', (chunk) => {
+          expect(chunk.toString()).to.equal('goodbye cruel world');
+          done();
+        });
       });
     });
 
-    it('should lock statusCode once data is written to the pipe', (done) => {
-      response.statusCode = 404;
+    describe('#getBody', () => {
+      it('should return a reference to the body stream after construction', () => {
+        response = new Response();
 
-      inStream.end('chunk');
-      outStream.on('data', () => {
-        expect(() => {
-          response.statusCode = 405;
-        }).to.throw('Cannot set statusCode after writing to the response.');
-        done();
+        expect(response.getBody()).to.equal(response.body);
+      });
+
+      it('should return a reference to the body stream after we setBody to a readable stream ', () => {
+        response.setBody(inStream);
+        expect(response.getBody()).to.equal(response.body);
+      });
+
+      it('should return a reference to the assigned balue if we setBody to a non-stream value', () => {
+        response.setBody('hello world');
+        expect(response.getBody()).to.equal('hello world');
       });
     });
 
-    it('should throw if you assign to body', () => {
-      expect(() => {
-        response.body = 'asdf';
-      }).to.throw('Cannot set property');
-    });
   });
 
-  describe('#setBody', () => {
-    let inStream;
-    let outStream;
-
-    beforeEach(() => {
-      inStream  = new PassThrough();
-      outStream = new PassThrough();
-    });
-
-    it('should pipe if the input is a readable stream', (done) => {
-      inStream.end('hello world');
-
-      response.setBody(inStream);
-      response.body.pipe(outStream);
-
-      outStream.on('data', (chunk) => {
-        expect(chunk.toString()).to.equal('hello world');
-        done();
-      });
-    });
-
-    it('should .end to itself with the input value otherwise', () => {
-      response.setBody('goodbye cruel world');
-      response.body.pipe(outStream);
-
-      outStream.on('data', (chunk) => {
-        expect(chunk.toString()).to.equal('goodbye cruel world');
-        done();
-      });
-    });
-
-    it('should break piping from previous sources', (done) => {
-      inStream.end('hello world');
-      inStream.pipe(response.body);
-
-      response.setBody('goodbye cruel world');
-      response.body.pipe(outStream);
-
-      outStream.on('data', (chunk) => {
-        expect(chunk.toString()).to.equal('goodbye cruel world');
-        done();
-      });
-    });
-  });
 
 });
