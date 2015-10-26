@@ -15,7 +15,7 @@ const expect = chai.expect;
 const Request = require('./..').Request;
 let request;
 
-describe('SuperRouterRequest', () => {
+describe('Request', () => {
 
   describe('constructor', () => {
     const OPTIONS_ERROR = 'options must be an object.';

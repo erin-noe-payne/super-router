@@ -38,7 +38,7 @@ app.use((opts) => {
 app.use((opts) => {
   const request  = opts.request;
   const response = opts.response;
-  console.log(request.body)
+  console.log(request.body);
   response.setBody(request.body);
 });
 
@@ -61,42 +61,42 @@ app.use((opts) => {
 /*
  Router
  */
-//router.addRoute({
-//  path    : '/cases',
-//  method  : 'get',
-//  handler : () => {
-//
-//  }
-//});
-//
-//router.addRoute({
-//  path    : '/a/b/c',
-//  method  : 'get',
-//  handler : () => {
-//
-//  }
-//});
-//
-//
-//router.addRoute({
-//  path    : '/a/b',
-//  method  : 'get',
-//  handler : () => {
-//
-//  }
-//});
-//
-//app.use(router.match);
-//app.use(router.execute);
-//app.use((opts) => {
-//  const request  = opts.request;
-//  const response = opts.response;
-//
-//  return response.pipe(through2.obj(function (chunk, enc, callback) {
-//    this.push(JSON.stringify(chunk));
-//    callback();
-//  }));
-//})
+router.addRoute({
+  path    : '/cases',
+  method  : 'get',
+  handler : () => {
+
+  }
+});
+
+router.addRoute({
+  path    : '/a/b/c',
+  method  : 'get',
+  handler : () => {
+
+  }
+});
+
+
+router.addRoute({
+  path    : '/a/b',
+  method  : 'get',
+  handler : () => {
+
+  }
+});
+
+app.use(router.match);
+app.use(router.execute);
+app.use((opts) => {
+  const request  = opts.request;
+  const response = opts.response;
+
+  return response.pipe(through2.obj(function (chunk, enc, callback) {
+    this.push(JSON.stringify(chunk));
+    callback();
+  }));
+})
 
 /*
  Object stream

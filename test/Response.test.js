@@ -16,7 +16,7 @@ const expect = chai.expect;
 const Response = require('./..').Response;
 let response;
 
-describe('SuperRouterResponse', () => {
+describe('Response', () => {
 
   beforeEach(() => {
     response = new Response();

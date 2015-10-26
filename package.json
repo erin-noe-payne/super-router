@@ -7,23 +7,15 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "del": "~1.2.1",
     "isstream": "^0.1.2",
     "lodash": "~3.9.3",
-    "lr-logger": "~1.0.1",
-    "promise": "^7.0.4",
-    "protobufjs": "~4.0.0",
     "q": "^1.4.1",
-    "route-parser": "0.0.4",
-    "through2": "~2.0.0",
-    "uuid": "~2.0.1"
+    "route-parser": "0.0.4"
   },
   "scripts": {
     "test": "mocha test/**/*.js -w"
   },
   "devDependencies": {
-    "babel-runtime": "^5.8.20",
-    "blanket": "^1.1.7",
     "chai": "~3.0.0",
     "chai-as-promised": "~5.1.0",
     "eslint-config-logrhythm": "^2.0.0",
@@ -35,17 +27,15 @@
   },
   "maintainers": [
     {
-      "name": "admin",
+      "name": "Erin Noe-Payne",
+      "email": "saizul@gmail.com"
+    },
+    {
+      "name": "Chris Langager",
       "email": "chris.langager@logrhythm.com"
     }
   ],
   "publishConfig": {
     "registry": "http://usbo1part01:8081/artifactory/api/npm/npm-local"
-  },
-  "config": {
-    "blanket": {
-      "pattern": "lib",
-      "data-cover-never": "node_modules"
-    }
   }
 }
