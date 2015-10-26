@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "repository": {
     "type": "git",
-    "url": "http://github.schq.secious.com/WebUI/super-router"
+    "url": "https://github.com/autoric/super-router"
   },
   "main": "lib/index.js",
   "dependencies": {
@@ -18,8 +18,7 @@
   "devDependencies": {
     "chai": "~3.0.0",
     "chai-as-promised": "~5.1.0",
-    "eslint-config-logrhythm": "^2.0.0",
-    "lr-sinon-promises": "0.0.1",
+    "sinon-promises": "^1.0.0",
     "mocha": "~2.2.5",
     "proxyquire": "^1.7.3",
     "sinon": "^1.17.2",
@@ -34,8 +33,5 @@
       "name": "Chris Langager",
       "email": "chris.langager@logrhythm.com"
     }
-  ],
-  "publishConfig": {
-    "registry": "http://usbo1part01:8081/artifactory/api/npm/npm-local"
-  }
+  ]
 }
