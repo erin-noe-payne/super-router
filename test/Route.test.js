@@ -118,6 +118,11 @@ describe('A Route', () => {
       expect(route.path).to.equal('/a/b/c');
     });
 
+    it('should lowercase path parts that are NOT route params', () => {
+      route = new Route({ path : '/CaSes/:caseId/THINg', method : 'get', handler : handler });
+      expect(route.path).to.equal('/cases/:caseId/thing');
+    });
+
     it('should normalize method name', () => {
       route = new Route({ path : '/a/b/c', method : 'GeT', handler : handler });
       expect(route.method).to.equal('get');
