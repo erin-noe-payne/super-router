@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">lib/Response.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <a data-ice="repoURL" href="https://github.com/autoric/super-router" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">lib/Response.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+const _                = require(&apos;lodash&apos;);
+const TransformStream  = require(&apos;stream&apos;).Transform;
+const isReadableStream = require(&apos;isstream&apos;).isReadable;
+
+/**
+ * SuperRouter Response object.
+ */
+class Response {
+  constructor() {
+    this.setBody();
+
+    this._headers   = new Map();
+    this.statusCode = 200;
+  }
+
+  /**
+   * Gets the status code of the response.
+   * @returns {number} - the status code
+   */
+  get statusCode() {
+    return this._statusCode;
+  }
+
+  /**
+   * Sets the status code of the response.
+   * @param {number} val - The new status code
+   * @returns {void}
+   */
+  set statusCode(val) {
+    if (!_.isNumber(val)) {
+      throw new TypeError(&apos;statusCode must be a number.&apos;);
+    }
+    this._statusCode = val;
+  }
+
+  /**
+   * Gets the headers of the response as a plain object. Response header key / value pairs are all
+   * lower-cased.
+   * @returns {Object} - Response headers
+   */
+  get headers() {
+    const obj = {};
+    for (const kv of this._headers) {
+      obj[kv[0]] = kv[1];
+    }
+
+    return obj;
+  }
+
+  /**
+   * Gets the value of a response header. Keys are case-insensitive. Returns undefined if the header
+   * is not set.
+   * @param {string} key - the header key
+   * @returns {string} - the header value.
+   */
+  getHeader(key) {
+    return this._headers.get(key);
+  }
+
+  /**
+   * Sets the value of a response header. Keys and values are case-insensitive.
+   * @param {string} key - the response header key
+   * @param {string} value - the response header value
+   * @returns {void}
+   */
+  setHeader(key, value) {
+    if (!_.isString(key)) {
+      throw new TypeError(&apos;First argument: key must be a string.&apos;);
+    }
+    if (!_.isString(value)) {
+      throw new TypeError(&apos;Second argument: value must be a string.&apos;);
+    }
+    this._headers.set(key, value);
+  }
+
+  /**
+   * Clears the value of a response header.
+   * @param {string} key - the response header to clear
+   * @returns {void}
+   */
+  clearHeader(key) {
+    this._headers.delete(key);
+  }
+
+  /**
+   * Returns the underlying response body stream.
+   * @returns {TransformStream} - The response body stream.
+   */
+  get body() {
+    return this._body;
+  }
+
+  /**
+   * Returns the response body according to how it was most recently set. If the body is being
+   * used as a stream, will return the body stream. If the body is being written with values, will
+   * return the last assigned value.
+   * @returns {*} - The response body value
+   */
+  getBody() {
+    return this._lastAssignedBody;
+  }
+
+  /**
+   * Sets the value of the response body. If the value is a readable stream, it will be piped into
+   * the underlying response body stream. If the value is plain type, it will be written to the
+   * underlying body stream.
+   * @param {ReadableStream|*} body - The new body value
+   * @returns {void}
+   */
+  setBody(body) {
+    this._body             = new TransformStream({ objectMode : true });
+    this._body._transform  = function (chunk, encoding, done) {
+      return done(null, chunk);
+    };
+    this._lastAssignedBody = this._body;
+
+    if (isReadableStream(body)) {
+      body.pipe(this._body);
+      body.on(&apos;error&apos;, (err) =&gt; {
+        this._body.emit(&apos;error&apos;, err);
+      });
+    }
+    else if (!_.isUndefined(body)) {
+      this._body.end(body);
+      this._lastAssignedBody = body;
+    }
+  }
+
+}
+
+module.exports = Response;
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.1)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

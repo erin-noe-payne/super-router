@@ -1,0 +1,27 @@
+{
+  "coverage": "100%",
+  "expectCount": 29,
+  "actualCount": 29,
+  "files": {
+    "lib/App.js": {
+      "expectCount": 4,
+      "actualCount": 4,
+      "undocumentLines": []
+    },
+    "lib/Request.js": {
+      "expectCount": 11,
+      "actualCount": 11,
+      "undocumentLines": []
+    },
+    "lib/Response.js": {
+      "expectCount": 10,
+      "actualCount": 10,
+      "undocumentLines": []
+    },
+    "lib/Router.js": {
+      "expectCount": 4,
+      "actualCount": 4,
+      "undocumentLines": []
+    }
+  }
+}

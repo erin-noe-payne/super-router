@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">test/Request.test.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <a data-ice="repoURL" href="https://github.com/autoric/super-router" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">test/Request.test.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+const chai              = require(&apos;chai&apos;);
+const sinon             = require(&apos;sinon&apos;);
+const sinonChai         = require(&apos;sinon-chai&apos;);
+const sinonStubPromises = require(&apos;sinon-promises&apos;);
+const chaiAsPromised    = require(&apos;chai-as-promised&apos;);
+const _                 = require(&apos;lodash&apos;);
+
+sinonStubPromises(sinon);
+chai.use(chaiAsPromised);
+chai.use(sinonChai);
+
+const expect = chai.expect;
+
+const Request = require(&apos;./..&apos;).Request;
+let request;
+
+describe(&apos;Request&apos;, () =&gt; {
+
+  describe(&apos;constructor&apos;, () =&gt; {
+    const OPTIONS_ERROR = &apos;options must be an object.&apos;;
+    const HEADERS_ERROR = &apos;headers must be an object.&apos;;
+    const PATH_ERROR    = &apos;path must be a string.&apos;;
+    const METHOD_ERROR  = &apos;method must be a valid method string.&apos;;
+    const BODY_ERROR    = &apos;body must be a readable stream.&apos;;
+
+    it(&apos;should throw if options is undefined&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Request();
+      }).to.throw(OPTIONS_ERROR);
+    });
+
+    it(&apos;should throw if options is not an object&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Request(&apos;asdf&apos;);
+      }).to.throw(OPTIONS_ERROR);
+    });
+
+    it(&apos;should not throw if options.headers is undefined&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Request({});
+      }).to.not.throw(HEADERS_ERROR);
+    });
+
+    it(&apos;should throw if options.headers is defined and not an object&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Request({ headers : &apos;asdf&apos; });
+      }).to.throw(HEADERS_ERROR);
+    });
+
+    it(&apos;should throw if options.path is undefined&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Request({ headers : {} });
+      }).to.throw(PATH_ERROR);
+    });
+
+    it(&apos;should throw if options.path is not a string&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Request({ headers : {}, path : 7 });
+      }).to.throw(PATH_ERROR);
+    });
+
+    it(&apos;should throw if options.method is undefined&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Request({ headers : {}, path : &apos;/&apos; });
+      }).to.throw(METHOD_ERROR);
+    });
+
+    it(&apos;should throw if options.method is not a string&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Request({ headers : {}, path : &apos;/&apos;, method : 7 });
+      }).to.throw(METHOD_ERROR);
+    });
+
+    it(&apos;should throw if options.method is not an allowed method value&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Request({ headers : {}, path : &apos;/&apos;, method : &apos;heart!&apos; });
+      }).to.throw(METHOD_ERROR);
+    });
+
+    it(&apos;should not throw if options.body is undefined&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Request({ headers : {}, path : &apos;/&apos;, method : &apos;get&apos; });
+      }).to.not.throw();
+    });
+
+    it(&apos;should throw if options.body is defined but not a readable stream&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Request({ headers : {}, path : &apos;/&apos;, method : &apos;get&apos;, body : &apos;asdf&apos; });
+      }).to.throw(BODY_ERROR);
+    });
+
+    it(&apos;should allow arbitrary properties from constructor&apos;, () =&gt; {
+      const request = new Request({ headers : {}, path : &apos;/&apos;, method : &apos;get&apos;, a : 1 });
+      expect(request.a).to.equal(1);
+    });
+
+    it(&apos;should allow construction from an existing request instance&apos;, () =&gt; {
+      const req1 = new Request({ headers : { &apos;b&apos; : &apos;c&apos; }, path : &apos;/&apos;, method : &apos;get&apos;, a : 1 });
+      const req2 = new Request(req1);
+
+      expect(req2.headers).to.eql({ &apos;b&apos; : &apos;c&apos; });
+      expect(req2.path).to.equal(&apos;/&apos;);
+      expect(req2.method).to.equal(&apos;get&apos;);
+      expect(req2.a).to.equal(1);
+    });
+  });
+
+  describe(&apos;properties&apos;, () =&gt; {
+    beforeEach(() =&gt; {
+      request = new Request({
+        headers : { hello : &apos;world&apos;,
+                    HeY : &apos;BuDdY&apos;
+                  },
+        path    : &apos;/&apos;,
+        method  : &apos;get&apos;
+      });
+    });
+
+    it(&apos;should set properties based on constructed values&apos;, () =&gt; {
+      expect(request.getHeader(&apos;hello&apos;)).to.equal(&apos;world&apos;);
+      expect(request.path).to.equal(&apos;/&apos;);
+      expect(request.method).to.equal(&apos;get&apos;);
+    });
+
+    it(&apos;should defensively copy to protect itself from upstream changes on the headers object&apos;, () =&gt; {
+      const headers = {};
+      request       = new Request({
+        headers : headers,
+        path    : &apos;/&apos;,
+        method  : &apos;get&apos;
+      });
+
+      headers.a = 1;
+
+      expect(request.getHeader(&apos;a&apos;)).to.eql(undefined);
+    });
+
+    it(&apos;should throw if an invalid path is set&apos;, () =&gt; {
+      expect(() =&gt; {
+        request.path = 7;
+      }).to.throw(&apos;path must be a string.&apos;);
+    });
+
+    it(&apos;should normalize path when set&apos;, () =&gt; {
+      request.path = &apos;/WoNkY/&apos;;
+      expect(request.path).to.equal(&apos;/wonky&apos;);
+    });
+
+    it(&apos;should throw if an invalid method is set&apos;, () =&gt; {
+      expect(() =&gt; {
+        request.method = &apos;adsf&apos;;
+      }).to.throw(&apos;method must be a valid method string.&apos;);
+    });
+
+    it(&apos;should normalize method when set&apos;, () =&gt; {
+      request.method = &apos;GET&apos;;
+      expect(request.method).to.equal(&apos;get&apos;);
+    });
+
+    it(&apos;should expose an originalPath property&apos;, () =&gt; {
+      expect(request.originalPath).to.exist;
+    });
+
+    it(&apos;should throw on assignment to originalPath&apos;, () =&gt; {
+      expect(() =&gt; {
+        request.originalPath = &apos;/asdf&apos;;
+      }).to.throw(&apos;Cannot set property&apos;);
+    });
+
+    it(&apos;should initialize originalPath to the value of path&apos;, () =&gt; {
+      expect(request.originalPath).to.equal(&apos;/&apos;);
+    });
+
+    it(&apos;should initialize originalPath to the input originalPath, if provided&apos;, () =&gt; {
+      request.path = &apos;/a/b/c&apos;;
+      const newReq = new Request(request);
+      expect(newReq.originalPath).to.equal(&apos;/&apos;);
+    });
+
+    it(&apos;should allow the body property to be overwritten&apos;, () =&gt; {
+      request.body = { hello : &apos;world&apos; };
+      expect(request.body).to.eql({ hello : &apos;world&apos; });
+    });
+
+    it(&apos;should allow assignment of arbitrary properties&apos;, () =&gt; {
+      request.asdf = {};
+      expect(request.asdf).to.eql({});
+    });
+
+    it(&apos;getting headers should not be case sensitive&apos;, () =&gt; {
+      expect(request.getHeader(&apos;HeLlO&apos;)).to.equal(&apos;world&apos;);
+    });
+
+    it(&apos;header values should be stored as lowercase&apos;, () =&gt; {
+      expect(request.getHeader(&apos;hey&apos;)).to.equal(&apos;buddy&apos;);
+    });
+
+  });
+
+  describe(&apos;streaming body&apos;, () =&gt; {
+    beforeEach(() =&gt; {
+      request = new Request({ path : &apos;/&apos;, method : &apos;get&apos; });
+    });
+
+    it(&apos;should be an instance of transform stream&apos;, () =&gt; {
+      expect(request.body).to.be.instanceof(require(&apos;stream&apos;).Transform);
+    });
+
+    it(&apos;should be readable and writable&apos;, (done) =&gt; {
+      const PassThrough = require(&apos;stream&apos;).PassThrough;
+      const inStream    = new PassThrough();
+      const outStream   = new PassThrough();
+
+      inStream.pipe(request.body).pipe(outStream);
+
+      inStream.end(&apos;hello world&apos;);
+      outStream.on(&apos;data&apos;, (chunk) =&gt; {
+        expect(chunk.toString()).to.equal(&apos;hello world&apos;);
+        done();
+      });
+    });
+  });
+
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.1)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
