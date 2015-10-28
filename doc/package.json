@@ -1,0 +1,42 @@
+{
+  "name": "super-router",
+  "version": "2.0.3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/autoric/super-router"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "esdoc": "^0.4.1",
+    "isstream": "^0.1.2",
+    "lodash": "^3.9.3",
+    "q": "^1.4.1",
+    "route-parser": "0.0.4"
+  },
+  "scripts": {
+    "test": "mocha test/**/*.js -w",
+    "lint": "eslint lib test",
+    "doc": "istanbul cover ./node_modules/.bin/_mocha -- test -R spec && esdoc -c esdoc.json && gh-pages -d . -s {doc,coverage}/**/*"
+  },
+  "devDependencies": {
+    "chai": "^3.0.0",
+    "chai-as-promised": "^5.1.0",
+    "gh-pages": "^0.4.0",
+    "istanbul": "^0.4.0",
+    "mocha": "^2.2.5",
+    "proxyquire": "^1.7.3",
+    "sinon": "^1.17.2",
+    "sinon-chai": "^2.8.0",
+    "sinon-promises": "^1.0.0"
+  },
+  "maintainers": [
+    {
+      "name": "Erin Noe-Payne",
+      "email": "saizul@gmail.com"
+    },
+    {
+      "name": "Chris Langager",
+      "email": "chris.langager@logrhythm.com"
+    }
+  ]
+}
