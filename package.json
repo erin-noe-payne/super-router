@@ -16,20 +16,12 @@
   "scripts": {
     "test": "mocha test/**/*.js -w",
     "lint": "eslint lib test",
-    "doc": "esdoc -c esdoc.json",
-    "ghpages" : "gh-pages-deploy"
-  },
-  "gh-pages-deploy": {
-    "staticpath": "doc",
-    "prep": [
-      "doc"
-    ],
-    "noprompt": false
+    "doc": "esdoc -c esdoc.json && gh-pages -d doc",
   },
   "devDependencies": {
     "chai": "^3.0.0",
     "chai-as-promised": "^5.1.0",
-    "gh-pages-deploy": "^0.3.0",
+    "gh-pages": "^0.4.0",
     "mocha": "^2.2.5",
     "proxyquire": "^1.7.3",
     "sinon": "^1.17.2",
