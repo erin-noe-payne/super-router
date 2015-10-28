@@ -27,7 +27,8 @@
     "proxyquire": "^1.7.3",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
-    "sinon-promises": "^1.0.0"
+    "sinon-promises": "^1.0.0",
+    "through2": "^2.0.0"
   },
   "maintainers": [
     {

@@ -7,75 +7,36 @@ const app      = new SuperRouter.App();
 const router   = new SuperRouter.Router();
 const _        = require('lodash');
 const through2 = require('through2');
-const fs       = require('fs');
-const path     = require('path');
-const Q        = require('q');
-
-
-
-const ContentNegotiation = SuperRouter.Middleware.ContentNegotiation;
-
-
-
-
-/*
- Objects
- */
-
-// app.use((opts) => {
-//   const request  = opts.request;
-//   const response = opts.response;
-//   const onWire   = '{"a":1}';
-//   const deferred = Q.defer();
-//
-//   setTimeout(() => {
-//     try {
-//       request.body = JSON.parse(onWire);
-//       deferred.resolve();
-//     }
-//     catch (err) {
-//       deferred.reject(err);
-//     }
-//   }, 200);
-//
-//   return deferred.promise;
-// });
-
-app.use(ContentNegotiation.request);
-
-app.use((opts) => {
-  const request  = opts.request;
-  const response = opts.response;
-
-  response.setBody(request.body);
-});
-
-app.use((opts) => {
-  const response = opts.response;
-
-  const body = response.getBody();
-
-  response.setBody(_.extend(body, { c : 3 }));
-});
-
-app.use(ContentNegotiation.response);
 
 /*
  Router
  */
 router.addRoute({
+  path    : '/',
+  method  : 'get',
+  handler : (opts) => {
+    const request  = opts.request;
+    const response = opts.response;
+
+    response.setBody({ hello : 'world' });
+  }
+});
+
+router.addRoute({
   path    : '/cases',
   method  : 'get',
-  handler : () => {
-
+  handler : (opts) => {
+    const request  = opts.request;
+    const response = opts.response;
   }
 });
 
 router.addRoute({
   path    : '/a/b/c',
   method  : 'get',
-  handler : () => {
-
+  handler : (opts) => {
+    const request  = opts.request;
+    const response = opts.response;
   }
 });
 
@@ -83,22 +44,23 @@ router.addRoute({
 router.addRoute({
   path    : '/a/b',
   method  : 'get',
-  handler : () => {
-
+  handler : (opts) => {
+    const request  = opts.request;
+    const response = opts.response;
   }
 });
 
-// app.use(router.match);
-// app.use(router.execute);
-// app.use((opts) => {
-//   const request  = opts.request;
-//   const response = opts.response;
-//
-//   return response.pipe(through2.obj(function (chunk, enc, callback) {
-//     this.push(JSON.stringify(chunk));
-//     callback();
-//   }));
-// })
+app.use(router.match);
+app.use(router.execute);
+app.use((opts) => {
+  const request  = opts.request;
+  const response = opts.response;
+
+  response.setBody(response.body.pipe(through2.obj(function (chunk, enc, callback) {
+    this.push(JSON.stringify(chunk));
+    callback();
+  })));
+})
 
 /*
  Object stream
