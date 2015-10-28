@@ -7,22 +7,28 @@
   },
   "main": "lib/index.js",
   "dependencies": {
+    "esdoc": "^0.4.1",
     "isstream": "^0.1.2",
-    "lodash": "~3.9.3",
+    "lodash": "^3.9.3",
     "q": "^1.4.1",
     "route-parser": "0.0.4"
   },
   "scripts": {
-    "test": "mocha test/**/*.js -w"
+    "test": "mocha test/**/*.js -w",
+    "lint": "eslint lib test",
+    "doc": "istanbul cover ./node_modules/.bin/_mocha -- test -R spec && esdoc -c esdoc.json && gh-pages -d . -s '{doc,coverage}/**/*'"
   },
   "devDependencies": {
-    "chai": "~3.0.0",
-    "chai-as-promised": "~5.1.0",
-    "sinon-promises": "^1.0.0",
-    "mocha": "~2.2.5",
+    "chai": "^3.0.0",
+    "chai-as-promised": "^5.1.0",
+    "gh-pages": "^0.4.0",
+    "istanbul": "^0.4.0",
+    "mocha": "^2.2.5",
     "proxyquire": "^1.7.3",
     "sinon": "^1.17.2",
-    "sinon-chai": "~2.8.0"
+    "sinon-chai": "^2.8.0",
+    "sinon-promises": "^1.0.0",
+    "through2": "^2.0.0"
   },
   "maintainers": [
     {

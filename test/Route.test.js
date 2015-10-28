@@ -144,6 +144,12 @@ describe('A Route', () => {
       expect(route.a).to.equal(1);
       expect(route.b).to.equal('AHHH');
     });
+
+    it('should not allow arbitrary parameters to overwrite internal state', () => {
+      route = new Route(_.extend({}, opts, { _path : 'okthen?' }));
+
+      expect(route.path).to.equal('/');
+    });
   });
 
   describe('isMatch', () => {
@@ -373,7 +379,7 @@ describe('A Route', () => {
       describe('routeParams', () => {
         beforeEach(() => {
           route = new Route({
-            path    : '/case(/:type)/:id(/*rest)',
+            path    : '/user(/:type)/:id(/*rest)',
             method  : 'get',
             handler : sinon.spy()
           });
@@ -404,7 +410,7 @@ describe('A Route', () => {
 
         it('should represent each match from the route path on the routeParams property', () => {
           request = new Request({
-            path    : '/case/red/17/a/b/c',
+            path    : '/user/red/17/a/b/c',
             method  : 'get',
             headers : {}
           });

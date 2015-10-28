@@ -62,19 +62,19 @@ describe('Node ', () => {
     });
 
     it('should set the path property from the constructor', () => {
-      const node = new Node({ path : '/case' });
-      expect(node.path).to.equal('/case');
+      const node = new Node({ path : '/user' });
+      expect(node.path).to.equal('/user');
     });
 
     it('should throw on assignment to path', () => {
-      const node = new Node({ path : '/case' });
+      const node = new Node({ path : '/user' });
       expect(() => {
         node.path = '/asdfa';
       }).to.throw('Cannot set property');
     });
     
     it('should add an options route', () => {
-      const node = new Node({ path : '/case' });
+      const node = new Node({ path : '/user' });
       expect(node.getRoutes()).to.have.length(1);
       const optsRoute = node.getRoutes()[0];
       expect(optsRoute.method).to.equal('options');
@@ -87,13 +87,13 @@ describe('Node ', () => {
 
     beforeEach(() => {
       route = {
-        path    : '/case',
+        path    : '/user',
         method  : 'get',
         handler : () => {
 
         }
       };
-      node  = new Node({ path : '/case' });
+      node  = new Node({ path : '/user' });
     });
 
     describe('#_optionsHandler', () => {
@@ -116,7 +116,7 @@ describe('Node ', () => {
         node.addRoute(route);
         expect(() => {
           node.addRoute(route);
-        }).to.throw('duplicate method "get" added for path "/case"');
+        }).to.throw('duplicate method "get" added for path "/user"');
       });
     });
 
@@ -249,14 +249,14 @@ describe('Node ', () => {
         });
         
         it('should insert correctly on route patterns, regardless of param names', () => {
-          const node = new Node({ path : '/cases/:id' });
+          const node = new Node({ path : '/users/:id' });
           const route1 = new Route({
-            path    : '/cases/:id',
+            path    : '/users/:id',
             method  : 'get',
             handler : sinon.spy()
           });
           const route2 = new Route({
-            path    : '/cases/:caseId',
+            path    : '/users/:userId',
             method  : 'put',
             handler : sinon.spy()
           });
@@ -318,7 +318,7 @@ describe('Node ', () => {
         });
       });
 
-      describe('#toJs', () => {
+      describe('#toObject', () => {
 
       });
     });

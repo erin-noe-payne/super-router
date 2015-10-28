@@ -99,13 +99,13 @@ describe('Router ', () => {
       router = new Router();
 
       router.addRoute({
-        path    : '/case/:id',
+        path    : '/user/:id',
         method  : 'post',
         handler : sinon.spy()
       });
 
       router.addRoute({
-        path    : '/case/:id',
+        path    : '/user/:id',
         method  : 'get',
         handler : sinon.spy()
       });
