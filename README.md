@@ -1,5 +1,9 @@
 # Super Router
 
+[API Docs](http://autoric.github.io/super-router/doc/)
+
+[Code coverage Report](http://autoric.github.io/super-router/coverage/lcov-report/)
+
 ```
 const SuperRouter = require('super-router');
 const app      = new SuperRouter.App();
