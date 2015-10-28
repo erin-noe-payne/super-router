@@ -16,7 +16,7 @@
   "scripts": {
     "test": "mocha test/**/*.js -w",
     "lint": "eslint lib test",
-    "doc": "istanbul cover ./node_modules/.bin/_mocha -- test -R spec && esdoc -c esdoc.json && gh-pages -d . -s {doc,coverage}/**/*"
+    "doc": "istanbul cover ./node_modules/.bin/_mocha -- test -R spec && esdoc -c esdoc.json && gh-pages -d . -s '{doc,coverage}/**/*'"
   },
   "devDependencies": {
     "chai": "^3.0.0",
