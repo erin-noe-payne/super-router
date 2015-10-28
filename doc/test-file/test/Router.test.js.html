@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">test/Router.test.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <a data-ice="repoURL" href="https://github.com/autoric/super-router" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">test/Router.test.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+const chai              = require(&apos;chai&apos;);
+const sinon             = require(&apos;sinon&apos;);
+const sinonChai         = require(&apos;sinon-chai&apos;);
+const sinonStubPromises = require(&apos;sinon-promises&apos;);
+const chaiAsPromised    = require(&apos;chai-as-promised&apos;);
+const proxyquire        = require(&apos;proxyquire&apos;);
+const _                 = require(&apos;lodash&apos;);
+
+sinonStubPromises(sinon);
+chai.use(chaiAsPromised);
+chai.use(sinonChai);
+
+const expect  = chai.expect;
+const sandbox = sinon.sandbox.create();
+
+const Route    = require(&apos;../lib/Route&apos;);
+const Request  = require(&apos;../lib/Request&apos;);
+const Response = require(&apos;../lib/Response&apos;);
+
+let Router;
+let router;
+let mockTree;
+let request;
+let response;
+
+describe(&apos;Router &apos;, () =&gt; {
+  beforeEach(() =&gt; {
+    delete require.cache[require.resolve(&apos;../lib/Router&apos;)];
+
+    const RouteTree = require(&apos;../lib/RouteTree&apos;);
+    mockTree        = sinon.createStubInstance(RouteTree);
+
+    Router = proxyquire(&apos;../lib/Router&apos;, {
+      &apos;./RouteTree&apos; : sinon.stub().returns(mockTree)
+    });
+    router = new Router();
+  });
+
+  afterEach(() =&gt; {
+    sandbox.restore();
+  });
+
+  describe(&apos;#addRoute&apos;, () =&gt; {
+    it(&apos;should construct a new Route object from the input&apos;, () =&gt; {
+      const mockRoute = sinon.stub();
+      const route     = sinon.createStubInstance(Route);
+      mockRoute.returns({
+        path : &apos;&apos;
+      });
+      Router          = proxyquire(&apos;../lib/Router&apos;, {
+        &apos;./Route&apos;     : mockRoute,
+        &apos;./RouteTree&apos; : sinon.stub().returns(mockTree)
+      });
+
+      const opts = {};
+      router     = new Router();
+      router.addRoute(opts);
+      expect(mockRoute).to.have.been.calledOnce;
+      expect(mockRoute).to.have.been.calledWithNew;
+      expect(mockRoute).to.have.been.calledWith(opts);
+    });
+
+    it(&apos;should add the new route to its tree&apos;, () =&gt; {
+      const route = new Route({
+        path    : &apos;/&apos;,
+        method  : &apos;get&apos;,
+        handler : sinon.spy()
+      });
+      router.addRoute(route);
+
+      expect(mockTree.addRoute).to.have.been.calledOnce;
+      expect(mockTree.addRoute).to.have.been.calledWith(route);
+    });
+
+    it(&apos;should throw an error if the route contains a splat&apos;, () =&gt; {
+      expect(() =&gt; {
+        router.addRoute({
+          path    : &apos;/*start/foo&apos;,
+          method  : &apos;get&apos;,
+          handler : sinon.spy()
+        });
+      }).to.throw(&apos;Splats and optional groups are not supported for routes.&apos;);
+    });
+
+    it(&apos;should throw an error if the route contains an optional&apos;, () =&gt; {
+      expect(() =&gt; {
+        router.addRoute({
+          path    : &apos;(/start)/foo&apos;,
+          method  : &apos;get&apos;,
+          handler : sinon.spy()
+        });
+      }).to.throw(&apos;Splats and optional groups are not supported for routes.&apos;);
+    });
+  });
+
+  describe(&apos;middleware&apos;, () =&gt; {
+    beforeEach(() =&gt; {
+      router = new Router();
+
+      router.addRoute({
+        path    : &apos;/case/:id&apos;,
+        method  : &apos;post&apos;,
+        handler : sinon.spy()
+      });
+
+      router.addRoute({
+        path    : &apos;/case/:id&apos;,
+        method  : &apos;get&apos;,
+        handler : sinon.spy()
+      });
+
+      request = new Request({
+        path    : &apos;/&apos;,
+        method  : &apos;get&apos;,
+        headers : {}
+      });
+
+      response = new Response();
+    });
+
+    describe(&apos;#match&apos;, () =&gt; {
+      it(&apos;should find the route on its routeTree&apos;, () =&gt; {
+        router.match({ request });
+
+        expect(mockTree.find).to.have.been.calledOnce;
+        expect(mockTree.find).to.have.been.calledWith(request);
+      });
+
+      it(&apos;should attach the matched route info to the request&apos;, () =&gt; {
+        const route = new Route({
+          path    : &apos;/&apos;,
+          method  : &apos;get&apos;,
+          handler : sinon.spy()
+        });
+
+        mockTree.find.returns(route);
+
+        router.match({ request });
+        expect(request.matchedRoute).to.equal(route);
+      });
+
+      it(&apos;should attach an empty match info if there is not matched route&apos;, () =&gt; {
+        mockTree.find.returns(null);
+
+        router.match({ request });
+        expect(request.matchedRoute).to.be.null;
+      });
+    });
+
+    describe(&apos;#execute&apos;, () =&gt; {
+      it(&apos;should invoke execute on the matched route, if it exists&apos;, () =&gt; {
+        const route = new Route({
+          path    : &apos;/&apos;,
+          method  : &apos;get&apos;,
+          handler : sinon.spy()
+        });
+        sinon.spy(route, &apos;execute&apos;);
+
+        request.matchedRoute = route;
+        router.execute({ request, response });
+
+        expect(route.execute).to.have.been.calledOnce;
+        expect(route.execute).to.have.been.calledWith({ request, response });
+      });
+
+      it(&apos;should not throw if the matched route doesnt exist&apos;, () =&gt; {
+        expect(() =&gt; {
+          router.execute({ request, response });
+        }).to.not.throw();
+      });
+    });
+  });
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.1)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

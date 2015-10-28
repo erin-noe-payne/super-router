@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">test/ContentNegotiation.test.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <a data-ice="repoURL" href="https://github.com/autoric/super-router" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">test/ContentNegotiation.test.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use strict&apos;;
+const chai              = require(&apos;chai&apos;);
+const sinon             = require(&apos;sinon&apos;);
+const sinonChai         = require(&apos;sinon-chai&apos;);
+const sinonStubPromises = require(&apos;sinon-promises&apos;);
+const chaiAsPromised    = require(&apos;chai-as-promised&apos;);
+const _                 = require(&apos;lodash&apos;);
+const PassThrough       = require(&apos;stream&apos;).PassThrough;
+const Transform         = require(&apos;stream&apos;).Transform;
+const Q                 = require(&apos;q&apos;);
+
+sinonStubPromises(sinon);
+chai.use(chaiAsPromised);
+chai.use(sinonChai);
+
+const expect = chai.expect;
+
+const Request = require(&apos;./..&apos;).Request;
+const Response = require(&apos;./..&apos;).Response;
+const ContentNegotiation = require(&apos;./../lib/middleware/ContentNegotiation.js&apos;);
+
+describe(&apos;Content Negotiation Middleware&apos;, () =&gt; {
+  describe(&apos;exports&apos;, () =&gt; {
+    it(&apos;export a middleware function for request&apos;, () =&gt; {
+      expect(ContentNegotiation.request).to.be.a(&apos;function&apos;);
+    });
+
+    it(&apos;export a middleware function for response&apos;, () =&gt; {
+      expect(ContentNegotiation.response).to.be.a(&apos;function&apos;);
+    });
+  });
+
+  describe(&apos;request&apos;, () =&gt; {
+
+    let request;
+
+    describe(&apos;buffering&apos;, () =&gt; {
+      beforeEach(() =&gt; {
+        request = new Request({
+          path    : &apos;/&apos;,
+          method  : &apos;get&apos;,
+          headers : {},
+          body    : new PassThrough()
+        });
+      });
+
+      it(&apos;if there is no Content-Type, it should try to parse as json and overwrite body&apos;, (done) =&gt; {
+        const requestData = { hello : &apos;world&apos; };
+        request.body.end(JSON.stringify(requestData));
+        ContentNegotiation.request({ request }).then(() =&gt; {
+          expect(request.body).to.eql(requestData);
+          done();
+        });
+
+      });
+
+      it(&apos;should throw an error if parsing fails&apos;, (done) =&gt; {
+        request.body.end(&apos;this is not json&apos;);
+        ContentNegotiation.request({ request }).catch((error) =&gt; {
+          expect(error.message).to.equal(&apos;failed to parse json in request&apos;);
+          done();
+        });
+      });
+
+      it(&apos;should set the body to null if nothing is streamed in&apos;, (done) =&gt; {
+        request.body.end();
+        ContentNegotiation.request({ request }).then(() =&gt; {
+          expect(request.body).to.be.null;
+          done();
+        });
+
+      });
+
+    });
+    describe(&apos;non-buffering&apos;, () =&gt; {
+
+      beforeEach(() =&gt; {
+        const headers = {};
+        headers[&apos;Transfer-Encoding&apos;] = &apos;chunked&apos;;
+        request = new Request({
+          path    : &apos;/&apos;,
+          method  : &apos;get&apos;,
+          headers : headers,
+          body    : new PassThrough()
+        });
+      });
+
+      it(&apos;should do nothing to the response stream if content-type is multipart&apos;, (done) =&gt; {
+        request.body.end(&apos;chunked data&apos;);
+        ContentNegotiation.request({ request });
+        expect(request.body instanceof Transform).to.be.true;
+        request.body.on(&apos;data&apos;, (chunk) =&gt; {
+          expect(chunk.toString()).to.equal(&apos;chunked data&apos;);
+          done();
+        });
+      });
+
+    });
+
+  });
+
+  describe(&apos;response&apos;, () =&gt; {
+    let request;
+    let response;
+
+    beforeEach(() =&gt; {
+      request = new Request({
+        path    : &apos;/&apos;,
+        method  : &apos;get&apos;,
+        headers : {},
+        body    : new PassThrough()
+      });
+
+      response = new Response();
+    });
+
+    describe(&apos;JSON&apos;, () =&gt; {
+      it(&apos;should treat the response body as JSON and write it as a new stream if no headers are present&apos;, (done) =&gt; {
+        response.setBody({ hello : &apos;world&apos; });
+        ContentNegotiation.response({ request, response });
+        response.body.on(&apos;data&apos;, (chunk) =&gt; {
+          expect(chunk.toString()).to.equal(&apos;{&quot;hello&quot;:&quot;world&quot;}&apos;);
+          expect(response.getHeader(&apos;content-type&apos;)).to.equal(&apos;application/json&apos;);
+          done();
+        });
+      });
+
+    });
+
+  });
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.1)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
