@@ -5,7 +5,6 @@ const sinonChai         = require('sinon-chai');
 const sinonStubPromises = require('sinon-promises');
 const chaiAsPromised    = require('chai-as-promised');
 const proxyquire        = require('proxyquire');
-const _                 = require('lodash');
 
 sinonStubPromises(sinon);
 chai.use(chaiAsPromised);
@@ -44,7 +43,6 @@ describe('Router ', () => {
   describe('#addRoute', () => {
     it('should construct a new Route object from the input', () => {
       const mockRoute = sinon.stub();
-      const route     = sinon.createStubInstance(Route);
       mockRoute.returns({
         path : ''
       });

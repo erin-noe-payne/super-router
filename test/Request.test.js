@@ -4,7 +4,6 @@ const sinon             = require('sinon');
 const sinonChai         = require('sinon-chai');
 const sinonStubPromises = require('sinon-promises');
 const chaiAsPromised    = require('chai-as-promised');
-const _                 = require('lodash');
 
 sinonStubPromises(sinon);
 chai.use(chaiAsPromised);
@@ -109,9 +108,10 @@ describe('Request', () => {
   describe('properties', () => {
     beforeEach(() => {
       request = new Request({
-        headers : { hello : 'world',
-                    HeY : 'BuDdY'
-                  },
+        headers : {
+          hello : 'world',
+          HeY   : 'BuDdY'
+        },
         path    : '/',
         method  : 'get'
       });

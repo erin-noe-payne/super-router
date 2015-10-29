@@ -6,7 +6,6 @@ const sinonStubPromises = require('sinon-promises');
 const chaiAsPromised    = require('chai-as-promised');
 const proxyquire        = require('proxyquire');
 const Q                 = require('q');
-const Stream            = require('stream');
 
 sinonStubPromises(sinon);
 chai.use(chaiAsPromised);

@@ -143,8 +143,7 @@ describe('Node ', () => {
     });
 
     describe('tree walkers', () => {
-      let root, a, ab, az, abc, abd;
-      let route;
+      let root, a, az, abc, abd;
       beforeEach(() => {
         root = new Node({ path : '/' });
         a    = new Node({ path : '/a' });
