@@ -15,13 +15,14 @@
   },
   "scripts": {
     "test": "mocha test/**/*.js -w",
-    "ci-test" : "mocha test/**/*.js",
+    "ci-test": "mocha test/**/*.js",
     "lint": "eslint lib test",
     "doc": "istanbul cover ./node_modules/.bin/_mocha -- test -R spec && esdoc -c esdoc.json && gh-pages -d . -s '{doc,coverage}/**/*'"
   },
   "devDependencies": {
     "chai": "^3.0.0",
     "chai-as-promised": "^5.1.0",
+    "eslint": "^1.7.3",
     "gh-pages": "^0.4.0",
     "istanbul": "^0.4.0",
     "mocha": "^2.2.5",
