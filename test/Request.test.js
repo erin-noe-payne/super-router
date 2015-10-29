@@ -192,8 +192,8 @@ describe('Request', () => {
       expect(request.getHeader('HeLlO')).to.equal('world');
     });
 
-    it('header values should be stored as lowercase', () => {
-      expect(request.getHeader('hey')).to.equal('buddy');
+    it('header values case should be preserved', () => {
+      expect(request.getHeader('hey')).to.equal('BuDdY');
     });
 
   });
