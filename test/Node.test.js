@@ -77,7 +77,7 @@ describe('Node ', () => {
       const node = new Node({ path : '/user' });
       expect(node.getRoutes()).to.have.length(1);
       const optsRoute = node.getRoutes()[0];
-      expect(optsRoute.method).to.equal('options');
+      expect(optsRoute.method).to.equal('OPTIONS');
     });
   });
 
@@ -116,7 +116,15 @@ describe('Node ', () => {
         node.addRoute(route);
         expect(() => {
           node.addRoute(route);
-        }).to.throw('duplicate method "get" added for path "/user"');
+        }).to.throw('duplicate method "GET" added for path "/user"');
+      });
+
+      it('should throw if the route method is ALL', () => {
+        route.method = '*';
+
+        expect(() => {
+          node.addRoute(route);
+        }).to.throw('cannot register route with method ALL on node.');
       });
     });
 
