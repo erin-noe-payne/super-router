@@ -100,7 +100,7 @@ describe('Request', () => {
 
       expect(req2.headers).to.eql({ 'b' : 'c' });
       expect(req2.path).to.equal('/');
-      expect(req2.method).to.equal('get');
+      expect(req2.method).to.equal('GET');
       expect(req2.a).to.equal(1);
     });
   });
@@ -120,7 +120,7 @@ describe('Request', () => {
     it('should set properties based on constructed values', () => {
       expect(request.getHeader('hello')).to.equal('world');
       expect(request.path).to.equal('/');
-      expect(request.method).to.equal('get');
+      expect(request.method).to.equal('GET');
     });
 
     it('should defensively copy to protect itself from upstream changes on the headers object', () => {
@@ -154,8 +154,8 @@ describe('Request', () => {
     });
 
     it('should normalize method when set', () => {
-      request.method = 'GET';
-      expect(request.method).to.equal('get');
+      request.method = 'get';
+      expect(request.method).to.equal('GET');
     });
 
     it('should expose an originalPath property', () => {
@@ -192,8 +192,8 @@ describe('Request', () => {
       expect(request.getHeader('HeLlO')).to.equal('world');
     });
 
-    it('header values should be stored as lowercase', () => {
-      expect(request.getHeader('hey')).to.equal('buddy');
+    it('header values case should be preserved', () => {
+      expect(request.getHeader('hey')).to.equal('BuDdY');
     });
 
   });

@@ -1,5 +1,8 @@
 # Super Router
 
+[![Travis build status](https://travis-ci.org/autoric/super-router)](https://travis-ci.org/autoric/super-router.svg)
+
+
 [API Docs](http://autoric.github.io/super-router/doc/)
 
 [Code coverage Report](http://autoric.github.io/super-router/coverage/lcov-report/)

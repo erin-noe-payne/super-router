@@ -24,7 +24,7 @@ describe('A Route', () => {
 
   beforeEach(() => {
     handler = sinon.stub();
-    opts    = { path : '/', method : 'get', handler : handler };
+    opts    = { path : '/', method : 'GET', handler : handler };
     route   = new Route(opts);
   });
 
@@ -125,7 +125,7 @@ describe('A Route', () => {
 
     it('should normalize method name', () => {
       route = new Route({ path : '/a/b/c', method : 'GeT', handler : handler });
-      expect(route.method).to.equal('get');
+      expect(route.method).to.equal('GET');
     });
 
     it('should default method to ALL', () => {
