@@ -33,8 +33,10 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Node.js~Node.html">Node</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Route.js~Route.html">Route</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
 </ul>
 </div>
@@ -124,7 +126,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/lib/App.js~App.html#instance-method-use">use</a></span></span><span data-ice="signature">(route: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
+           <span data-ice="name"><span><a href="class/lib/App.js~App.html#instance-method-use">use</a></span></span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
         </p>
       </div>
       <div>
@@ -150,7 +152,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/lib/App.js~App.html#instance-method-useError">useError</a></span></span><span data-ice="signature">(route: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
+           <span data-ice="name"><span><a href="class/lib/App.js~App.html#instance-method-useError">useError</a></span></span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
         </p>
       </div>
       <div>
@@ -188,7 +190,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/App.js.html#lineNumber103">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/App.js.html#lineNumber105">source</a></span></span>
     </span>
   </h3>
 
@@ -255,11 +257,11 @@ will reject with the last error thrown.</p>
     
     
     
-    <span data-ice="name">use</span><span data-ice="signature">(route: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
+    <span data-ice="name">use</span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/App.js.html#lineNumber45">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/App.js.html#lineNumber46">source</a></span></span>
     </span>
   </h3>
 
@@ -288,9 +290,10 @@ chain will move to the error stack.</p>
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">route</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
+      <td data-ice="type"><span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The middleware route.</p>
+      <td data-ice="description"><p>The middleware route. If a function is provided, it will be
+ used as the handler. If a plain object is provided, it will be run through the Route constructor.</p>
 </td>
     </tr>
 </tbody>
@@ -348,11 +351,11 @@ app.use(({request, response}) =&gt; {
     
     
     
-    <span data-ice="name">useError</span><span data-ice="signature">(route: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
+    <span data-ice="name">useError</span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/App.js.html#lineNumber82">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/App.js.html#lineNumber84">source</a></span></span>
     </span>
   </h3>
 
@@ -379,9 +382,10 @@ moving to the next middleware in the stack.</p>
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">route</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
+      <td data-ice="type"><span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The middleware route.</p>
+      <td data-ice="description"><p>The middleware route. If a function is provided, it will be
+ used as the handler. If a plain object is provided, it will be run through the Route constructor.</p>
 </td>
     </tr>
 </tbody>

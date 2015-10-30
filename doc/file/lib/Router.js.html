@@ -33,8 +33,10 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Node.js~Node.html">Node</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Route.js~Route.html">Route</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
 </ul>
 </div>
@@ -45,8 +47,6 @@
 
 const Route     = require(&apos;./Route&apos;);
 const RouteTree = require(&apos;./RouteTree&apos;);
-const Request   = require(&apos;./Request&apos;);
-const Response  = require(&apos;./Response&apos;);
 
 const SPLAT    = /\*/;
 const OPTIONAL = /\(/;
@@ -56,7 +56,6 @@ const OPTIONAL = /\(/;
  */
 class Router {
   constructor() {
-    this._redirects  = [];
     this._routesTree = new RouteTree();
 
     this.match   = this.match.bind(this);
@@ -84,10 +83,8 @@ class Router {
    *  }
    * });
    *
-   * @param {object} route - The route definition
-   * @param {string} route.path - The path pattern to be matched for this route
-   * @param {string} route.method - The method that this route will match
-   * @param {function} route.handler - The handler function to execute when the route is matched
+   * @param {Route} route - The route definition. If a plain object is provided, will be run through the
+   *   Route constructor.
    * @returns {void}
    */
   addRoute(route) {

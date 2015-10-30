@@ -33,8 +33,10 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Node.js~Node.html">Node</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Route.js~Route.html">Route</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
 </ul>
 </div>
@@ -50,7 +52,24 @@ const Request     = require(&apos;./Request&apos;);
 const Response    = require(&apos;./Response&apos;);
 const RouteParser = require(&apos;route-parser&apos;);
 
+/**
+ * Route class.
+ * A route is defined as a path pattern, method, and handler. Testing requests against routes and executing matching
+ * handlers is the core of request processing.
+ */
 class Route {
+
+  /**
+   * Instantiates a new Route.
+   *
+   * @param {Object} options - The options object
+   * @param {Function} options.handler - The handler function to be executed if the route is matched.
+   * @param {String} [path=&apos;*all&apos;] - The path pattern that the route should be executed against. If not provided,
+   *  matches all paths.
+   * @param {String} [method=&apos;*&apos;] - The method that the route should be executed against. If not provided, mathes
+   *  all methods.
+   * @returns {Route} - The new route instance.
+   */
   constructor(options) {
     if (!_.isObject(options)) {
       throw new TypeError(&apos;options must be an object.&apos;);
@@ -65,34 +84,71 @@ class Route {
       throw new TypeError(&apos;method must be a valid method string.&apos;);
     }
 
+    _.extend(this, options);
+
     this._path    = utils.normalizePath(options.path || &apos;*all&apos;);
     this._method  = utils.normalizeMethod(options.method || METHODS.ALL);
     this._handler = options.handler;
     this._parsed  = new RouteParser(this._path);
-
-    _.extend(this, options);
   }
 
+  /**
+   * Returns the route path.
+   *
+   * @returns {String} - The route path.
+   */
   get path() {
     return this._path;
   }
 
+  /**
+   * Returns the route method.
+   *
+   * @returns {String} - The route method.
+   */
   get method() {
     return this._method;
   }
 
+  /**
+   * Returns the route handler.
+   *
+   * @returns {Function} - The route handler.
+   */
   get handler() {
     return this._handler;
   }
 
+  /**
+   * Tests if the given method matches this route
+   *
+   * @param {String} method - The input method
+   * @returns {boolean} - If the method matches this route
+   * @private
+   */
   _isMethodMatch(method) {
     return (this.method === METHODS.ALL) || (this.method === utils.normalizeMethod(method));
   }
 
+  /**
+   * Parses the given path string against this route&apos;s path pattern. If the input path is a match, returns
+   * an object whose key value pairs are the matched route params and their values. If the path is not a match,
+   * returns false.
+   *
+   * @param {String} path - The input path
+   * @returns {Boolean|Object} - False if the path is not a match, an object if it is.
+   * @private
+   */
   _parsePath(path) {
     return this._parsed.match(path);
   }
 
+  /**
+   * Tests whether a given request object is a match against this route, satisfying the path &amp; method requirements.
+   *
+   * @param {Request} request - The input requiest
+   * @returns {Boolean} - Whether the request matches this route.
+   */
   isMatch(request) {
     if (!(request instanceof Request)) {
       throw new Error(&apos;First argument: request must be a SuperRouter Request instance.&apos;);
@@ -100,6 +156,17 @@ class Route {
     return this._isMethodMatch(request.method) &amp;&amp; _.isObject(this._parsePath(request.path));
   }
 
+  /**
+   * Executes this route against a provided request / response. Returns a promise that will resolve or reject when
+   * execution is complete.
+   *  - If the request is not a match, returns an empty promise.
+   *  - If the request is a match, returns a promise for the return value of the route handler
+   *
+   * @param {Object} options - The options object
+   * @param {Request} options.request - The request the route will be tested &amp; executed against
+   * @param {Response} options.response - The response the route handler will be invoked with
+   * @returns {Promise} - A promise that will complete when execution is complete.
+   */
   execute(options) {
     if (!_.isObject(options)) {
       throw new TypeError(&apos;options must be an object.&apos;);
@@ -126,13 +193,6 @@ class Route {
     catch (err) {
       return Q.reject(err);
     }
-  }
-
-  toJs() {
-    return {
-      path   : this.path,
-      method : this.method
-    };
   }
 
 }

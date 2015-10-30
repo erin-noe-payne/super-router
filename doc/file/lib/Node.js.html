@@ -33,8 +33,10 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Node.js~Node.html">Node</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Route.js~Route.html">Route</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
 </ul>
 </div>
@@ -48,7 +50,23 @@ const Route       = require(&apos;./Route&apos;);
 const METHOODS    = require(&apos;./METHODS&apos;);
 const RouteParser = require(&apos;route-parser&apos;);
 
+/**
+ * Router Node.
+ * Represents a unique path on the router. Each node may contain one route per method, and any number of child nodes.
+ * Nodes build a linked tree structure, representing each unique route on the router. It is used to serve OPTIONS
+ * requests.
+ */
 class Node {
+
+  /**
+   * Node constructor.
+   *
+   * Creating a node automatically registers the OPTIONS request on this path.
+   *
+   * @param {Object} options - The input options
+   * @param {String} options.path - The path pattern the node represents
+   * @returns {Node} - The Node instance
+   */
   constructor(options) {
     if (!_.isObject(options)) {
       throw new TypeError(&apos;options must be an object.&apos;);
@@ -60,7 +78,7 @@ class Node {
       throw new TypeError(&apos;path must start with a / character.&apos;);
     }
 
-    this._path     = options.path;
+    this._path     = utils.normalizePath(options.path);
     this._parsed   = new RouteParser(this._path);
     this._routes   = new Map();
     this._children = new Map();
@@ -71,19 +89,42 @@ class Node {
       handler : (options) =&gt; {
         const response = options.response;
 
-        response.setBody(this.toJs());
+        response.setBody(this.toObject());
       }
     });
   }
 
+  /**
+   * Gets the path pattern that the node represents.
+   *
+   * @returns {String} - The path
+   */
   get path() {
     return this._path;
   }
 
+  /**
+   * Parses the given path string against this node&apos;s path pattern. If the input path is a match, returns
+   * an object whose key value pairs are the matched route params and their values. If the path is not a match,
+   * returns false.
+   *
+   * @param {String} path - The input path
+   * @returns {Boolean|Object} - False if the path is not a match, an object if it is.
+   * @private
+   */
   _parsePath(path) {
     return this._parsed.match(path);
   }
 
+  /**
+   * Adds a route to the node. Will throw an error if the route does not match the path of the node, if there is
+   * already a route registered on the given method, or if the route method is ALL (routes on a node must be
+   * deterministic).
+   *
+   * @param {Route} route - The route to add to the node.
+   * @throws TypeError - On validation error.
+   * @returns {void}
+   */
   addRoute(route) {
     if (!(route instanceof Route)) {
       route = new Route(route);
@@ -91,12 +132,21 @@ class Node {
     if (!this.isSame(route)) {
       throw new TypeError(&apos;route path must match node path.&apos;);
     }
+    if (route.method === METHOODS.ALL) {
+      throw new TypeError(&apos;cannot register route with method ALL on node.&apos;);
+    }
     if (this._routes.has(route.method)) {
       throw new TypeError(`duplicate method &quot;${route.method}&quot; added for path &quot;${route.path}&quot;`);
     }
     this._routes.set(route.method, route);
   }
 
+  /**
+   * Adds a child node to this node.
+   *
+   * @param {Node} node - The node to add as a child.
+   * @returns {void}
+   */
   addChild(node) {
     if (!(node instanceof Node)) {
       node = new Node(node);
@@ -108,26 +158,64 @@ class Node {
     this._children.set(node.path, node);
   }
 
+  /**
+   * Returns the node&apos;s children as an array.
+   *
+   * @returns {Array&lt;Node&gt;} - The node&apos;s children.
+   */
   getChildren() {
     return Array.from(this._children.values());
   }
 
+  /**
+   * Returns the node&apos;s routes as an array.
+   *
+   * @returns {Array&lt;Route&gt;} - The routes associated with this node.
+   */
   getRoutes() {
     return Array.from(this._routes.values());
   }
 
+  /**
+   * Indicates if this node is a parent to a route by comparing their paths.
+   *
+   * @param {Route} route - The route to compare.
+   * @returns {boolean} - If this node is a parent to the input route.
+   */
   isParent(route) {
     return utils.comparePaths(route.path, this.path) === 1;
   }
 
+  /**
+   * Indicates if this node represents the same path as a route.
+   *
+   * @param {Route} route - The route to compare.
+   * @returns {boolean} - If this node is the same path as the input route.
+   */
   isSame(route) {
     return utils.comparePaths(route.path, this.path) === 0;
   }
 
+  /**
+   * Indicates if the node can insert a route. Returns true if the node is the same or a parent to the route.
+   *
+   * @param {Route} route - The route to compare.
+   * @returns {boolean} - If the route can be inserted on this node.
+   */
   canInsert(route) {
-    return this.isSame(route) || this.isParent(route);
+    return utils.comparePaths(route.path, this.path) !== -1;
   }
 
+  /**
+   * Recursively inserts a route into the node.
+   * If the node is not the same or a parent to the route, has no effect.
+   * If the route is on the same path as the node, adds the route to this node.
+   * If the route can be inserted on a child node, recurses down to the child node.
+   * Otherwise, adds a new child node to this node, then adds the route to the child node.
+   *
+   * @param {Route} route - The route to insert.
+   * @returns {void}
+   */
   insert(route) {
     if (!(route instanceof Route)) {
       route = new Route(route);
@@ -158,6 +246,13 @@ class Node {
     this.addChild(newNode);
   }
 
+  /**
+   * Recursively finds a route that matches the specified request. Returns a matching route or null if not match
+   * can be found.
+   *
+   * @param {Request} request - The request to find a matching route against
+   * @returns {Route} - The matching route.
+   */
   find(request) {
     let match;
     if (this._parsePath(request.path)) {
@@ -177,7 +272,12 @@ class Node {
     return null;
   }
 
-  toJs() {
+  /**
+   * Returns a pojo representation of the node.
+   *
+   * @returns {Object} - Plain object representation of the node.
+   */
+  toObject() {
     const pojo = {
       methods     : _.map(this.getRoutes(), (route) =&gt; {
         return route.method;

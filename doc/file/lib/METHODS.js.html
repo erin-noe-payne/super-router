@@ -33,23 +33,28 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Node.js~Node.html">Node</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Route.js~Route.html">Route</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">lib/METHODS.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">module.exports = {
-  GET       : &apos;get&apos;,
-  PUT       : &apos;put&apos;,
-  POST      : &apos;post&apos;,
-  DELETE    : &apos;delete&apos;,
-  HEAD      : &apos;head&apos;,
-  OPTIONS   : &apos;options&apos;,
-  SUBSCRIBE : &apos;subscribe&apos;,
-  ALL       : &apos;*&apos;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * Supported super-router request methods.
+ */
+module.exports = {
+  GET     : &apos;GET&apos;,
+  PUT     : &apos;PUT&apos;,
+  POST    : &apos;POST&apos;,
+  PATCH   : &apos;PATCH&apos;,
+  DELETE  : &apos;DELETE&apos;,
+  HEAD    : &apos;HEAD&apos;,
+  OPTIONS : &apos;OPTIONS&apos;,
+  ALL     : &apos;*&apos;
 };
 </code></pre>
 

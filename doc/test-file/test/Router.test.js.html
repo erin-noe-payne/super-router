@@ -33,8 +33,10 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Node.js~Node.html">Node</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Route.js~Route.html">Route</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
 </ul>
 </div>
@@ -48,7 +50,6 @@ const sinonChai         = require(&apos;sinon-chai&apos;);
 const sinonStubPromises = require(&apos;sinon-promises&apos;);
 const chaiAsPromised    = require(&apos;chai-as-promised&apos;);
 const proxyquire        = require(&apos;proxyquire&apos;);
-const _                 = require(&apos;lodash&apos;);
 
 sinonStubPromises(sinon);
 chai.use(chaiAsPromised);
@@ -87,7 +88,6 @@ describe(&apos;Router &apos;, () =&gt; {
   describe(&apos;#addRoute&apos;, () =&gt; {
     it(&apos;should construct a new Route object from the input&apos;, () =&gt; {
       const mockRoute = sinon.stub();
-      const route     = sinon.createStubInstance(Route);
       mockRoute.returns({
         path : &apos;&apos;
       });
@@ -142,13 +142,13 @@ describe(&apos;Router &apos;, () =&gt; {
       router = new Router();
 
       router.addRoute({
-        path    : &apos;/case/:id&apos;,
+        path    : &apos;/user/:id&apos;,
         method  : &apos;post&apos;,
         handler : sinon.spy()
       });
 
       router.addRoute({
-        path    : &apos;/case/:id&apos;,
+        path    : &apos;/user/:id&apos;,
         method  : &apos;get&apos;,
         handler : sinon.spy()
       });

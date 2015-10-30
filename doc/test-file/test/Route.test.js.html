@@ -33,8 +33,10 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Node.js~Node.html">Node</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Route.js~Route.html">Route</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
 </ul>
 </div>
@@ -67,7 +69,7 @@ describe(&apos;A Route&apos;, () =&gt; {
 
   beforeEach(() =&gt; {
     handler = sinon.stub();
-    opts    = { path : &apos;/&apos;, method : &apos;get&apos;, handler : handler };
+    opts    = { path : &apos;/&apos;, method : &apos;GET&apos;, handler : handler };
     route   = new Route(opts);
   });
 
@@ -168,7 +170,7 @@ describe(&apos;A Route&apos;, () =&gt; {
 
     it(&apos;should normalize method name&apos;, () =&gt; {
       route = new Route({ path : &apos;/a/b/c&apos;, method : &apos;GeT&apos;, handler : handler });
-      expect(route.method).to.equal(&apos;get&apos;);
+      expect(route.method).to.equal(&apos;GET&apos;);
     });
 
     it(&apos;should default method to ALL&apos;, () =&gt; {
@@ -186,6 +188,12 @@ describe(&apos;A Route&apos;, () =&gt; {
 
       expect(route.a).to.equal(1);
       expect(route.b).to.equal(&apos;AHHH&apos;);
+    });
+
+    it(&apos;should not allow arbitrary parameters to overwrite internal state&apos;, () =&gt; {
+      route = new Route(_.extend({}, opts, { _path : &apos;okthen?&apos; }));
+
+      expect(route.path).to.equal(&apos;/&apos;);
     });
   });
 
@@ -313,16 +321,16 @@ describe(&apos;A Route&apos;, () =&gt; {
         });
       });
 
-      it(&apos;should pass properties on options to handler&apos;, ()=&gt; {
+      it(&apos;should pass properties on options to handler&apos;, () =&gt; {
         const opts = {
-          request : new Request({
+          request  : new Request({
             method  : &apos;get&apos;,
             path    : &apos;/&apos;,
             headers : {}
           }),
           response : new Response(),
-          a: 1,
-          b: &quot;thing&quot;
+          a        : 1,
+          b        : &apos;thing&apos;
         };
 
         return route.execute(opts).then(() =&gt; {
@@ -416,7 +424,7 @@ describe(&apos;A Route&apos;, () =&gt; {
       describe(&apos;routeParams&apos;, () =&gt; {
         beforeEach(() =&gt; {
           route = new Route({
-            path    : &apos;/case(/:type)/:id(/*rest)&apos;,
+            path    : &apos;/user(/:type)/:id(/*rest)&apos;,
             method  : &apos;get&apos;,
             handler : sinon.spy()
           });
@@ -447,7 +455,7 @@ describe(&apos;A Route&apos;, () =&gt; {
 
         it(&apos;should represent each match from the route path on the routeParams property&apos;, () =&gt; {
           request = new Request({
-            path    : &apos;/case/red/17/a/b/c&apos;,
+            path    : &apos;/user/red/17/a/b/c&apos;,
             method  : &apos;get&apos;,
             headers : {}
           });

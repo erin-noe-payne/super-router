@@ -6,6 +6,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "super-router/lib/node.js~node",
+    "class/lib/Node.js~Node.html",
+    "<span>Node</span> <span class=\"search-result-import-path\">super-router/lib/Node.js</span>",
+    "class"
+  ],
+  [
     "super-router/lib/request.js~request",
     "class/lib/Request.js~Request.html",
     "<span>Request</span> <span class=\"search-result-import-path\">super-router/lib/Request.js</span>",
@@ -15,6 +21,12 @@ window.esdocSearchIndex = [
     "super-router/lib/response.js~response",
     "class/lib/Response.js~Response.html",
     "<span>Response</span> <span class=\"search-result-import-path\">super-router/lib/Response.js</span>",
+    "class"
+  ],
+  [
+    "super-router/lib/route.js~route",
+    "class/lib/Route.js~Route.html",
+    "<span>Route</span> <span class=\"search-result-import-path\">super-router/lib/Route.js</span>",
     "class"
   ],
   [
@@ -31,133 +43,133 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber219",
+    "test-file/test/Route.test.js.html#lineNumber225",
     "A Route #execute",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber292",
+    "test-file/test/Route.test.js.html#lineNumber298",
     "A Route #execute on match",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber373",
+    "test-file/test/Route.test.js.html#lineNumber379",
     "A Route #execute on match routeParams",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber382",
+    "test-file/test/Route.test.js.html#lineNumber388",
     "A Route #execute on match routeParams should create a routeParams property on the request",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber393",
+    "test-file/test/Route.test.js.html#lineNumber399",
     "A Route #execute on match routeParams should overwrite an existing routeParams property",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber405",
+    "test-file/test/Route.test.js.html#lineNumber411",
     "A Route #execute on match routeParams should represent each match from the route path on the routeParams property",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber318",
+    "test-file/test/Route.test.js.html#lineNumber324",
     "A Route #execute on match should catch any thrown errors and reject the promise with them",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber312",
+    "test-file/test/Route.test.js.html#lineNumber318",
     "A Route #execute on match should pass the request and response to the handler",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber354",
+    "test-file/test/Route.test.js.html#lineNumber360",
     "A Route #execute on match should propagate mutations on the request and response that occur within the handler",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber344",
+    "test-file/test/Route.test.js.html#lineNumber350",
     "A Route #execute on match should reject if the handler rejects",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber335",
+    "test-file/test/Route.test.js.html#lineNumber341",
     "A Route #execute on match should resolve if the handler resolves",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber306",
+    "test-file/test/Route.test.js.html#lineNumber312",
     "A Route #execute on match should resolve the promise, executing the handler if the request is a match",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber327",
+    "test-file/test/Route.test.js.html#lineNumber333",
     "A Route #execute on match should resolve with the return value if the handler does not return a promise",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber302",
+    "test-file/test/Route.test.js.html#lineNumber308",
     "A Route #execute on match should return a promise",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber253",
+    "test-file/test/Route.test.js.html#lineNumber259",
     "A Route #execute on non-match",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber273",
+    "test-file/test/Route.test.js.html#lineNumber279",
     "A Route #execute on non-match should pass properties on options to handler",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber267",
+    "test-file/test/Route.test.js.html#lineNumber273",
     "A Route #execute on non-match should resolve the promise without executing the handler",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber263",
+    "test-file/test/Route.test.js.html#lineNumber269",
     "A Route #execute on non-match should return a promise",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber229",
+    "test-file/test/Route.test.js.html#lineNumber235",
     "A Route #execute should throw if options is not an object",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber223",
+    "test-file/test/Route.test.js.html#lineNumber229",
     "A Route #execute should throw if options is not defined",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber235",
+    "test-file/test/Route.test.js.html#lineNumber241",
     "A Route #execute should throw if the input is not a request object",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber241",
+    "test-file/test/Route.test.js.html#lineNumber247",
     "A Route #execute should throw if the second input is not a response object",
     "test"
   ],
@@ -223,43 +235,43 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber149",
+    "test-file/test/Route.test.js.html#lineNumber155",
     "A Route isMatch",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber198",
+    "test-file/test/Route.test.js.html#lineNumber204",
     "A Route isMatch should return false if a the method is wrong",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber208",
+    "test-file/test/Route.test.js.html#lineNumber214",
     "A Route isMatch should return false if a the path is wrong",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber166",
+    "test-file/test/Route.test.js.html#lineNumber172",
     "A Route isMatch should return true for any method if the route is to match all methods",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber182",
+    "test-file/test/Route.test.js.html#lineNumber188",
     "A Route isMatch should return true for any method if the route is to match all paths",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber156",
+    "test-file/test/Route.test.js.html#lineNumber162",
     "A Route isMatch should return true if a request is an exact match for the route",
     "test"
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber150",
+    "test-file/test/Route.test.js.html#lineNumber156",
     "A Route isMatch should throw if the input is not a request object",
     "test"
   ],
@@ -319,157 +331,163 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/Route.test.js.html#lineNumber116",
-    "A Route properties should normalize trailing slashes",
-    "test"
-  ],
-  [
-    "",
     "test-file/test/Route.test.js.html#lineNumber111",
     "A Route properties should normalize trailing slashes",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber25",
+    "test-file/test/Route.test.js.html#lineNumber116",
+    "A Route properties should normalize trailing slashes",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/Route.test.js.html#lineNumber148",
+    "A Route properties should not allow arbitrary parameters to overwrite internal state",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/App.test.js.html#lineNumber24",
     "App",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber32",
+    "test-file/test/App.test.js.html#lineNumber31",
     "App constructor",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber114",
+    "test-file/test/App.test.js.html#lineNumber113",
     "App processRequest",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber242",
+    "test-file/test/App.test.js.html#lineNumber241",
     "App processRequest should bail to the error stack if a middleware rejects with an error",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber217",
+    "test-file/test/App.test.js.html#lineNumber216",
     "App processRequest should bail to the error stack if a middleware throws an error",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber147",
+    "test-file/test/App.test.js.html#lineNumber146",
     "App processRequest should create a new Request object if the input is not a Request object",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber164",
+    "test-file/test/App.test.js.html#lineNumber163",
     "App processRequest should create a new response object",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber183",
+    "test-file/test/App.test.js.html#lineNumber182",
     "App processRequest should execute each route with request in the order declared",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber269",
+    "test-file/test/App.test.js.html#lineNumber268",
     "App processRequest should not allow a path specific error middleware to swallow a valid error condition",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber204",
+    "test-file/test/App.test.js.html#lineNumber203",
     "App processRequest should not execute error middleware if all middleware resolves",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber194",
+    "test-file/test/App.test.js.html#lineNumber193",
     "App processRequest should not execute the second middleware before the first one completes",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber254",
+    "test-file/test/App.test.js.html#lineNumber253",
     "App processRequest should propagate down the error stack if a previous error middleware rejects with an error",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber228",
+    "test-file/test/App.test.js.html#lineNumber227",
     "App processRequest should propagate down the error stack if a previous error middleware throws an error",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber289",
+    "test-file/test/App.test.js.html#lineNumber288",
     "App processRequest should reject if all error middleware throw",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber211",
+    "test-file/test/App.test.js.html#lineNumber210",
     "App processRequest should resolve with the created response object",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber160",
+    "test-file/test/App.test.js.html#lineNumber159",
     "App processRequest should return a promise",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber36",
+    "test-file/test/App.test.js.html#lineNumber35",
     "App use",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber64",
+    "test-file/test/App.test.js.html#lineNumber63",
     "App use should accept a function input and use it as a route handler",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber56",
+    "test-file/test/App.test.js.html#lineNumber55",
     "App use should not run the input through the Route constructor if it is a Route instance",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber48",
+    "test-file/test/App.test.js.html#lineNumber47",
     "App use should run the input through the Route constructor if it is not a Route instance",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber75",
+    "test-file/test/App.test.js.html#lineNumber74",
     "App useError",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber103",
+    "test-file/test/App.test.js.html#lineNumber102",
     "App useError should accept a function input and use it as a route handler",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber95",
+    "test-file/test/App.test.js.html#lineNumber94",
     "App useError should not run the input through the Route constructor if it is a Route instance",
     "test"
   ],
   [
     "",
-    "test-file/test/App.test.js.html#lineNumber87",
+    "test-file/test/App.test.js.html#lineNumber86",
     "App useError should run the input through the Route constructor if it is not a Route instance",
     "test"
   ],
@@ -799,85 +817,85 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber22",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber20",
     "Content Negotiation Middleware",
     "test"
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber23",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber21",
     "Content Negotiation Middleware exports",
     "test"
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber24",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber22",
     "Content Negotiation Middleware exports export a middleware function for request",
     "test"
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber28",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber26",
     "Content Negotiation Middleware exports export a middleware function for response",
     "test"
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber33",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber31",
     "Content Negotiation Middleware request",
     "test"
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber37",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber35",
     "Content Negotiation Middleware request buffering",
     "test"
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber47",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber45",
     "Content Negotiation Middleware request buffering if there is no Content-Type, it should try to parse as json and overwrite body",
     "test"
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber65",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber63",
     "Content Negotiation Middleware request buffering should set the body to null if nothing is streamed in",
     "test"
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber57",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber55",
     "Content Negotiation Middleware request buffering should throw an error if parsing fails",
     "test"
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber75",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber73",
     "Content Negotiation Middleware request non-buffering",
     "test"
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber88",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber86",
     "Content Negotiation Middleware request non-buffering should do nothing to the response stream if content-type is multipart",
     "test"
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber102",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber100",
     "Content Negotiation Middleware response",
     "test"
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber117",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber115",
     "Content Negotiation Middleware response JSON",
     "test"
   ],
   [
     "",
-    "test-file/test/ContentNegotiation.test.js.html#lineNumber118",
+    "test-file/test/ContentNegotiation.test.js.html#lineNumber116",
     "Content Negotiation Middleware response JSON should treat the response body as JSON and write it as a new stream if no headers are present",
     "test"
   ],
@@ -955,19 +973,19 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber123",
+    "test-file/test/Node.test.js.html#lineNumber131",
     "Node  methods #addChild",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber125",
+    "test-file/test/Node.test.js.html#lineNumber133",
     "Node  methods #addChild should be able to add children and be returned with getChildren",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber135",
+    "test-file/test/Node.test.js.html#lineNumber143",
     "Node  methods #addChild should throw an error if a child with a duplicate path is added",
     "test"
   ],
@@ -991,187 +1009,193 @@ window.esdocSearchIndex = [
   ],
   [
     "",
+    "test-file/test/Node.test.js.html#lineNumber122",
+    "Node  methods #addRoute should throw if the route method is ALL",
+    "test"
+  ],
+  [
+    "",
     "test-file/test/Node.test.js.html#lineNumber104",
     "Node  methods #addRoute should throw if the route path does not match the node path pattern",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber145",
+    "test-file/test/Node.test.js.html#lineNumber153",
     "Node  methods tree walkers",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber272",
+    "test-file/test/Node.test.js.html#lineNumber279",
     "Node  methods tree walkers #find",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber310",
+    "test-file/test/Node.test.js.html#lineNumber317",
     "Node  methods tree walkers #find should return a match from its children",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber290",
+    "test-file/test/Node.test.js.html#lineNumber297",
     "Node  methods tree walkers #find should return a match from its routes, if it exists",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber300",
+    "test-file/test/Node.test.js.html#lineNumber307",
     "Node  methods tree walkers #find should return undefined if request matches the path, but the route doesnt exist",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber161",
+    "test-file/test/Node.test.js.html#lineNumber168",
     "Node  methods tree walkers #insert",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber216",
+    "test-file/test/Node.test.js.html#lineNumber223",
     "Node  methods tree walkers #insert should add a new child otherwise",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber187",
+    "test-file/test/Node.test.js.html#lineNumber194",
     "Node  methods tree walkers #insert should add the route to the node if the paths match",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber251",
+    "test-file/test/Node.test.js.html#lineNumber258",
     "Node  methods tree walkers #insert should insert correctly on route patterns, regardless of param names",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber200",
+    "test-file/test/Node.test.js.html#lineNumber207",
     "Node  methods tree walkers #insert should insert on a child node, if possible",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber233",
+    "test-file/test/Node.test.js.html#lineNumber240",
     "Node  methods tree walkers #insert should reassign children as needed",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber175",
+    "test-file/test/Node.test.js.html#lineNumber182",
     "Node  methods tree walkers #insert should throw an error if the node path does not start the route path",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber163",
+    "test-file/test/Node.test.js.html#lineNumber170",
     "Node  methods tree walkers #insert should throw an error if the route path is not contained in the nodes path",
     "test"
   ],
   [
     "",
-    "test-file/test/Node.test.js.html#lineNumber321",
-    "Node  methods tree walkers #toJs",
+    "test-file/test/Node.test.js.html#lineNumber328",
+    "Node  methods tree walkers #toObject",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber18",
+    "test-file/test/Request.test.js.html#lineNumber17",
     "Request",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber20",
+    "test-file/test/Request.test.js.html#lineNumber19",
     "Request constructor",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber93",
+    "test-file/test/Request.test.js.html#lineNumber92",
     "Request constructor should allow arbitrary properties from constructor",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber98",
+    "test-file/test/Request.test.js.html#lineNumber97",
     "Request constructor should allow construction from an existing request instance",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber81",
+    "test-file/test/Request.test.js.html#lineNumber80",
     "Request constructor should not throw if options.body is undefined",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber39",
+    "test-file/test/Request.test.js.html#lineNumber38",
     "Request constructor should not throw if options.headers is undefined",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber33",
+    "test-file/test/Request.test.js.html#lineNumber32",
     "Request constructor should throw if options is not an object",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber27",
+    "test-file/test/Request.test.js.html#lineNumber26",
     "Request constructor should throw if options is undefined",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber87",
+    "test-file/test/Request.test.js.html#lineNumber86",
     "Request constructor should throw if options.body is defined but not a readable stream",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber45",
+    "test-file/test/Request.test.js.html#lineNumber44",
     "Request constructor should throw if options.headers is defined and not an object",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber69",
+    "test-file/test/Request.test.js.html#lineNumber68",
     "Request constructor should throw if options.method is not a string",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber75",
+    "test-file/test/Request.test.js.html#lineNumber74",
     "Request constructor should throw if options.method is not an allowed method value",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber63",
+    "test-file/test/Request.test.js.html#lineNumber62",
     "Request constructor should throw if options.method is undefined",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber57",
+    "test-file/test/Request.test.js.html#lineNumber56",
     "Request constructor should throw if options.path is not a string",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber51",
+    "test-file/test/Request.test.js.html#lineNumber50",
     "Request constructor should throw if options.path is undefined",
     "test"
   ],
   [
     "",
-    "test-file/test/Request.test.js.html#lineNumber109",
+    "test-file/test/Request.test.js.html#lineNumber108",
     "Request properties",
     "test"
   ],
@@ -1184,7 +1208,7 @@ window.esdocSearchIndex = [
   [
     "",
     "test-file/test/Request.test.js.html#lineNumber195",
-    "Request properties header values should be stored as lowercase",
+    "Request properties header values case should be preserved",
     "test"
   ],
   [
@@ -1435,85 +1459,85 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber27",
+    "test-file/test/Router.test.js.html#lineNumber26",
     "Router ",
     "test"
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber44",
+    "test-file/test/Router.test.js.html#lineNumber43",
     "Router  #addRoute",
     "test"
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber64",
+    "test-file/test/Router.test.js.html#lineNumber62",
     "Router  #addRoute should add the new route to its tree",
     "test"
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber45",
+    "test-file/test/Router.test.js.html#lineNumber44",
     "Router  #addRoute should construct a new Route object from the input",
     "test"
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber76",
+    "test-file/test/Router.test.js.html#lineNumber74",
     "Router  #addRoute should throw an error if the route contains a splat",
     "test"
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber86",
+    "test-file/test/Router.test.js.html#lineNumber84",
     "Router  #addRoute should throw an error if the route contains an optional",
     "test"
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber97",
+    "test-file/test/Router.test.js.html#lineNumber95",
     "Router  middleware",
     "test"
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber151",
+    "test-file/test/Router.test.js.html#lineNumber149",
     "Router  middleware #execute",
     "test"
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber152",
+    "test-file/test/Router.test.js.html#lineNumber150",
     "Router  middleware #execute should invoke execute on the matched route, if it exists",
     "test"
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber167",
+    "test-file/test/Router.test.js.html#lineNumber165",
     "Router  middleware #execute should not throw if the matched route doesnt exist",
     "test"
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber122",
+    "test-file/test/Router.test.js.html#lineNumber120",
     "Router  middleware #match",
     "test"
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber143",
+    "test-file/test/Router.test.js.html#lineNumber141",
     "Router  middleware #match should attach an empty match info if there is not matched route",
     "test"
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber130",
+    "test-file/test/Router.test.js.html#lineNumber128",
     "Router  middleware #match should attach the matched route info to the request",
     "test"
   ],
   [
     "",
-    "test-file/test/Router.test.js.html#lineNumber123",
+    "test-file/test/Router.test.js.html#lineNumber121",
     "Router  middleware #match should find the route on its routeTree",
     "test"
   ],
@@ -1552,6 +1576,78 @@ window.esdocSearchIndex = [
     "file/lib/Node.js.html",
     "lib/Node.js",
     "file"
+  ],
+  [
+    "lib/node.js~node#addchild",
+    "class/lib/Node.js~Node.html#instance-method-addChild",
+    "lib/Node.js~Node#addChild",
+    "method"
+  ],
+  [
+    "lib/node.js~node#addroute",
+    "class/lib/Node.js~Node.html#instance-method-addRoute",
+    "lib/Node.js~Node#addRoute",
+    "method"
+  ],
+  [
+    "lib/node.js~node#caninsert",
+    "class/lib/Node.js~Node.html#instance-method-canInsert",
+    "lib/Node.js~Node#canInsert",
+    "method"
+  ],
+  [
+    "lib/node.js~node#constructor",
+    "class/lib/Node.js~Node.html#instance-constructor-constructor",
+    "lib/Node.js~Node#constructor",
+    "method"
+  ],
+  [
+    "lib/node.js~node#find",
+    "class/lib/Node.js~Node.html#instance-method-find",
+    "lib/Node.js~Node#find",
+    "method"
+  ],
+  [
+    "lib/node.js~node#getchildren",
+    "class/lib/Node.js~Node.html#instance-method-getChildren",
+    "lib/Node.js~Node#getChildren",
+    "method"
+  ],
+  [
+    "lib/node.js~node#getroutes",
+    "class/lib/Node.js~Node.html#instance-method-getRoutes",
+    "lib/Node.js~Node#getRoutes",
+    "method"
+  ],
+  [
+    "lib/node.js~node#insert",
+    "class/lib/Node.js~Node.html#instance-method-insert",
+    "lib/Node.js~Node#insert",
+    "method"
+  ],
+  [
+    "lib/node.js~node#isparent",
+    "class/lib/Node.js~Node.html#instance-method-isParent",
+    "lib/Node.js~Node#isParent",
+    "method"
+  ],
+  [
+    "lib/node.js~node#issame",
+    "class/lib/Node.js~Node.html#instance-method-isSame",
+    "lib/Node.js~Node#isSame",
+    "method"
+  ],
+  [
+    "lib/node.js~node#path",
+    "class/lib/Node.js~Node.html#instance-get-path",
+    "lib/Node.js~Node#path",
+    "member"
+  ],
+  [
+    "lib/node.js~node#toobject",
+    "class/lib/Node.js~Node.html#instance-method-toObject",
+    "lib/Node.js~Node#toObject",
+    "method"
   ],
   [
     "lib/request.js",
@@ -1609,13 +1705,13 @@ window.esdocSearchIndex = [
   ],
   [
     "lib/request.js~request#path",
-    "class/lib/Request.js~Request.html#instance-get-path",
+    "class/lib/Request.js~Request.html#instance-set-path",
     "lib/Request.js~Request#path",
     "member"
   ],
   [
     "lib/request.js~request#path",
-    "class/lib/Request.js~Request.html#instance-set-path",
+    "class/lib/Request.js~Request.html#instance-get-path",
     "lib/Request.js~Request#path",
     "member"
   ],
@@ -1669,13 +1765,13 @@ window.esdocSearchIndex = [
   ],
   [
     "lib/response.js~response#statuscode",
-    "class/lib/Response.js~Response.html#instance-set-statusCode",
+    "class/lib/Response.js~Response.html#instance-get-statusCode",
     "lib/Response.js~Response#statusCode",
     "member"
   ],
   [
     "lib/response.js~response#statuscode",
-    "class/lib/Response.js~Response.html#instance-get-statusCode",
+    "class/lib/Response.js~Response.html#instance-set-statusCode",
     "lib/Response.js~Response#statusCode",
     "member"
   ],
@@ -1684,6 +1780,42 @@ window.esdocSearchIndex = [
     "file/lib/Route.js.html",
     "lib/Route.js",
     "file"
+  ],
+  [
+    "lib/route.js~route#constructor",
+    "class/lib/Route.js~Route.html#instance-constructor-constructor",
+    "lib/Route.js~Route#constructor",
+    "method"
+  ],
+  [
+    "lib/route.js~route#execute",
+    "class/lib/Route.js~Route.html#instance-method-execute",
+    "lib/Route.js~Route#execute",
+    "method"
+  ],
+  [
+    "lib/route.js~route#handler",
+    "class/lib/Route.js~Route.html#instance-get-handler",
+    "lib/Route.js~Route#handler",
+    "member"
+  ],
+  [
+    "lib/route.js~route#ismatch",
+    "class/lib/Route.js~Route.html#instance-method-isMatch",
+    "lib/Route.js~Route#isMatch",
+    "method"
+  ],
+  [
+    "lib/route.js~route#method",
+    "class/lib/Route.js~Route.html#instance-get-method",
+    "lib/Route.js~Route#method",
+    "member"
+  ],
+  [
+    "lib/route.js~route#path",
+    "class/lib/Route.js~Route.html#instance-get-path",
+    "lib/Route.js~Route#path",
+    "member"
   ],
   [
     "lib/routetree.js",

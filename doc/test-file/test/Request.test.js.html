@@ -33,8 +33,10 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Node.js~Node.html">Node</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Route.js~Route.html">Route</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
 </ul>
 </div>
@@ -47,7 +49,6 @@ const sinon             = require(&apos;sinon&apos;);
 const sinonChai         = require(&apos;sinon-chai&apos;);
 const sinonStubPromises = require(&apos;sinon-promises&apos;);
 const chaiAsPromised    = require(&apos;chai-as-promised&apos;);
-const _                 = require(&apos;lodash&apos;);
 
 sinonStubPromises(sinon);
 chai.use(chaiAsPromised);
@@ -144,7 +145,7 @@ describe(&apos;Request&apos;, () =&gt; {
 
       expect(req2.headers).to.eql({ &apos;b&apos; : &apos;c&apos; });
       expect(req2.path).to.equal(&apos;/&apos;);
-      expect(req2.method).to.equal(&apos;get&apos;);
+      expect(req2.method).to.equal(&apos;GET&apos;);
       expect(req2.a).to.equal(1);
     });
   });
@@ -152,9 +153,10 @@ describe(&apos;Request&apos;, () =&gt; {
   describe(&apos;properties&apos;, () =&gt; {
     beforeEach(() =&gt; {
       request = new Request({
-        headers : { hello : &apos;world&apos;,
-                    HeY : &apos;BuDdY&apos;
-                  },
+        headers : {
+          hello : &apos;world&apos;,
+          HeY   : &apos;BuDdY&apos;
+        },
         path    : &apos;/&apos;,
         method  : &apos;get&apos;
       });
@@ -163,7 +165,7 @@ describe(&apos;Request&apos;, () =&gt; {
     it(&apos;should set properties based on constructed values&apos;, () =&gt; {
       expect(request.getHeader(&apos;hello&apos;)).to.equal(&apos;world&apos;);
       expect(request.path).to.equal(&apos;/&apos;);
-      expect(request.method).to.equal(&apos;get&apos;);
+      expect(request.method).to.equal(&apos;GET&apos;);
     });
 
     it(&apos;should defensively copy to protect itself from upstream changes on the headers object&apos;, () =&gt; {
@@ -197,8 +199,8 @@ describe(&apos;Request&apos;, () =&gt; {
     });
 
     it(&apos;should normalize method when set&apos;, () =&gt; {
-      request.method = &apos;GET&apos;;
-      expect(request.method).to.equal(&apos;get&apos;);
+      request.method = &apos;get&apos;;
+      expect(request.method).to.equal(&apos;GET&apos;);
     });
 
     it(&apos;should expose an originalPath property&apos;, () =&gt; {
@@ -235,8 +237,8 @@ describe(&apos;Request&apos;, () =&gt; {
       expect(request.getHeader(&apos;HeLlO&apos;)).to.equal(&apos;world&apos;);
     });
 
-    it(&apos;header values should be stored as lowercase&apos;, () =&gt; {
-      expect(request.getHeader(&apos;hey&apos;)).to.equal(&apos;buddy&apos;);
+    it(&apos;header values case should be preserved&apos;, () =&gt; {
+      expect(request.getHeader(&apos;hey&apos;)).to.equal(&apos;BuDdY&apos;);
     });
 
   });

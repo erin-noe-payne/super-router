@@ -33,8 +33,10 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Node.js~Node.html">Node</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Route.js~Route.html">Route</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
 </ul>
 </div>
@@ -47,7 +49,7 @@
   
   
   
-  <span data-ice="source">| <span><a href="file/lib/Router.js.html#lineNumber14">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/lib/Router.js.html#lineNumber12">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -98,7 +100,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/lib/Router.js~Router.html#instance-method-addRoute">addRoute</a></span></span><span data-ice="signature">(route: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span>): <span>void</span></span>
+           <span data-ice="name"><span><a href="class/lib/Router.js~Router.html#instance-method-addRoute">addRoute</a></span></span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span>): <span>void</span></span>
         </p>
       </div>
       <div>
@@ -184,11 +186,11 @@
     
     
     
-    <span data-ice="name">addRoute</span><span data-ice="signature">(route: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span>): <span>void</span></span>
+    <span data-ice="name">addRoute</span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span>): <span>void</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/Router.js.html#lineNumber50">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/Router.js.html#lineNumber45">source</a></span></span>
     </span>
   </h3>
 
@@ -215,30 +217,10 @@ moving to the next middleware in the stack.</p>
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">route</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">object</a></span></td>
+      <td data-ice="type"><span><a href="class/lib/Route.js~Route.html">Route</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The route definition</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" data-depth="1">route.path</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The path pattern to be matched for this route</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" data-depth="1">route.method</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The method that this route will match</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="1">
-      <td data-ice="name" data-depth="1">route.handler</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The handler function to execute when the route is matched</p>
+      <td data-ice="description"><p>The route definition. If a plain object is provided, will be run through the
+  Route constructor.</p>
 </td>
     </tr>
 </tbody>
@@ -297,7 +279,7 @@ moving to the next middleware in the stack.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/Router.js.html#lineNumber89">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/Router.js.html#lineNumber84">source</a></span></span>
     </span>
   </h3>
 
@@ -373,7 +355,7 @@ be executed. If <code>request.matchedRoute</code> is not defined, the middleware
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/Router.js.html#lineNumber73">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/Router.js.html#lineNumber68">source</a></span></span>
     </span>
   </h3>
 

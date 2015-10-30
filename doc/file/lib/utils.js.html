@@ -33,8 +33,10 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Node.js~Node.html">Node</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Route.js~Route.html">Route</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
 </ul>
 </div>
@@ -45,8 +47,21 @@
 const _       = require(&apos;lodash&apos;);
 const METHODS = require(&apos;./METHODS&apos;);
 
+/**
+ * Utility class
+ * @private
+ */
 class utils {
 
+  /**
+   * Compares two path pattern strings, as used in routing. Returns 0 if they are the same (they would match
+   * the same request path). Returns 1 if the first path is a parent to the second path. Returns -1 if the
+   * second path is a parent, sibling, or cousin.
+   *
+   * @param {String} p1 - first path string
+   * @param {String} p2 - first path string
+   * @returns {Number} - The comparator value
+   */
   static comparePaths(p1, p2) {
     const PARAM_RE = /\/:[^\/]+/gi;
     p1             = p1.replace(PARAM_RE, &apos;/:&apos;);
@@ -62,8 +77,16 @@ class utils {
 
   }
 
+  /**
+   * Normalizes path strings for routing and requests.
+   *  - Strips trailing slashes
+   *  - Lowercases path parts other than route params
+   *
+   * @param {String} path - The path string
+   * @returns {String} - The normalized path
+   */
   static normalizePath(path) {
-    if (_.last(path) === &apos;/&apos; &amp;&amp; path.length &gt; 1) {
+    while (_.last(path) === &apos;/&apos; &amp;&amp; path.length &gt; 1) {
       path = path.slice(0, -1);
     }
     return path.replace(/\/[^:][^\/]+/gi, (match) =&gt; {
@@ -71,10 +94,22 @@ class utils {
     });
   }
 
+  /**
+   * Normalizes a method string to lower case
+   *
+   * @param {string} method - The method string
+   * @returns {string} - The nrormalized method
+   */
   static normalizeMethod(method) {
-    return method.toLowerCase();
+    return method.toUpperCase();
   }
 
+  /**
+   * Tests if a method string is valid.
+   *
+   * @param {String} method - The method string
+   * @returns {Boolean} - If the method is valid
+   */
   static isValidMethod(method) {
     return _.isString(method) &amp;&amp; _.contains(METHODS, this.normalizeMethod(method));
   }

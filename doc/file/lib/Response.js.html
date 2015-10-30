@@ -33,8 +33,10 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Node.js~Node.html">Node</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Route.js~Route.html">Route</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
 </ul>
 </div>
@@ -71,7 +73,7 @@ class Response {
    * @returns {void}
    */
   set statusCode(val) {
-    if (!_.isNumber(val)) {
+    if (!_.isFinite(val)) {
       throw new TypeError(&apos;statusCode must be a number.&apos;);
     }
     this._statusCode = val;
@@ -98,7 +100,10 @@ class Response {
    * @returns {string} - the header value.
    */
   getHeader(key) {
-    return this._headers.get(key);
+    if (!_.isString(key)) {
+      throw new TypeError(&apos;First argument: key must be a string.&apos;);
+    }
+    return this._headers.get(key.toLowerCase());
   }
 
   /**
@@ -114,7 +119,7 @@ class Response {
     if (!_.isString(value)) {
       throw new TypeError(&apos;Second argument: value must be a string.&apos;);
     }
-    this._headers.set(key, value);
+    this._headers.set(key.toLowerCase(), value);
   }
 
   /**
@@ -123,7 +128,10 @@ class Response {
    * @returns {void}
    */
   clearHeader(key) {
-    this._headers.delete(key);
+    if (!_.isString(key)) {
+      throw new TypeError(&apos;First argument: key must be a string.&apos;);
+    }
+    this._headers.delete(key.toLowerCase());
   }
 
   /**

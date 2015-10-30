@@ -1,11 +1,16 @@
 {
   "coverage": "100%",
-  "expectCount": 29,
-  "actualCount": 29,
+  "expectCount": 49,
+  "actualCount": 49,
   "files": {
     "lib/App.js": {
       "expectCount": 4,
       "actualCount": 4,
+      "undocumentLines": []
+    },
+    "lib/Node.js": {
+      "expectCount": 13,
+      "actualCount": 13,
       "undocumentLines": []
     },
     "lib/Request.js": {
@@ -16,6 +21,11 @@
     "lib/Response.js": {
       "expectCount": 10,
       "actualCount": 10,
+      "undocumentLines": []
+    },
+    "lib/Route.js": {
+      "expectCount": 7,
+      "actualCount": 7,
       "undocumentLines": []
     },
     "lib/Router.js": {

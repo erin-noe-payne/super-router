@@ -33,8 +33,10 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Node.js~Node.html">Node</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Route.js~Route.html">Route</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
 </ul>
 </div>
@@ -54,7 +56,7 @@ class Request {
   /**
    * Constructs a new request object.
    *
-   * @param {object} options
+   * @param {object} options - The options object
    * @param {string} path - The request path
    * @param {string} method - The request method
    * @param {object} [headers={}] - The request headers
@@ -82,12 +84,11 @@ class Request {
     this._originalPath    = options.originalPath || options.path;
     this._headers         = new Map();
     _.each(headers, (v, k) =&gt; {
-      this._headers.set(k.toLowerCase(), v.toLowerCase());
+      this._headers.set(k.toLowerCase(), v);
     });
     this._body            = new TransformStream();
     this._body._transform = function (chunk, encoding, done) {
-      this.push(chunk);
-      return done();
+      return done(null, chunk);
     };
     if (isReadableStream(body)) {
       body.pipe(this._body);

@@ -33,8 +33,10 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/App.js~App.html">App</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Node.js~Node.html">Node</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Request.js~Request.html">Request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Response.js~Response.html">Response</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Route.js~Route.html">Route</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/lib/Router.js~Router.html">Router</a></span></span></li>
 </ul>
 </div>
@@ -105,22 +107,22 @@ describe(&apos;Node &apos;, () =&gt; {
     });
 
     it(&apos;should set the path property from the constructor&apos;, () =&gt; {
-      const node = new Node({ path : &apos;/case&apos; });
-      expect(node.path).to.equal(&apos;/case&apos;);
+      const node = new Node({ path : &apos;/user&apos; });
+      expect(node.path).to.equal(&apos;/user&apos;);
     });
 
     it(&apos;should throw on assignment to path&apos;, () =&gt; {
-      const node = new Node({ path : &apos;/case&apos; });
+      const node = new Node({ path : &apos;/user&apos; });
       expect(() =&gt; {
         node.path = &apos;/asdfa&apos;;
       }).to.throw(&apos;Cannot set property&apos;);
     });
     
     it(&apos;should add an options route&apos;, () =&gt; {
-      const node = new Node({ path : &apos;/case&apos; });
+      const node = new Node({ path : &apos;/user&apos; });
       expect(node.getRoutes()).to.have.length(1);
       const optsRoute = node.getRoutes()[0];
-      expect(optsRoute.method).to.equal(&apos;options&apos;);
+      expect(optsRoute.method).to.equal(&apos;OPTIONS&apos;);
     });
   });
 
@@ -130,13 +132,13 @@ describe(&apos;Node &apos;, () =&gt; {
 
     beforeEach(() =&gt; {
       route = {
-        path    : &apos;/case&apos;,
+        path    : &apos;/user&apos;,
         method  : &apos;get&apos;,
         handler : () =&gt; {
 
         }
       };
-      node  = new Node({ path : &apos;/case&apos; });
+      node  = new Node({ path : &apos;/user&apos; });
     });
 
     describe(&apos;#_optionsHandler&apos;, () =&gt; {
@@ -159,7 +161,15 @@ describe(&apos;Node &apos;, () =&gt; {
         node.addRoute(route);
         expect(() =&gt; {
           node.addRoute(route);
-        }).to.throw(&apos;duplicate method &quot;get&quot; added for path &quot;/case&quot;&apos;);
+        }).to.throw(&apos;duplicate method &quot;GET&quot; added for path &quot;/user&quot;&apos;);
+      });
+
+      it(&apos;should throw if the route method is ALL&apos;, () =&gt; {
+        route.method = &apos;*&apos;;
+
+        expect(() =&gt; {
+          node.addRoute(route);
+        }).to.throw(&apos;cannot register route with method ALL on node.&apos;);
       });
     });
 
@@ -186,8 +196,7 @@ describe(&apos;Node &apos;, () =&gt; {
     });
 
     describe(&apos;tree walkers&apos;, () =&gt; {
-      let root, a, ab, az, abc, abd;
-      let route;
+      let root, a, az, abc, abd;
       beforeEach(() =&gt; {
         root = new Node({ path : &apos;/&apos; });
         a    = new Node({ path : &apos;/a&apos; });
@@ -292,14 +301,14 @@ describe(&apos;Node &apos;, () =&gt; {
         });
         
         it(&apos;should insert correctly on route patterns, regardless of param names&apos;, () =&gt; {
-          const node = new Node({ path : &apos;/cases/:id&apos; });
+          const node = new Node({ path : &apos;/users/:id&apos; });
           const route1 = new Route({
-            path    : &apos;/cases/:id&apos;,
+            path    : &apos;/users/:id&apos;,
             method  : &apos;get&apos;,
             handler : sinon.spy()
           });
           const route2 = new Route({
-            path    : &apos;/cases/:caseId&apos;,
+            path    : &apos;/users/:userId&apos;,
             method  : &apos;put&apos;,
             handler : sinon.spy()
           });
@@ -361,7 +370,7 @@ describe(&apos;Node &apos;, () =&gt; {
         });
       });
 
-      describe(&apos;#toJs&apos;, () =&gt; {
+      describe(&apos;#toObject&apos;, () =&gt; {
 
       });
     });
