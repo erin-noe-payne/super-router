@@ -72,7 +72,7 @@ describe('Node ', () => {
         node.path = '/asdfa';
       }).to.throw('Cannot set property');
     });
-    
+
     it('should add an options route', () => {
       const node = new Node({ path : '/user' });
       expect(node.getRoutes()).to.have.length(1);
@@ -254,7 +254,7 @@ describe('Node ', () => {
           });
           expect(ab.getChildren()).to.eql([abc, abd]);
         });
-        
+
         it('should insert correctly on route patterns, regardless of param names', () => {
           const node = new Node({ path : '/users/:id' });
           const route1 = new Route({
@@ -311,7 +311,9 @@ describe('Node ', () => {
             headers : {}
           });
 
-          expect(root.find(request)).to.be.null;
+          expect(() => {
+            root.find(request);
+          }).to.throw('Invalid method');
         });
 
         it('should return a match from its children', () => {

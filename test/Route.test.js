@@ -278,7 +278,7 @@ describe('A Route', () => {
 
       it('should pass properties on options to handler', () => {
         const opts = {
-          request  : new Request({
+          request : new Request({
             method  : 'get',
             path    : '/',
             headers : {}
