@@ -97,6 +97,12 @@ describe('Router ', () => {
       router = new Router();
 
       router.addRoute({
+        path    : '/',
+        method  : 'get',
+        handler : sinon.spy()
+      });
+
+      router.addRoute({
         path    : '/user/:id',
         method  : 'post',
         handler : sinon.spy()
@@ -119,6 +125,7 @@ describe('Router ', () => {
 
     describe('#match', () => {
       it('should find the route on its routeTree', () => {
+        mockTree.find.returns({});
         router.match({ request });
 
         expect(mockTree.find).to.have.been.calledOnce;
@@ -138,11 +145,12 @@ describe('Router ', () => {
         expect(request.matchedRoute).to.equal(route);
       });
 
-      it('should attach an empty match info if there is not matched route', () => {
-        mockTree.find.returns(null);
+      it('should throw an error if there is not matched route', () => {
+        mockTree.find.returns(undefined);
+        expect(() => {
+          router.match({ request });
+        }).to.throw('No route matched');
 
-        router.match({ request });
-        expect(request.matchedRoute).to.be.null;
       });
     });
 

@@ -112,8 +112,8 @@ describe('Request', () => {
           hello : 'world',
           HeY   : 'BuDdY'
         },
-        path    : '/',
-        method  : 'get'
+        path   : '/',
+        method : 'get'
       });
     });
 
