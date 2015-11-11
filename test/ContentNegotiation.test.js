@@ -57,10 +57,10 @@ describe('Content Negotiation Middleware', () => {
         return expect(ContentNegotiation.request({ request })).to.be.rejectedWith('InvalidJSON');
       });
 
-      it('should set the body to null if nothing is streamed in', (done) => {
+      it('should set the body to {} if nothing is streamed in', (done) => {
         request.body.end();
         ContentNegotiation.request({ request }).then(() => {
-          expect(request.body).to.be.null;
+          expect(request.body).to.eql({});
           done();
         });
 
