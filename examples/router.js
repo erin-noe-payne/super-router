@@ -83,10 +83,10 @@ app.useError((opts) => {
   const response = opts.response;
   const error    = opts.error;
 
-  response.statusCode = error.status;
+  response.statusCode = error.statusCode;
   response.setBody({
-    status : error.status,
-    message : error.message
+    statusCode : error.statusCode,
+    message    : error.message
   });
 
 
