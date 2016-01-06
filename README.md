@@ -14,11 +14,11 @@ const router   = new SuperRouter.Router();
 
 router.addRoute({
   path    : '/cases',
-  method  : 'get',
+  methods : 'get',
   handler : (opts) => {
     const request  = opts.request;
     const response = opts.response;
-    
+
     return Database.getCases().then((cases)=>{
       response.setBody(cases);
     });
@@ -27,11 +27,11 @@ router.addRoute({
 
 router.addRoute({
   path    : '/cases/:caseId',
-  method  : 'get',
+  methods : 'get',
   handler : (opts) => {
     const request  = opts.request;
     const response = opts.response;
-    
+
     return Database.getCaseById(request.routeParams.caseId).then((case)=>{
       response.setBody(case);
     });
@@ -43,7 +43,7 @@ app.use({
   handler : (opts) => {
     const request  = opts.request;
     const response = opts.response;
-    
+
     return Database.getCaseByExternalId(request.routeParams.externalId).then((case)=>{
       request.path = `/cases/${case.id}${request.routeParams.restOfRoute}`
     });

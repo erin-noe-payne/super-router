@@ -23,7 +23,7 @@ const users = {
 
 router.addRoute({
   path    : '/',
-  method  : 'get',
+  methods : 'get',
   handler : (opts) => {
     const response = opts.response;
 
@@ -35,7 +35,7 @@ router.addRoute({
 
 router.addRoute({
   path    : '/users',
-  method  : 'get',
+  methods  : 'get',
   handler : (opts) => {
     const response = opts.response;
 
@@ -45,7 +45,7 @@ router.addRoute({
 
 router.addRoute({
   path    : '/users/:userId',
-  method  : 'get',
+  methods : 'get',
   handler : (opts) => {
     const request = opts.request;
     const response = opts.response;

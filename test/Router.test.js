@@ -62,7 +62,7 @@ describe('Router ', () => {
     it('should add the new route to its tree', () => {
       const route = new Route({
         path    : '/',
-        method  : 'get',
+        methods : 'get',
         handler : sinon.spy()
       });
       router.addRoute(route);
@@ -75,7 +75,7 @@ describe('Router ', () => {
       expect(() => {
         router.addRoute({
           path    : '/*start/foo',
-          method  : 'get',
+          methods : 'get',
           handler : sinon.spy()
         });
       }).to.throw('Splats and optional groups are not supported for routes.');
@@ -85,7 +85,7 @@ describe('Router ', () => {
       expect(() => {
         router.addRoute({
           path    : '(/start)/foo',
-          method  : 'get',
+          methods : 'get',
           handler : sinon.spy()
         });
       }).to.throw('Splats and optional groups are not supported for routes.');
@@ -98,19 +98,19 @@ describe('Router ', () => {
 
       router.addRoute({
         path    : '/',
-        method  : 'get',
+        methods : 'get',
         handler : sinon.spy()
       });
 
       router.addRoute({
         path    : '/user/:id',
-        method  : 'post',
+        methods : 'post',
         handler : sinon.spy()
       });
 
       router.addRoute({
         path    : '/user/:id',
-        method  : 'get',
+        methods : 'get',
         handler : sinon.spy()
       });
 
@@ -135,7 +135,7 @@ describe('Router ', () => {
       it('should attach the matched route info to the request', () => {
         const route = new Route({
           path    : '/',
-          method  : 'get',
+          methods : 'get',
           handler : sinon.spy()
         });
 
@@ -158,7 +158,7 @@ describe('Router ', () => {
       it('should invoke execute on the matched route, if it exists', () => {
         const route = new Route({
           path    : '/',
-          method  : 'get',
+          methods : 'get',
           handler : sinon.spy()
         });
         sinon.spy(route, 'execute');
