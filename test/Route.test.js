@@ -88,12 +88,31 @@ describe('A Route', () => {
       }).to.throw(METHOD_ERROR);
     });
 
+    it('should throw if options.method contains a method value in the array that is not allowed', () => {
+      expect(() => {
+        new Route({ handler : sinon.spy(), method : ['GET', 'heart!'] });
+      }).to.throw(METHOD_ERROR);
+    });
+
   });
 
   describe('properties', () => {
     _.each(['path', 'method', 'handler'], (propertyName) => {
       it(`should set property ${propertyName} from constructor`, () => {
-        expect(route[propertyName]).to.equal(opts[propertyName]);
+        let shouldEqual;
+        if (propertyName === 'method') {
+          shouldEqual = [];
+          if (_.isArray(opts[propertyName])) {
+            shouldEqual = opts[propertyName];
+          }
+          else {
+            shouldEqual.push(opts[propertyName]);
+          }
+        }
+        else {
+          shouldEqual = opts[propertyName];
+        }
+        expect(route[propertyName]).to.eql(shouldEqual);
       });
 
       it(`should throw on assignment to ${propertyName}`, () => {
@@ -125,12 +144,27 @@ describe('A Route', () => {
 
     it('should normalize method name', () => {
       route = new Route({ path : '/a/b/c', method : 'GeT', handler : handler });
-      expect(route.method).to.equal('GET');
+      expect(route.method).to.eql(['GET']);
+    });
+
+    it('should turn a single method into an array', () => {
+      route = new Route({ path : '/a/b/c', method : 'GET', handler : handler });
+      expect(route.method).to.eql(['GET']);
+    });
+
+    it('should be able to take in an array of methods', () => {
+      route = new Route({ path : '/a/b/c', method : ['GET', 'POST'], handler : handler });
+      expect(route.method).to.eql(['GET', 'POST']);
+    });
+
+    it('should normalize an array of methods', () => {
+      route = new Route({ path : '/a/b/c', method : ['gET', 'POst'], handler : handler });
+      expect(route.method).to.eql(['GET', 'POST']);
     });
 
     it('should default method to ALL', () => {
       route = new Route({ path : '/a/b/c', handler : handler });
-      expect(route.method).to.equal('*');
+      expect(route.method).to.eql(['*']);
     });
 
     it('should default path to all', () => {

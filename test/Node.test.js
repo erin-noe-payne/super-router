@@ -77,7 +77,7 @@ describe('Node ', () => {
       const node = new Node({ path : '/user' });
       expect(node.getRoutes()).to.have.length(1);
       const optsRoute = node.getRoutes()[0];
-      expect(optsRoute.method).to.equal('OPTIONS');
+      expect(optsRoute.method).to.eql(['OPTIONS']);
     });
   });
 
@@ -115,6 +115,23 @@ describe('Node ', () => {
       it('should throw if the method is already defined for this node', () => {
         node.addRoute(route);
         expect(() => {
+          node.addRoute(route);
+        }).to.throw('duplicate method "GET" added for path "/user"');
+      });
+
+      it('should throw if the method is already defined using an array of methods for this node', () => {
+        route.method = ['get', 'post'];
+        node.addRoute(route);
+        expect(() => {
+          route.method = 'get';
+          node.addRoute(route);
+        }).to.throw('duplicate method "GET" added for path "/user"');
+      });
+
+      it('should throw if one of the methods in array is already defined for this node', () => {
+        node.addRoute(route);
+        expect(() => {
+          route.method = ['get', 'post'];
           node.addRoute(route);
         }).to.throw('duplicate method "GET" added for path "/user"');
       });
