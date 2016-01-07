@@ -77,7 +77,7 @@ describe('Node ', () => {
       const node = new Node({ path : '/user' });
       expect(node.getRoutes()).to.have.length(1);
       const optsRoute = node.getRoutes()[0];
-      expect(optsRoute.method).to.equal('OPTIONS');
+      expect(optsRoute.methods).to.eql(['OPTIONS']);
     });
   });
 
@@ -88,7 +88,7 @@ describe('Node ', () => {
     beforeEach(() => {
       route = {
         path    : '/user',
-        method  : 'get',
+        methods : 'get',
         handler : () => {
 
         }
@@ -119,8 +119,25 @@ describe('Node ', () => {
         }).to.throw('duplicate method "GET" added for path "/user"');
       });
 
+      it('should throw if the method is already defined using an array of methods for this node', () => {
+        route.methods = ['get', 'post'];
+        node.addRoute(route);
+        expect(() => {
+          route.methods = 'get';
+          node.addRoute(route);
+        }).to.throw('duplicate method "GET" added for path "/user"');
+      });
+
+      it('should throw if one of the methods in array is already defined for this node', () => {
+        node.addRoute(route);
+        expect(() => {
+          route.methods = ['get', 'post'];
+          node.addRoute(route);
+        }).to.throw('duplicate method "GET" added for path "/user"');
+      });
+
       it('should throw if the route method is ALL', () => {
-        route.method = '*';
+        route.methods = '*';
 
         expect(() => {
           node.addRoute(route);
@@ -170,7 +187,7 @@ describe('Node ', () => {
         it('should throw an error if the route path is not contained in the nodes path', () => {
           const route = new Route({
             path    : '/',
-            method  : 'get',
+            methods : 'get',
             handler : sinon.spy()
           });
 
@@ -182,7 +199,7 @@ describe('Node ', () => {
         it('should throw an error if the node path does not start the route path', () => {
           const route = new Route({
             path    : '/b/c',
-            method  : 'get',
+            methods : 'get',
             handler : sinon.spy()
           });
 
@@ -195,7 +212,7 @@ describe('Node ', () => {
           sandbox.spy(root, 'addRoute');
           const route = new Route({
             path    : '/',
-            method  : 'get',
+            methods : 'get',
             handler : sinon.spy()
           });
           root.insert(route);
@@ -207,7 +224,7 @@ describe('Node ', () => {
         it('should insert on a child node, if possible', () => {
           const route = new Route({
             path    : '/a/b/c/e',
-            method  : 'get',
+            methods : 'get',
             handler : sinon.spy()
           });
           sinon.spy(a, 'insert');
@@ -223,7 +240,7 @@ describe('Node ', () => {
         it('should add a new child otherwise', () => {
           const route   = new Route({
             path    : '/a/b',
-            method  : 'get',
+            methods : 'get',
             handler : sinon.spy()
           });
           sinon.spy(a, 'insert');
@@ -240,7 +257,7 @@ describe('Node ', () => {
         it('should reassign children as needed', () => {
           const route  = new Route({
             path    : '/a/b',
-            method  : 'get',
+            methods : 'get',
             handler : sinon.spy()
           });
 
@@ -259,12 +276,12 @@ describe('Node ', () => {
           const node = new Node({ path : '/users/:id' });
           const route1 = new Route({
             path    : '/users/:id',
-            method  : 'get',
+            methods : 'get',
             handler : sinon.spy()
           });
           const route2 = new Route({
             path    : '/users/:userId',
-            method  : 'put',
+            methods : 'put',
             handler : sinon.spy()
           });
           node.insert(route1);
@@ -281,14 +298,14 @@ describe('Node ', () => {
         beforeEach(() => {
           rootGet = new Route({
             path    : '/',
-            method  : 'get',
+            methods : 'get',
             handler : sinon.spy()
           });
           root.addRoute(rootGet);
 
           aGet = new Route({
             path    : '/a',
-            method  : 'get',
+            methods : 'get',
             handler : sinon.spy()
           });
           a.addRoute(aGet);

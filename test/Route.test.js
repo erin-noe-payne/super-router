@@ -24,7 +24,7 @@ describe('A Route', () => {
 
   beforeEach(() => {
     handler = sinon.stub();
-    opts    = { path : '/', method : 'GET', handler : handler };
+    opts    = { path : '/', methods : 'GET', handler : handler };
     route   = new Route(opts);
   });
 
@@ -70,30 +70,49 @@ describe('A Route', () => {
       }).to.throw(PATH_ERROR);
     });
 
-    it('should not throw if options.method is undefined', () => {
+    it('should not throw if options.methods is undefined', () => {
       expect(() => {
         new Route({ handler : sinon.spy() });
       }).to.not.throw();
     });
 
-    it('should throw if options.method is not a string', () => {
+    it('should throw if options.methods is not a string', () => {
       expect(() => {
-        new Route({ handler : sinon.spy(), method : 7 });
+        new Route({ handler : sinon.spy(), methods : 7 });
       }).to.throw(METHOD_ERROR);
     });
 
-    it('should throw if options.method is not an allowed method value', () => {
+    it('should throw if options.methods is not an allowed method value', () => {
       expect(() => {
-        new Route({ handler : sinon.spy(), method : 'heart!' });
+        new Route({ handler : sinon.spy(), methods : 'heart!' });
+      }).to.throw(METHOD_ERROR);
+    });
+
+    it('should throw if options.methods contains a method value in the array that is not allowed', () => {
+      expect(() => {
+        new Route({ handler : sinon.spy(), methods : ['GET', 'heart!'] });
       }).to.throw(METHOD_ERROR);
     });
 
   });
 
   describe('properties', () => {
-    _.each(['path', 'method', 'handler'], (propertyName) => {
+    _.each(['path', 'methods', 'handler'], (propertyName) => {
       it(`should set property ${propertyName} from constructor`, () => {
-        expect(route[propertyName]).to.equal(opts[propertyName]);
+        let shouldEqual;
+        if (propertyName === 'methods') {
+          shouldEqual = [];
+          if (_.isArray(opts[propertyName])) {
+            shouldEqual = opts[propertyName];
+          }
+          else {
+            shouldEqual.push(opts[propertyName]);
+          }
+        }
+        else {
+          shouldEqual = opts[propertyName];
+        }
+        expect(route[propertyName]).to.eql(shouldEqual);
       });
 
       it(`should throw on assignment to ${propertyName}`, () => {
@@ -104,33 +123,48 @@ describe('A Route', () => {
     });
 
     it('should normalize root path', () => {
-      route = new Route({ path : '/', method : 'get', handler : handler });
+      route = new Route({ path : '/', methods : 'get', handler : handler });
       expect(route.path).to.equal('/');
     });
 
     it('should normalize trailing slashes', () => {
-      route = new Route({ path : '/a/b/c/', method : 'get', handler : handler });
+      route = new Route({ path : '/a/b/c/', methods : 'get', handler : handler });
       expect(route.path).to.equal('/a/b/c');
     });
 
     it('should normalize trailing slashes', () => {
-      route = new Route({ path : '/a/b/c', method : 'get', handler : handler });
+      route = new Route({ path : '/a/b/c', methods : 'get', handler : handler });
       expect(route.path).to.equal('/a/b/c');
     });
 
     it('should lowercase path parts that are NOT route params', () => {
-      route = new Route({ path : '/CaSes/:caseId/THINg', method : 'get', handler : handler });
+      route = new Route({ path : '/CaSes/:caseId/THINg', methods : 'get', handler : handler });
       expect(route.path).to.equal('/cases/:caseId/thing');
     });
 
     it('should normalize method name', () => {
-      route = new Route({ path : '/a/b/c', method : 'GeT', handler : handler });
-      expect(route.method).to.equal('GET');
+      route = new Route({ path : '/a/b/c', methods : 'GeT', handler : handler });
+      expect(route.methods).to.eql(['GET']);
+    });
+
+    it('should turn a single method into an array', () => {
+      route = new Route({ path : '/a/b/c', methods : 'GET', handler : handler });
+      expect(route.methods).to.eql(['GET']);
+    });
+
+    it('should be able to take in an array of methods', () => {
+      route = new Route({ path : '/a/b/c', methods : ['GET', 'POST'], handler : handler });
+      expect(route.methods).to.eql(['GET', 'POST']);
+    });
+
+    it('should normalize an array of methods', () => {
+      route = new Route({ path : '/a/b/c', methods : ['gET', 'POst'], handler : handler });
+      expect(route.methods).to.eql(['GET', 'POST']);
     });
 
     it('should default method to ALL', () => {
       route = new Route({ path : '/a/b/c', handler : handler });
-      expect(route.method).to.equal('*');
+      expect(route.methods).to.eql(['*']);
     });
 
     it('should default path to all', () => {
@@ -360,7 +394,7 @@ describe('A Route', () => {
       it('should propagate mutations on the request and response that occur within the handler', () => {
         route = new Route({
           path    : '/',
-          method  : 'get',
+          methods : 'get',
           handler : (opts) => {
             const req = opts.request;
             const res = opts.response;
@@ -380,7 +414,7 @@ describe('A Route', () => {
         beforeEach(() => {
           route = new Route({
             path    : '/user(/:type)/:id(/*rest)',
-            method  : 'get',
+            methods : 'get',
             handler : sinon.spy()
           });
         });
