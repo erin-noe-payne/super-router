@@ -114,8 +114,12 @@ describe('App', () => {
     let request;
     let middleware1;
     let middleware2;
+    let middleware3;
+    let middleware4;
     let errMiddleware1;
     let errMiddleware2;
+    let errMiddleware3;
+    let errMiddleware4;
 
     beforeEach(() => {
       request = new Request({
@@ -126,6 +130,12 @@ describe('App', () => {
 
       middleware1 = sinon.createStubInstance(Route);
       middleware2 = sinon.createStubInstance(Route);
+      middleware3 = new Route({
+        handler : sinon.spy(function (opts) {
+          opts.response.end();
+        })
+      });
+      middleware4 = sinon.createStubInstance(Route);
 
       errMiddleware1 = new Route({
         handler : sinon.spy()
@@ -135,6 +145,16 @@ describe('App', () => {
         handler : sinon.spy()
       });
       sandbox.stub(errMiddleware2, 'execute');
+      errMiddleware3 = new Route({
+        handler : sinon.spy(function (opts) {
+          opts.response.end();
+          throw new Error('Failure');
+        })
+      });
+      errMiddleware4 = new Route({
+        handler : sinon.spy()
+      });
+      sandbox.stub(errMiddleware4, 'execute');
 
       app.use(middleware1);
       app.use(middleware2);
@@ -210,6 +230,30 @@ describe('App', () => {
     it('should resolve with the created response object', () => {
       return app.processRequest(request).then((response) => {
         expect(response).to.be.instanceof(Response);
+      });
+    });
+
+    it('should bail from the middleware stack if response.end is true', () => {
+      app.use(middleware3);
+      app.use(middleware4);
+      return app.processRequest(request).then(() => {
+        expect(middleware3.handler).to.have.been.calledOnce;
+        expect(middleware4.execute).to.not.have.been.calledOnce;
+      });
+    });
+
+    it('should bail from the error stack if response.end is true', () => {
+      const err = new Error('uhoh');
+      const err2 = new Error('ohno');
+      middleware1.execute.throws(err);
+      errMiddleware1.execute.throws(err2);
+      errMiddleware2.execute.throws(err2);
+      app.useError(errMiddleware3);
+      app.useError(errMiddleware4);
+
+      return app.processRequest(request).then(() => {
+        expect(errMiddleware3.handler).to.have.been.calledOnce;
+        expect(errMiddleware4.execute).to.not.have.been.calledOnce;
       });
     });
 
