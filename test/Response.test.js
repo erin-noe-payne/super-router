@@ -164,12 +164,25 @@ describe('Response', () => {
         expect(response.getBody()).to.equal(response.body);
       });
 
-      it('should return a reference to the assigned balue if we setBody to a non-stream value', () => {
+      it('should return a reference to the assigned value if we setBody to a non-stream value', () => {
         response.setBody('hello world');
         expect(response.getBody()).to.equal('hello world');
       });
     });
+  });
 
+  describe('ended', () => {
+    beforeEach(() => {
+      response = new Response();
+    });
+    it('should default the value to false', () => {
+      expect(response.ended).to.be.false;
+    });
+
+    it('should be set to true when setEnd is called', () => {
+      response.end();
+      expect(response.ended).to.be.true;
+    });
   });
 
 
