@@ -33,6 +33,7 @@ describe('A Route', () => {
     const PATH_ERROR    = 'path must be a string.';
     const METHOD_ERROR  = 'method must be a valid method string.';
     const HANDLER_ERROR = 'handler must be a function.';
+    const ERROR_HANDLER_ERROR = 'errorHandler must be a function.';
 
     it('should throw if options is undefined', () => {
       expect(() => {
@@ -56,6 +57,18 @@ describe('A Route', () => {
       expect(() => {
         new Route({ handler : 'asdf' });
       }).to.throw(HANDLER_ERROR);
+    });
+
+    it('should throw if error handler is provided but not a function', () => {
+      expect(() => {
+        new Route({ handler : sinon.spy(), errorHandler : 'whatever' });
+      }).to.throw(ERROR_HANDLER_ERROR);
+    });
+
+    it('should not throw if error handler is not provided', () => {
+      expect(() => {
+        new Route({ handler : sinon.spy() });
+      }).to.not.throw();
     });
 
     it('should not throw if options.path is undefined', () => {
@@ -381,7 +394,7 @@ describe('A Route', () => {
         });
       });
 
-      it('should reject if the handler rejects', () => {
+      it('should reject if the handler rejects and there is no error handler', () => {
         handler.returnsPromise();
         const err = new Error('A TERRIBLE TRAGEDY');
         handler.rejects(err);
@@ -407,6 +420,75 @@ describe('A Route', () => {
         return route.execute({ request, response }).then(() => {
           expect(request.a).to.equal(1);
           expect(response.b).to.equal(2);
+        });
+      });
+
+      describe('route with an error handler', () => {
+        let errorHandler;
+
+        beforeEach(() => {
+          errorHandler = sinon.stub();
+          opts    = { path : '/', methods : 'GET', handler : handler, errorHandler : errorHandler };
+          route   = new Route(opts);
+        });
+
+        it('if the handler resolves then error handler should not be run', () => {
+          handler.returnsPromise();
+          handler.resolves();
+
+          return route.execute({ request, response }).then(() => {
+            expect(errorHandler).to.not.have.been.called;
+          });
+
+        });
+
+        it('if the handler rejects then error handler should be run', () => {
+          handler.returnsPromise();
+          const err = new Error('A TERRIBLE TRAGEDY');
+          handler.rejects(err);
+
+          return route.execute({ request, response }).then(() => {
+            expect(errorHandler).to.have.been.calledOnce;
+          });
+
+        });
+
+        it('should pass request, response, error to the error handler', () => {
+          handler.returnsPromise();
+          const err = new Error('A TERRIBLE TRAGEDY');
+          handler.rejects(err);
+
+          return route.execute({ request, response }).then(() => {
+            expect(errorHandler).to.have.been.calledWith({ request, response, error : err });
+          });
+        });
+
+        it('should resolve if the handler rejects and the error handler resolves', () => {
+          handler.returnsPromise();
+          const err = new Error('A TERRIBLE TRAGEDY');
+          handler.rejects(err);
+
+          errorHandler.returnsPromise();
+          const success = 'YAY';
+          errorHandler.resolves(success);
+
+          return route.execute({ request, response }).then((result) => {
+            expect(result).to.equal(success);
+          });
+        });
+
+        it('should reject if the handler rejects and the error handler rejects', () => {
+          handler.returnsPromise();
+          const err = new Error('A TERRIBLE TRAGEDY');
+          handler.rejects(err);
+
+          errorHandler.returnsPromise();
+          const err2 = new Error('ANOTHER TERRIBLE TRAGEDY');
+          errorHandler.rejects(err2);
+
+          return route.execute({ request, response }).catch((thrownErr) => {
+            expect(thrownErr).to.equal(err2);
+          });
         });
       });
 
