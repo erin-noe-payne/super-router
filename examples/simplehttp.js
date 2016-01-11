@@ -41,7 +41,7 @@ app.then((opts) => {
 
   response.setHeader('Content-Type', 'application/json');
   response.setBody(JSON.stringify(response.getBody()));
-})
+});
 
 // Setup a transport binding to http server
 const server = http.createServer((req, res) => {

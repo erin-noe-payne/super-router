@@ -61,8 +61,8 @@ router.addRoute({
   }
 });
 
-app.use(router.match);
-app.use((opts) => {
+app.then(router.match);
+app.then((opts) => {
   const request = opts.request;
 
   if (request.matchedRoute == null) {
@@ -71,15 +71,15 @@ app.use((opts) => {
     throw err;
   }
 });
-app.use(router.execute);
-app.use((opts) => {
+app.then(router.execute);
+app.then((opts) => {
   const response = opts.response;
 
   response.setHeader('Content-Type', 'application/json');
   response.setBody(JSON.stringify(response.getBody()));
 });
 
-app.useError((opts) => {
+app.catch((opts) => {
   const response = opts.response;
   const error    = opts.error;
 

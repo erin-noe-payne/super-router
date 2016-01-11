@@ -38,7 +38,7 @@ router.addRoute({
   }
 });
 
-app.use({
+app.then({
   path : '/cases/externalId/:externalId(/*restOfRoute)',
   handler : (opts) => {
     const request  = opts.request;
@@ -49,9 +49,9 @@ app.use({
     });
   }
 });
-app.use(router.match);
-app.use(router.execute);
-app.use((opts) => {
+app.then(router.match);
+app.then(router.execute);
+app.then((opts) => {
   const request  = opts.request;
   const response = opts.response;
 

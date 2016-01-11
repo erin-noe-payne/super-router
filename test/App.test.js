@@ -343,7 +343,7 @@ describe('App', () => {
     });
   });
 
-  describe.only('processRequest with middleware specific error handlers', () => {
+  describe('processRequest with middleware specific error handlers', () => {
     let request;
     let middleware1;
     let middleware2;
@@ -442,75 +442,6 @@ describe('App', () => {
         expect(middleware4.execute).to.not.have.been.calledOnce;
       });
     });
-
-
-
-    // let request;
-    // let middleware1Handler, middleware1ErrorHandler;
-    // let middleware2Handler, middleware2ErrorHandler;
-    // let middleware3Handler, middleware3ErrorHandler;
-    // let middleware4Handler, middleware4ErrorHandler;
-    //
-    // let errorMiddleware1Handler, errorMiddleware1ErrorHandler;
-    // let errorMiddleware2Handler, errorMiddleware2ErrorHandler;
-    //
-    //
-    // beforeEach(() => {
-    //   request = new Request({
-    //     headers : {},
-    //     path    : '/a',
-    //     method  : 'get'
-    //   });
-    //
-    //   middleware1Handler = sinon.spy();
-    //   middleware1ErrorHandler = sinon.spy();
-    //   middleware2Handler = sinon.spy();
-    //   middleware2ErrorHandler = sinon.spy();
-    //   middleware3Handler = sinon.spy();
-    //   middleware3ErrorHandler = sinon.spy();
-    //   middleware4Handler = sinon.spy();
-    //   middleware4ErrorHandler = sinon.spy();
-    //
-    //   errorMiddleware1Handler = sinon.spy();
-    //   errorMiddleware1ErrorHandler = sinon.spy();
-    //   errorMiddleware2Handler = sinon.spy();
-    //   errorMiddleware2ErrorHandler = sinon.spy();
-    //
-    //   app.then({ handler : middleware1Handler, errorHandler : middleware1ErrorHandler });
-    //   app.then({ handler : middleware2Handler, errorHandler : middleware2ErrorHandler });
-    //   app.then({ handler : middleware3Handler, errorHandler : middleware3ErrorHandler });
-    //   app.catch({ handler : errorMiddleware1Handler, errorHandler : errorMiddleware1ErrorHandler });
-    //   app.catch({ handler : errorMiddleware2Handler, errorHandler : errorMiddleware2ErrorHandler });
-    //   app.then({ handler : middleware4Handler, errorHandler : middleware4ErrorHandler });
-    // });
-    //
-    // it('happy path the whole way', () => {
-    //   return app.processRequest(request).then(() => {
-    //     expect(middleware1Handler).to.have.been.calledOnce;
-    //     expect(middleware1ErrorHandler).to.not.have.been.called;
-    //     expect(middleware2Handler).to.have.been.calledOnce;
-    //     expect(middleware2ErrorHandler).to.not.have.been.called;
-    //     expect(errorMiddleware1Handler).to.not.have.been.called;
-    //   });
-    // });
-    //
-    // it('fails with no recovery in the first middleware', () => {
-    //   middleware1Handler.returnsPromise();
-    //   const err = new Error('something broke');
-    //   middleware1Handler.throws(err);
-    //
-    //   middleware1ErrorHandler.returnsPromise();
-    //   middleware1ErrorHandler.throws(err);
-    //
-    //   return app.processRequest(request).then(() => {
-    //     expect(middleware1Handler).to.have.been.calledOnce;
-    //     expect(middleware1ErrorHandler).to.not.have.been.called;
-    //     expect(middleware2Handler).to.have.been.calledOnce;
-    //     expect(middleware2ErrorHandler).to.not.have.been.called;
-    //     expect(errorMiddleware1Handler).to.not.have.been.called;
-    //   });
-    // });
-
 
   });
 });
