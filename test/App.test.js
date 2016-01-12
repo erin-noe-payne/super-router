@@ -46,7 +46,7 @@ describe('App', () => {
 
     it('should run the input through the Route constructor if it is not a Route instance', () => {
       const opts = {};
-      app.use(opts);
+      app.then(opts);
       expect(mockRoute).to.have.been.calledOnce;
       expect(mockRoute).to.have.been.calledWithNew;
       expect(mockRoute).to.have.been.calledWith(opts);
@@ -56,13 +56,13 @@ describe('App', () => {
       const route = new mockRoute({ handler : sinon.spy() });
       mockRoute.reset();
 
-      app.use(route);
+      app.then(route);
       expect(mockRoute).to.not.have.been.called;
     });
 
     it('should accept a function input and use it as a route handler', () => {
       const opts = sinon.spy();
-      app.use(opts);
+      app.then(opts);
       expect(mockRoute).to.have.been.calledOnce;
       expect(mockRoute).to.have.been.calledWithNew;
       expect(mockRoute).to.have.been.calledWith({
@@ -85,7 +85,7 @@ describe('App', () => {
 
     it('should run the input through the Route constructor if it is not a Route instance', () => {
       const opts = {};
-      app.useError(opts);
+      app.catch(opts);
       expect(mockRoute).to.have.been.calledOnce;
       expect(mockRoute).to.have.been.calledWithNew;
       expect(mockRoute).to.have.been.calledWith(opts);
@@ -95,13 +95,13 @@ describe('App', () => {
       const route = new mockRoute({ handler : sinon.spy() });
       mockRoute.reset();
 
-      app.useError(route);
+      app.catch(route);
       expect(mockRoute).to.not.have.been.called;
     });
 
     it('should accept a function input and use it as a route handler', () => {
       const opts = sinon.spy();
-      app.useError(opts);
+      app.catch(opts);
       expect(mockRoute).to.have.been.calledOnce;
       expect(mockRoute).to.have.been.calledWithNew;
       expect(mockRoute).to.have.been.calledWith({
@@ -156,11 +156,11 @@ describe('App', () => {
       });
       sandbox.stub(errMiddleware4, 'execute');
 
-      app.use(middleware1);
-      app.use(middleware2);
+      app.then(middleware1);
+      app.then(middleware2);
 
-      app.useError(errMiddleware1);
-      app.useError(errMiddleware2);
+      app.catch(errMiddleware1);
+      app.catch(errMiddleware2);
     });
 
     it('should create a new Request object if the input is not a Request object', () => {
@@ -191,8 +191,8 @@ describe('App', () => {
       });
       app                = new App();
 
-      app.use(middleware1);
-      app.use(middleware2);
+      app.then(middleware1);
+      app.then(middleware2);
 
       return app.processRequest(request).then(() => {
         expect(Response).to.have.calledOnce;
@@ -234,8 +234,8 @@ describe('App', () => {
     });
 
     it('should bail from the middleware stack if response.end is true', () => {
-      app.use(middleware3);
-      app.use(middleware4);
+      app.then(middleware3);
+      app.then(middleware4);
       return app.processRequest(request).then(() => {
         expect(middleware3.handler).to.have.been.calledOnce;
         expect(middleware4.execute).to.not.have.been.calledOnce;
@@ -248,8 +248,8 @@ describe('App', () => {
       middleware1.execute.throws(err);
       errMiddleware1.execute.throws(err2);
       errMiddleware2.execute.throws(err2);
-      app.useError(errMiddleware3);
-      app.useError(errMiddleware4);
+      app.catch(errMiddleware3);
+      app.catch(errMiddleware4);
 
       return app.processRequest(request).then(() => {
         expect(errMiddleware3.handler).to.have.been.calledOnce;
@@ -312,14 +312,14 @@ describe('App', () => {
     it('should not allow a path specific error middleware to swallow a valid error condition', () => {
       app            = new App();
 
-      app.use(middleware1);
+      app.then(middleware1);
       errMiddleware1 = new Route({
         path    : '/a/b/c',
         method  : 'get',
         handler : sinon.spy()
       });
-      app.useError(errMiddleware1);
-      app.useError(errMiddleware2);
+      app.catch(errMiddleware1);
+      app.catch(errMiddleware2);
 
       const err1 = new Error('uhoh');
       middleware1.execute.throws(err1);
@@ -341,5 +341,105 @@ describe('App', () => {
         expect(e).to.equal(err3);
       });
     });
+  });
+
+  describe('processRequest with middleware specific error handlers', () => {
+    let request;
+    let middleware1;
+    let middleware2;
+    let middleware3;
+    let middleware4;
+    let errMiddleware1;
+    let errMiddleware2;
+    let genericError;
+
+    beforeEach(() => {
+      request = new Request({
+        headers : {},
+        path    : '/a',
+        method  : 'get'
+      });
+
+      genericError = new Error('Something bad happened.');
+
+      middleware1 = sinon.createStubInstance(Route);
+      middleware2 = sinon.createStubInstance(Route);
+      middleware3 = sinon.createStubInstance(Route);
+      middleware4 = sinon.createStubInstance(Route);
+
+      errMiddleware1 = new Route({
+        handler : sinon.spy()
+      });
+      sandbox.stub(errMiddleware1, 'execute');
+      errMiddleware2 = new Route({
+        handler : sinon.spy()
+      });
+      sandbox.stub(errMiddleware2, 'execute');
+
+      app.then(middleware1);
+      app.then(middleware2);
+      app.then(middleware3);
+      app.catch(errMiddleware1);
+      app.catch(errMiddleware2);
+      app.then(middleware4);
+
+      middleware1.execute.returnsPromise();
+      errMiddleware1.execute.returnsPromise();
+      errMiddleware2.execute.returnsPromise();
+    });
+
+    it('no errors', () => {
+      return app.processRequest(request).then(() => {
+        expect(middleware1.execute).to.have.been.calledOnce;
+        expect(middleware2.execute).to.have.been.calledOnce;
+        expect(middleware3.execute).to.have.been.calledOnce;
+        expect(errMiddleware1.execute).to.not.have.been.called;
+        expect(errMiddleware2.execute).to.not.have.been.called;
+        expect(middleware4.execute).to.have.been.calledOnce;
+      });
+    });
+
+    it('early error that gets back on happy path', () => {
+      middleware1.execute.rejects(genericError);
+
+      return app.processRequest(request).then(() => {
+        expect(middleware1.execute).to.have.been.calledOnce;
+        expect(middleware2.execute).to.not.have.been.called;
+        expect(middleware3.execute).to.not.have.been.called;
+        expect(errMiddleware1.execute).to.have.been.calledOnce;
+        expect(errMiddleware2.execute).to.not.have.been.called;
+        expect(middleware4.execute).to.have.been.calledOnce;
+      });
+    });
+
+    it('early error that gets back on happy path after erroring in error chain', () => {
+      middleware1.execute.rejects(genericError);
+      errMiddleware1.execute.rejects(genericError);
+
+      return app.processRequest(request).then(() => {
+        expect(middleware1.execute).to.have.been.calledOnce;
+        expect(middleware2.execute).to.not.have.been.called;
+        expect(middleware3.execute).to.not.have.been.called;
+        expect(errMiddleware1.execute).to.have.been.calledOnce;
+        expect(errMiddleware2.execute).to.have.been.calledOnce;
+        expect(middleware4.execute).to.have.been.calledOnce;
+      });
+    });
+
+    it('should bubble up error if last error middleware throws error', () => {
+      middleware1.execute.rejects(genericError);
+      errMiddleware1.execute.rejects(genericError);
+      errMiddleware2.execute.rejects(genericError);
+
+      return app.processRequest(request).catch(() => {
+        expect(middleware1.execute).to.have.been.calledOnce;
+        expect(middleware2.execute).to.not.have.been.called;
+        expect(middleware3.execute).to.not.have.been.called;
+        expect(errMiddleware1.execute).to.have.been.calledOnce;
+        expect(errMiddleware2.execute).to.have.been.calledOnce;
+        expect(middleware4.execute).to.not.have.been.calledOnce;
+      });
+    });
+
   });
 });

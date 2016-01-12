@@ -8,7 +8,7 @@ const _           = require('lodash');
 const app = new SuperRouter.App();
 
 // Middleware to buffer request body.
-app.use((opts) => {
+app.then((opts) => {
   const request  = opts.request;
   const deferred = Q.defer();
 
@@ -25,7 +25,7 @@ app.use((opts) => {
 });
 
 // Middleware to set request body.
-app.use((opts) => {
+app.then((opts) => {
   const response = opts.response;
   const request  = opts.request;
 
@@ -36,12 +36,12 @@ app.use((opts) => {
 });
 
 // Middleware to set content type and stringify response body.
-app.use((opts) => {
+app.then((opts) => {
   const response = opts.response;
 
   response.setHeader('Content-Type', 'application/json');
   response.setBody(JSON.stringify(response.getBody()));
-})
+});
 
 // Setup a transport binding to http server
 const server = http.createServer((req, res) => {

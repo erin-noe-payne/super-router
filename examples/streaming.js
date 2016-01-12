@@ -9,7 +9,7 @@ const through2    = require('through2');
 const app = new SuperRouter.App();
 
 // Stream input to response body
-app.use({
+app.then({
   handler : (opts) => {
     const response = opts.response;
     const deferred = Q.defer();
@@ -24,7 +24,7 @@ app.use({
 });
 
 // Transform response body
-app.use((opts) => {
+app.then((opts) => {
   const response = opts.response;
 
   response.statusCode = 201;
@@ -34,7 +34,7 @@ app.use((opts) => {
   })));
 });
 
-app.use({
+app.then({
   handler : (opts) => {
     const response = opts.response;
 

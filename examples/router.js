@@ -8,18 +8,18 @@ const app    = new SuperRouter.App();
 const router = new SuperRouter.Router();
 const users = {
   1 : {
-    name : 'jane',
+    name   : 'jane',
     userId : 1
   },
   2 : {
-    name : 'ted',
+    name   : 'ted',
     userId : 2
   },
   3 : {
-    name : 'marci',
+    name   : 'marci',
     userId : 3
   }
-}
+};
 
 router.addRoute({
   path    : '/',
@@ -35,7 +35,7 @@ router.addRoute({
 
 router.addRoute({
   path    : '/users',
-  methods  : 'get',
+  methods : 'get',
   handler : (opts) => {
     const response = opts.response;
 
@@ -61,8 +61,8 @@ router.addRoute({
   }
 });
 
-app.use(router.match);
-app.use((opts) => {
+app.then(router.match);
+app.then((opts) => {
   const request = opts.request;
 
   if (request.matchedRoute == null) {
@@ -71,15 +71,15 @@ app.use((opts) => {
     throw err;
   }
 });
-app.use(router.execute);
-app.use((opts) => {
+app.then(router.execute);
+app.then((opts) => {
   const response = opts.response;
 
   response.setHeader('Content-Type', 'application/json');
   response.setBody(JSON.stringify(response.getBody()));
 });
 
-app.useError((opts) => {
+app.catch((opts) => {
   const response = opts.response;
   const error    = opts.error;
 
