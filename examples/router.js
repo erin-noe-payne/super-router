@@ -8,18 +8,18 @@ const app    = new SuperRouter.App();
 const router = new SuperRouter.Router();
 const users = {
   1 : {
-    name : 'jane',
+    name   : 'jane',
     userId : 1
   },
   2 : {
-    name : 'ted',
+    name   : 'ted',
     userId : 2
   },
   3 : {
-    name : 'marci',
+    name   : 'marci',
     userId : 3
   }
-}
+};
 
 router.addRoute({
   path    : '/',
@@ -35,7 +35,7 @@ router.addRoute({
 
 router.addRoute({
   path    : '/users',
-  methods  : 'get',
+  methods : 'get',
   handler : (opts) => {
     const response = opts.response;
 

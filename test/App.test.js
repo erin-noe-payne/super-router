@@ -382,6 +382,10 @@ describe('App', () => {
       app.catch(errMiddleware1);
       app.catch(errMiddleware2);
       app.then(middleware4);
+
+      middleware1.execute.returnsPromise();
+      errMiddleware1.execute.returnsPromise();
+      errMiddleware2.execute.returnsPromise();
     });
 
     it('no errors', () => {
@@ -396,7 +400,6 @@ describe('App', () => {
     });
 
     it('early error that gets back on happy path', () => {
-      middleware1.execute.returnsPromise();
       middleware1.execute.rejects(genericError);
 
       return app.processRequest(request).then(() => {
@@ -410,9 +413,7 @@ describe('App', () => {
     });
 
     it('early error that gets back on happy path after erroring in error chain', () => {
-      middleware1.execute.returnsPromise();
       middleware1.execute.rejects(genericError);
-      errMiddleware1.execute.returnsPromise();
       errMiddleware1.execute.rejects(genericError);
 
       return app.processRequest(request).then(() => {
@@ -426,11 +427,8 @@ describe('App', () => {
     });
 
     it('should bubble up error if last error middleware throws error', () => {
-      middleware1.execute.returnsPromise();
       middleware1.execute.rejects(genericError);
-      errMiddleware1.execute.returnsPromise();
       errMiddleware1.execute.rejects(genericError);
-      errMiddleware2.execute.returnsPromise();
       errMiddleware2.execute.rejects(genericError);
 
       return app.processRequest(request).catch(() => {

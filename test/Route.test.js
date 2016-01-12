@@ -430,10 +430,11 @@ describe('A Route', () => {
           errorHandler = sinon.stub();
           opts    = { path : '/', methods : 'GET', handler : handler, errorHandler : errorHandler };
           route   = new Route(opts);
+          handler.returnsPromise();
+          errorHandler.returnsPromise();
         });
 
         it('if the handler resolves then error handler should not be run', () => {
-          handler.returnsPromise();
           handler.resolves();
 
           return route.execute({ request, response }).then(() => {
@@ -443,7 +444,6 @@ describe('A Route', () => {
         });
 
         it('if the handler rejects then error handler should be run', () => {
-          handler.returnsPromise();
           const err = new Error('A TERRIBLE TRAGEDY');
           handler.rejects(err);
 
@@ -454,7 +454,6 @@ describe('A Route', () => {
         });
 
         it('should pass request, response, error to the error handler', () => {
-          handler.returnsPromise();
           const err = new Error('A TERRIBLE TRAGEDY');
           handler.rejects(err);
 
@@ -464,11 +463,9 @@ describe('A Route', () => {
         });
 
         it('should resolve if the handler rejects and the error handler resolves', () => {
-          handler.returnsPromise();
           const err = new Error('A TERRIBLE TRAGEDY');
           handler.rejects(err);
 
-          errorHandler.returnsPromise();
           const success = 'YAY';
           errorHandler.resolves(success);
 
@@ -478,11 +475,9 @@ describe('A Route', () => {
         });
 
         it('should reject if the handler rejects and the error handler rejects', () => {
-          handler.returnsPromise();
           const err = new Error('A TERRIBLE TRAGEDY');
           handler.rejects(err);
 
-          errorHandler.returnsPromise();
           const err2 = new Error('ANOTHER TERRIBLE TRAGEDY');
           errorHandler.rejects(err2);
 
