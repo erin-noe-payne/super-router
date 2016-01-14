@@ -427,15 +427,21 @@ describe('A Route', () => {
         let errorHandler;
 
         beforeEach(() => {
-          errorHandler = sinon.stub();
+          handler = sinon.spy();
+          errorHandler = sinon.spy();
           opts    = { path : '/', methods : 'GET', handler : handler, errorHandler : errorHandler };
           route   = new Route(opts);
-          handler.returnsPromise();
-          errorHandler.returnsPromise();
+        });
+
+        it('if the handler does not throw then error handler should not be run', () => {
+          return route.execute({ request, response }).then(() => {
+            expect(errorHandler).to.not.have.been.called;
+          });
+
         });
 
         it('if the handler resolves then error handler should not be run', () => {
-          handler.resolves();
+          handler = sinon.stub().returnsPromise().resolves();
 
           return route.execute({ request, response }).then(() => {
             expect(errorHandler).to.not.have.been.called;
@@ -443,9 +449,13 @@ describe('A Route', () => {
 
         });
 
-        it('if the handler rejects then error handler should be run', () => {
+        it('if the handler throws then error handler should be run', () => {
           const err = new Error('A TERRIBLE TRAGEDY');
-          handler.rejects(err);
+          handler = sinon.stub().throws(err);
+          route = new Route({
+            handler      : handler,
+            errorHandler : errorHandler
+          });
 
           return route.execute({ request, response }).then(() => {
             expect(errorHandler).to.have.been.calledOnce;
@@ -455,7 +465,11 @@ describe('A Route', () => {
 
         it('should pass request, response, error to the error handler', () => {
           const err = new Error('A TERRIBLE TRAGEDY');
-          handler.rejects(err);
+          handler = sinon.stub().throws(err);
+          route = new Route({
+            handler      : handler,
+            errorHandler : errorHandler
+          });
 
           return route.execute({ request, response }).then(() => {
             expect(errorHandler).to.have.been.calledWith({ request, response, error : err });
@@ -464,10 +478,14 @@ describe('A Route', () => {
 
         it('should resolve if the handler rejects and the error handler resolves', () => {
           const err = new Error('A TERRIBLE TRAGEDY');
-          handler.rejects(err);
-
+          handler = sinon.stub().throws(err);
           const success = 'YAY';
-          errorHandler.resolves(success);
+          errorHandler = sinon.stub();
+          errorHandler.returnsPromise().resolves(success);
+          route = new Route({
+            handler      : handler,
+            errorHandler : errorHandler
+          });
 
           return route.execute({ request, response }).then((result) => {
             expect(result).to.equal(success);
@@ -476,10 +494,10 @@ describe('A Route', () => {
 
         it('should reject if the handler rejects and the error handler rejects', () => {
           const err = new Error('A TERRIBLE TRAGEDY');
-          handler.rejects(err);
+          handler = sinon.stub().throws(err);
 
           const err2 = new Error('ANOTHER TERRIBLE TRAGEDY');
-          errorHandler.rejects(err2);
+          errorHandler = sinon.stub().throws(err2);
 
           return route.execute({ request, response }).catch((thrownErr) => {
             expect(thrownErr).to.equal(err2);

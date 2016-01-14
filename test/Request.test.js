@@ -198,6 +198,39 @@ describe('Request', () => {
 
   });
 
+  describe('#toString', () => {
+    it('should include method, path, headers, and body', () => {
+      request = new Request({
+        headers : {
+          hello : 'world',
+        },
+        path   : '/a/b/c',
+        method : 'get'
+      });
+      request.body = {
+        a : 1,
+        b : 2
+      };
+      expect(request.toString().replace(/\s+/g, '')).to.eql('Request:{"method":"GET","path":"/a/b/c","headers":{"hello":"world"},"body":{"a":1,"b":2}}');
+    });
+
+    it('should strip out all but the last 4 chars of the auth header', () => {
+      request = new Request({
+        headers : {
+          hello : 'world',
+          authorization : 'abcdefghijklmnopqrstuvwxyz'
+        },
+        path   : '/a/b/c',
+        method : 'get'
+      });
+      request.body = {};
+      expect(request.toString().replace(/\s+/g, '')).to.eql('Request:{"method":"GET","path":"/a/b/c","headers":{"hello":"world","authorization":"...wxyz"},"body":{}}');
+      expect(request.headers.authorization).to.equal('abcdefghijklmnopqrstuvwxyz'); // make sure it didn't modify
+
+    });
+
+  });
+
   describe('streaming body', () => {
     beforeEach(() => {
       request = new Request({ path : '/', method : 'get' });

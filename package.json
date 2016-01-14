@@ -1,6 +1,6 @@
 {
   "name": "super-router",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/autoric/super-router"
@@ -39,7 +39,7 @@
     },
     {
       "name": "Chris Langager",
-      "email": "chris.langager@logrhythm.com"
+      "email": "christopher.langager@gmail.com"
     }
   ]
 }

@@ -171,6 +171,16 @@ describe('Response', () => {
     });
   });
 
+  describe('#toString', () => {
+    it('should include statusCode, headers, and body', () => {
+      response.setHeader('hello', 'world');
+      response.setBody('hi');
+      response.statusCode = 222;
+      expect(response.toString().replace(/\s+/g, '')).to.equal('Response:{"statusCode":222,"headers":{"hello":"world"},"body":"hi"}');
+    });
+
+  });
+
   describe('ended', () => {
     beforeEach(() => {
       response = new Response();
