@@ -53,7 +53,7 @@ router.addRoute({
     const user = users[request.routeParams.userId];
     if (user == null) {
       const err  = new Error('Resource not found');
-      err.status = 404;
+      err.statusCode = 404;
       throw err;
     }
 
@@ -67,7 +67,7 @@ app.then((opts) => {
 
   if (request.matchedRoute == null) {
     const err  = new Error('Resource not found');
-    err.status = 404;
+    err.statusCode = 404;
     throw err;
   }
 });
