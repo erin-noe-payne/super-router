@@ -52,18 +52,22 @@ class ContentNegotiation {
   static request(opts) {
     const request = opts.request;
 
-    if (_isMultipart(request)) {
+    if (_isChunked(request)) {
       return;
     }
 
     const deferred = Q.defer();
-    let newBody    = null;
+    let newBody    = {};
     request.body.on(&apos;data&apos;, (chunk) =&gt; {
       try {
         newBody = JSON.parse(chunk);
       }
       catch (e) {
-        deferred.reject(new Error(&apos;failed to parse json in request&apos;));
+        const error = new Error(`Invalid JSON in request body.`);
+        error.name = &apos;InvalidJSON&apos;;
+        error.messageDetails = &apos;Hint: JSON does not allow a trailing comma.&apos;;
+        error.statusCode = 400;
+        deferred.reject(error);
       }
     });
 
@@ -77,20 +81,17 @@ class ContentNegotiation {
 
   static response(opts) {
     const response = opts.response;
-
-    response.setHeader(&apos;content-type&apos;, &apos;application/json&apos;);
-    return response.setBody(JSON.stringify(response.getBody()));
+    if (!_isChunked(response)) {
+      response.setHeader(&apos;content-type&apos;, &apos;application/json&apos;);
+      return response.setBody(JSON.stringify(response.getBody()));
+    }
   }
 
 }
 
-function _isMultipart(request) {
-  const contentType = request.getHeader[&apos;Transfer-Encoding&apos;];
-  if (contentType &amp;&amp; contentType.toLowerCase().indexOf(&apos;chunked&apos;) &gt; -1) {
-    return true;
-  }
-
-  return false;
+function _isChunked(reqres) {
+  const contentType = reqres.getHeader(&apos;Transfer-Encoding&apos;);
+  return (contentType &amp;&amp; contentType.toLowerCase().indexOf(&apos;chunked&apos;) &gt; -1);
 }
 
 module.exports = ContentNegotiation;

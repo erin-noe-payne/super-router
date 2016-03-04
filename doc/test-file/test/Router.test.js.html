@@ -107,7 +107,7 @@ describe(&apos;Router &apos;, () =&gt; {
     it(&apos;should add the new route to its tree&apos;, () =&gt; {
       const route = new Route({
         path    : &apos;/&apos;,
-        method  : &apos;get&apos;,
+        methods : &apos;get&apos;,
         handler : sinon.spy()
       });
       router.addRoute(route);
@@ -120,7 +120,7 @@ describe(&apos;Router &apos;, () =&gt; {
       expect(() =&gt; {
         router.addRoute({
           path    : &apos;/*start/foo&apos;,
-          method  : &apos;get&apos;,
+          methods : &apos;get&apos;,
           handler : sinon.spy()
         });
       }).to.throw(&apos;Splats and optional groups are not supported for routes.&apos;);
@@ -130,7 +130,7 @@ describe(&apos;Router &apos;, () =&gt; {
       expect(() =&gt; {
         router.addRoute({
           path    : &apos;(/start)/foo&apos;,
-          method  : &apos;get&apos;,
+          methods : &apos;get&apos;,
           handler : sinon.spy()
         });
       }).to.throw(&apos;Splats and optional groups are not supported for routes.&apos;);
@@ -142,14 +142,20 @@ describe(&apos;Router &apos;, () =&gt; {
       router = new Router();
 
       router.addRoute({
-        path    : &apos;/user/:id&apos;,
-        method  : &apos;post&apos;,
+        path    : &apos;/&apos;,
+        methods : &apos;get&apos;,
         handler : sinon.spy()
       });
 
       router.addRoute({
         path    : &apos;/user/:id&apos;,
-        method  : &apos;get&apos;,
+        methods : &apos;post&apos;,
+        handler : sinon.spy()
+      });
+
+      router.addRoute({
+        path    : &apos;/user/:id&apos;,
+        methods : &apos;get&apos;,
         handler : sinon.spy()
       });
 
@@ -164,6 +170,7 @@ describe(&apos;Router &apos;, () =&gt; {
 
     describe(&apos;#match&apos;, () =&gt; {
       it(&apos;should find the route on its routeTree&apos;, () =&gt; {
+        mockTree.find.returns({});
         router.match({ request });
 
         expect(mockTree.find).to.have.been.calledOnce;
@@ -173,7 +180,7 @@ describe(&apos;Router &apos;, () =&gt; {
       it(&apos;should attach the matched route info to the request&apos;, () =&gt; {
         const route = new Route({
           path    : &apos;/&apos;,
-          method  : &apos;get&apos;,
+          methods : &apos;get&apos;,
           handler : sinon.spy()
         });
 
@@ -183,11 +190,12 @@ describe(&apos;Router &apos;, () =&gt; {
         expect(request.matchedRoute).to.equal(route);
       });
 
-      it(&apos;should attach an empty match info if there is not matched route&apos;, () =&gt; {
-        mockTree.find.returns(null);
+      it(&apos;should throw an error if there is not matched route&apos;, () =&gt; {
+        mockTree.find.returns(undefined);
+        expect(() =&gt; {
+          router.match({ request });
+        }).to.throw(&apos;No route matched&apos;);
 
-        router.match({ request });
-        expect(request.matchedRoute).to.be.null;
       });
     });
 
@@ -195,7 +203,7 @@ describe(&apos;Router &apos;, () =&gt; {
       it(&apos;should invoke execute on the matched route, if it exists&apos;, () =&gt; {
         const route = new Route({
           path    : &apos;/&apos;,
-          method  : &apos;get&apos;,
+          methods : &apos;get&apos;,
           handler : sinon.spy()
         });
         sinon.spy(route, &apos;execute&apos;);

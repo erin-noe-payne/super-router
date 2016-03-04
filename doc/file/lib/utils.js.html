@@ -113,6 +113,23 @@ class utils {
   static isValidMethod(method) {
     return _.isString(method) &amp;&amp; _.contains(METHODS, this.normalizeMethod(method));
   }
+
+  /**
+  * Tests if a method array is valid.
+  *
+  * @param {Array} methodArray - The method array
+  * @returns {Boolean} - If the method array is valid
+  */
+  static isValidMethodArray(methodArray) {
+    if (_.isArray(methodArray)) {
+      return _.every(methodArray, (method) =&gt; {
+        return this.isValidMethod(method);
+      });
+    }
+    else {
+      return this.isValidMethod(methodArray);
+    }
+  }
 }
 
 module.exports = utils;

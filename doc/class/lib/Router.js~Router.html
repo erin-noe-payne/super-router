@@ -253,7 +253,7 @@ moving to the next middleware in the stack.</p>
       
       <pre class="prettyprint source-code"><code data-ice="exampleCode">router.addRoute({
  path : &apos;/cases/:caseId&apos;,
- method : &apos;get&apos;,
+ methods : &apos;get&apos;,
  handler : ({request, response}) =&gt; {
    return Database.getCaseById(request.routeParams.caseId).then((caseInstance) =&gt; {
      request.setBody(caseInstance);
@@ -279,7 +279,7 @@ moving to the next middleware in the stack.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/Router.js.html#lineNumber84">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/Router.js.html#lineNumber92">source</a></span></span>
     </span>
   </h3>
 
@@ -335,7 +335,7 @@ be executed. If <code>request.matchedRoute</code> is not defined, the middleware
     
   <div class="example-doc" data-ice="exampleDoc">
       
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">app.use(router.execute);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">app.then(router.execute);</code></pre>
     </div>
 </div>
 
@@ -355,7 +355,7 @@ be executed. If <code>request.matchedRoute</code> is not defined, the middleware
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/Router.js.html#lineNumber68">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/Router.js.html#lineNumber69">source</a></span></span>
     </span>
   </h3>
 
@@ -405,14 +405,26 @@ the middleware does not throw an error; the matchedRoute key will simply be unde
 
   
 
-  
+  <div data-ice="throwWrap">
+    <h4>Throw:</h4>
+    <table>
+      <tbody>
+      
+      <tr class="throw" data-ice="throw">
+        <td><p data-ice="throwName"><span>*</span></p></td>
+        <td data-ice="throwDesc"><p>an error with a code of 404 if no match is found</p>
+</td>
+      </tr>
+</tbody>
+    </table>
+  </div>
 
   <div data-ice="example">
     <h4>Example:</h4>
     
   <div class="example-doc" data-ice="exampleDoc">
       
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">app.use(router.match);</code></pre>
+      <pre class="prettyprint source-code"><code data-ice="exampleCode">app.then(router.match);</code></pre>
     </div>
 </div>
 

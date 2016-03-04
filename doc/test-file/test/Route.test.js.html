@@ -69,7 +69,7 @@ describe(&apos;A Route&apos;, () =&gt; {
 
   beforeEach(() =&gt; {
     handler = sinon.stub();
-    opts    = { path : &apos;/&apos;, method : &apos;GET&apos;, handler : handler };
+    opts    = { path : &apos;/&apos;, methods : &apos;GET&apos;, handler : handler };
     route   = new Route(opts);
   });
 
@@ -78,6 +78,7 @@ describe(&apos;A Route&apos;, () =&gt; {
     const PATH_ERROR    = &apos;path must be a string.&apos;;
     const METHOD_ERROR  = &apos;method must be a valid method string.&apos;;
     const HANDLER_ERROR = &apos;handler must be a function.&apos;;
+    const ERROR_HANDLER_ERROR = &apos;errorHandler must be a function.&apos;;
 
     it(&apos;should throw if options is undefined&apos;, () =&gt; {
       expect(() =&gt; {
@@ -103,6 +104,18 @@ describe(&apos;A Route&apos;, () =&gt; {
       }).to.throw(HANDLER_ERROR);
     });
 
+    it(&apos;should throw if error handler is provided but not a function&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Route({ handler : sinon.spy(), errorHandler : &apos;whatever&apos; });
+      }).to.throw(ERROR_HANDLER_ERROR);
+    });
+
+    it(&apos;should not throw if error handler is not provided&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Route({ handler : sinon.spy() });
+      }).to.not.throw();
+    });
+
     it(&apos;should not throw if options.path is undefined&apos;, () =&gt; {
       expect(() =&gt; {
         new Route({ handler : sinon.spy() });
@@ -115,30 +128,49 @@ describe(&apos;A Route&apos;, () =&gt; {
       }).to.throw(PATH_ERROR);
     });
 
-    it(&apos;should not throw if options.method is undefined&apos;, () =&gt; {
+    it(&apos;should not throw if options.methods is undefined&apos;, () =&gt; {
       expect(() =&gt; {
         new Route({ handler : sinon.spy() });
       }).to.not.throw();
     });
 
-    it(&apos;should throw if options.method is not a string&apos;, () =&gt; {
+    it(&apos;should throw if options.methods is not a string&apos;, () =&gt; {
       expect(() =&gt; {
-        new Route({ handler : sinon.spy(), method : 7 });
+        new Route({ handler : sinon.spy(), methods : 7 });
       }).to.throw(METHOD_ERROR);
     });
 
-    it(&apos;should throw if options.method is not an allowed method value&apos;, () =&gt; {
+    it(&apos;should throw if options.methods is not an allowed method value&apos;, () =&gt; {
       expect(() =&gt; {
-        new Route({ handler : sinon.spy(), method : &apos;heart!&apos; });
+        new Route({ handler : sinon.spy(), methods : &apos;heart!&apos; });
+      }).to.throw(METHOD_ERROR);
+    });
+
+    it(&apos;should throw if options.methods contains a method value in the array that is not allowed&apos;, () =&gt; {
+      expect(() =&gt; {
+        new Route({ handler : sinon.spy(), methods : [&apos;GET&apos;, &apos;heart!&apos;] });
       }).to.throw(METHOD_ERROR);
     });
 
   });
 
   describe(&apos;properties&apos;, () =&gt; {
-    _.each([&apos;path&apos;, &apos;method&apos;, &apos;handler&apos;], (propertyName) =&gt; {
+    _.each([&apos;path&apos;, &apos;methods&apos;, &apos;handler&apos;], (propertyName) =&gt; {
       it(`should set property ${propertyName} from constructor`, () =&gt; {
-        expect(route[propertyName]).to.equal(opts[propertyName]);
+        let shouldEqual;
+        if (propertyName === &apos;methods&apos;) {
+          shouldEqual = [];
+          if (_.isArray(opts[propertyName])) {
+            shouldEqual = opts[propertyName];
+          }
+          else {
+            shouldEqual.push(opts[propertyName]);
+          }
+        }
+        else {
+          shouldEqual = opts[propertyName];
+        }
+        expect(route[propertyName]).to.eql(shouldEqual);
       });
 
       it(`should throw on assignment to ${propertyName}`, () =&gt; {
@@ -149,33 +181,48 @@ describe(&apos;A Route&apos;, () =&gt; {
     });
 
     it(&apos;should normalize root path&apos;, () =&gt; {
-      route = new Route({ path : &apos;/&apos;, method : &apos;get&apos;, handler : handler });
+      route = new Route({ path : &apos;/&apos;, methods : &apos;get&apos;, handler : handler });
       expect(route.path).to.equal(&apos;/&apos;);
     });
 
     it(&apos;should normalize trailing slashes&apos;, () =&gt; {
-      route = new Route({ path : &apos;/a/b/c/&apos;, method : &apos;get&apos;, handler : handler });
+      route = new Route({ path : &apos;/a/b/c/&apos;, methods : &apos;get&apos;, handler : handler });
       expect(route.path).to.equal(&apos;/a/b/c&apos;);
     });
 
     it(&apos;should normalize trailing slashes&apos;, () =&gt; {
-      route = new Route({ path : &apos;/a/b/c&apos;, method : &apos;get&apos;, handler : handler });
+      route = new Route({ path : &apos;/a/b/c&apos;, methods : &apos;get&apos;, handler : handler });
       expect(route.path).to.equal(&apos;/a/b/c&apos;);
     });
 
     it(&apos;should lowercase path parts that are NOT route params&apos;, () =&gt; {
-      route = new Route({ path : &apos;/CaSes/:caseId/THINg&apos;, method : &apos;get&apos;, handler : handler });
+      route = new Route({ path : &apos;/CaSes/:caseId/THINg&apos;, methods : &apos;get&apos;, handler : handler });
       expect(route.path).to.equal(&apos;/cases/:caseId/thing&apos;);
     });
 
     it(&apos;should normalize method name&apos;, () =&gt; {
-      route = new Route({ path : &apos;/a/b/c&apos;, method : &apos;GeT&apos;, handler : handler });
-      expect(route.method).to.equal(&apos;GET&apos;);
+      route = new Route({ path : &apos;/a/b/c&apos;, methods : &apos;GeT&apos;, handler : handler });
+      expect(route.methods).to.eql([&apos;GET&apos;]);
+    });
+
+    it(&apos;should turn a single method into an array&apos;, () =&gt; {
+      route = new Route({ path : &apos;/a/b/c&apos;, methods : &apos;GET&apos;, handler : handler });
+      expect(route.methods).to.eql([&apos;GET&apos;]);
+    });
+
+    it(&apos;should be able to take in an array of methods&apos;, () =&gt; {
+      route = new Route({ path : &apos;/a/b/c&apos;, methods : [&apos;GET&apos;, &apos;POST&apos;], handler : handler });
+      expect(route.methods).to.eql([&apos;GET&apos;, &apos;POST&apos;]);
+    });
+
+    it(&apos;should normalize an array of methods&apos;, () =&gt; {
+      route = new Route({ path : &apos;/a/b/c&apos;, methods : [&apos;gET&apos;, &apos;POst&apos;], handler : handler });
+      expect(route.methods).to.eql([&apos;GET&apos;, &apos;POST&apos;]);
     });
 
     it(&apos;should default method to ALL&apos;, () =&gt; {
       route = new Route({ path : &apos;/a/b/c&apos;, handler : handler });
-      expect(route.method).to.equal(&apos;*&apos;);
+      expect(route.methods).to.eql([&apos;*&apos;]);
     });
 
     it(&apos;should default path to all&apos;, () =&gt; {
@@ -323,7 +370,7 @@ describe(&apos;A Route&apos;, () =&gt; {
 
       it(&apos;should pass properties on options to handler&apos;, () =&gt; {
         const opts = {
-          request  : new Request({
+          request : new Request({
             method  : &apos;get&apos;,
             path    : &apos;/&apos;,
             headers : {}
@@ -392,7 +439,7 @@ describe(&apos;A Route&apos;, () =&gt; {
         });
       });
 
-      it(&apos;should reject if the handler rejects&apos;, () =&gt; {
+      it(&apos;should reject if the handler rejects and there is no error handler&apos;, () =&gt; {
         handler.returnsPromise();
         const err = new Error(&apos;A TERRIBLE TRAGEDY&apos;);
         handler.rejects(err);
@@ -405,7 +452,7 @@ describe(&apos;A Route&apos;, () =&gt; {
       it(&apos;should propagate mutations on the request and response that occur within the handler&apos;, () =&gt; {
         route = new Route({
           path    : &apos;/&apos;,
-          method  : &apos;get&apos;,
+          methods : &apos;get&apos;,
           handler : (opts) =&gt; {
             const req = opts.request;
             const res = opts.response;
@@ -421,11 +468,93 @@ describe(&apos;A Route&apos;, () =&gt; {
         });
       });
 
+      describe(&apos;route with an error handler&apos;, () =&gt; {
+        let errorHandler;
+
+        beforeEach(() =&gt; {
+          handler = sinon.spy();
+          errorHandler = sinon.spy();
+          opts    = { path : &apos;/&apos;, methods : &apos;GET&apos;, handler : handler, errorHandler : errorHandler };
+          route   = new Route(opts);
+        });
+
+        it(&apos;if the handler does not throw then error handler should not be run&apos;, () =&gt; {
+          return route.execute({ request, response }).then(() =&gt; {
+            expect(errorHandler).to.not.have.been.called;
+          });
+
+        });
+
+        it(&apos;if the handler resolves then error handler should not be run&apos;, () =&gt; {
+          handler = sinon.stub().returnsPromise().resolves();
+
+          return route.execute({ request, response }).then(() =&gt; {
+            expect(errorHandler).to.not.have.been.called;
+          });
+
+        });
+
+        it(&apos;if the handler throws then error handler should be run&apos;, () =&gt; {
+          const err = new Error(&apos;A TERRIBLE TRAGEDY&apos;);
+          handler = sinon.stub().throws(err);
+          route = new Route({
+            handler      : handler,
+            errorHandler : errorHandler
+          });
+
+          return route.execute({ request, response }).then(() =&gt; {
+            expect(errorHandler).to.have.been.calledOnce;
+          });
+
+        });
+
+        it(&apos;should pass request, response, error to the error handler&apos;, () =&gt; {
+          const err = new Error(&apos;A TERRIBLE TRAGEDY&apos;);
+          handler = sinon.stub().throws(err);
+          route = new Route({
+            handler      : handler,
+            errorHandler : errorHandler
+          });
+
+          return route.execute({ request, response }).then(() =&gt; {
+            expect(errorHandler).to.have.been.calledWith({ request, response, error : err });
+          });
+        });
+
+        it(&apos;should resolve if the handler rejects and the error handler resolves&apos;, () =&gt; {
+          const err = new Error(&apos;A TERRIBLE TRAGEDY&apos;);
+          handler = sinon.stub().throws(err);
+          const success = &apos;YAY&apos;;
+          errorHandler = sinon.stub();
+          errorHandler.returnsPromise().resolves(success);
+          route = new Route({
+            handler      : handler,
+            errorHandler : errorHandler
+          });
+
+          return route.execute({ request, response }).then((result) =&gt; {
+            expect(result).to.equal(success);
+          });
+        });
+
+        it(&apos;should reject if the handler rejects and the error handler rejects&apos;, () =&gt; {
+          const err = new Error(&apos;A TERRIBLE TRAGEDY&apos;);
+          handler = sinon.stub().throws(err);
+
+          const err2 = new Error(&apos;ANOTHER TERRIBLE TRAGEDY&apos;);
+          errorHandler = sinon.stub().throws(err2);
+
+          return route.execute({ request, response }).catch((thrownErr) =&gt; {
+            expect(thrownErr).to.equal(err2);
+          });
+        });
+      });
+
       describe(&apos;routeParams&apos;, () =&gt; {
         beforeEach(() =&gt; {
           route = new Route({
             path    : &apos;/user(/:type)/:id(/*rest)&apos;,
-            method  : &apos;get&apos;,
+            methods : &apos;get&apos;,
             handler : sinon.spy()
           });
         });

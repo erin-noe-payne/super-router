@@ -57,7 +57,7 @@
   <td data-ice="testDescription" style="padding-left: 10px"><span class="toggle closed"></span><span><a href="test-file/test/App.test.js.html#lineNumber24"><p>App</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">19</td>
+  <td data-ice="testCount">25</td>
 </tr>
 
 
@@ -129,83 +129,128 @@
   <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/App.test.js.html#lineNumber113"><p>processRequest</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">13</td>
+  <td data-ice="testCount">15</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber146"><p>should create a new Request object if the input is not a Request object</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber166"><p>should create a new Request object if the input is not a Request object</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber159"><p>should return a promise</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber179"><p>should return a promise</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber163"><p>should create a new response object</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber183"><p>should create a new response object</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber182"><p>should execute each route with request in the order declared</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber202"><p>should execute each route with request in the order declared</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber193"><p>should not execute the second middleware before the first one completes</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber213"><p>should not execute the second middleware before the first one completes</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber203"><p>should not execute error middleware if all middleware resolves</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber223"><p>should not execute error middleware if all middleware resolves</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber210"><p>should resolve with the created response object</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber230"><p>should resolve with the created response object</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber216"><p>should bail to the error stack if a middleware throws an error</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber236"><p>should bail from the middleware stack if response.end is true</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber227"><p>should propagate down the error stack if a previous error middleware throws an error</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber245"><p>should bail from the error stack if response.end is true</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber241"><p>should bail to the error stack if a middleware rejects with an error</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber260"><p>should bail to the error stack if a middleware throws an error</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber253"><p>should propagate down the error stack if a previous error middleware rejects with an error</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber271"><p>should propagate down the error stack if a previous error middleware throws an error</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber268"><p>should not allow a path specific error middleware to swallow a valid error condition</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber285"><p>should bail to the error stack if a middleware rejects with an error</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber288"><p>should reject if all error middleware throw</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber297"><p>should propagate down the error stack if a previous error middleware rejects with an error</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber312"><p>should not allow a path specific error middleware to swallow a valid error condition</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber332"><p>should reject if all error middleware throw</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/App.test.js.html#lineNumber346"><p>processRequest with middleware specific error handlers</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">4</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber391"><p>no errors</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber402"><p>early error that gets back on happy path</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber415"><p>early error that gets back on happy path after erroring in error chain</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/App.test.js.html#lineNumber429"><p>should bubble up error if last error middleware throws error</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -271,7 +316,7 @@
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/ContentNegotiation.test.js.html#lineNumber63"><p>should set the body to null if nothing is streamed in</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/ContentNegotiation.test.js.html#lineNumber60"><p>should set the body to {} if nothing is streamed in</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -279,14 +324,14 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/ContentNegotiation.test.js.html#lineNumber73"><p>non-buffering</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/ContentNegotiation.test.js.html#lineNumber70"><p>non-buffering</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">1</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/ContentNegotiation.test.js.html#lineNumber86"><p>should do nothing to the response stream if content-type is multipart</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/ContentNegotiation.test.js.html#lineNumber83"><p>should do nothing to the response stream if content-type is multipart</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -294,7 +339,7 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/ContentNegotiation.test.js.html#lineNumber100"><p>response</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/ContentNegotiation.test.js.html#lineNumber97"><p>response</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">1</td>
@@ -303,14 +348,14 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/ContentNegotiation.test.js.html#lineNumber115"><p>JSON</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/ContentNegotiation.test.js.html#lineNumber112"><p>JSON</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">1</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/ContentNegotiation.test.js.html#lineNumber116"><p>should treat the response body as JSON and write it as a new stream if no headers are present</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/ContentNegotiation.test.js.html#lineNumber113"><p>should treat the response body as JSON and write it as a new stream if no headers are present</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -321,7 +366,7 @@
   <td data-ice="testDescription" style="padding-left: 10px"><span class="toggle closed"></span><span><a href="test-file/test/Node.test.js.html#lineNumber20"><p>Node </p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">24</td>
+  <td data-ice="testCount">26</td>
 </tr>
 
 
@@ -387,7 +432,7 @@
   <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/Node.test.js.html#lineNumber84"><p>methods</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">16</td>
+  <td data-ice="testCount">18</td>
 </tr>
 
 
@@ -405,7 +450,7 @@
   <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/Node.test.js.html#lineNumber103"><p>#addRoute</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">4</td>
+  <td data-ice="testCount">6</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
@@ -427,7 +472,19 @@
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Node.test.js.html#lineNumber122"><p>should throw if the route method is ALL</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Node.test.js.html#lineNumber122"><p>should throw if the method is already defined using an array of methods for this node</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="3">
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Node.test.js.html#lineNumber131"><p>should throw if one of the methods in array is already defined for this node</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="3">
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Node.test.js.html#lineNumber139"><p>should throw if the route method is ALL</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -435,20 +492,20 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/Node.test.js.html#lineNumber131"><p>#addChild</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/Node.test.js.html#lineNumber148"><p>#addChild</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">2</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Node.test.js.html#lineNumber133"><p>should be able to add children and be returned with getChildren</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Node.test.js.html#lineNumber150"><p>should be able to add children and be returned with getChildren</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Node.test.js.html#lineNumber143"><p>should throw an error if a child with a duplicate path is added</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Node.test.js.html#lineNumber160"><p>should throw an error if a child with a duplicate path is added</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -456,7 +513,7 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/Node.test.js.html#lineNumber153"><p>tree walkers</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/Node.test.js.html#lineNumber170"><p>tree walkers</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">10</td>
@@ -465,50 +522,50 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/test/Node.test.js.html#lineNumber168"><p>#insert</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/test/Node.test.js.html#lineNumber185"><p>#insert</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">7</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="4">
-  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber170"><p>should throw an error if the route path is not contained in the nodes path</p>
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber187"><p>should throw an error if the route path is not contained in the nodes path</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="4">
-  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber182"><p>should throw an error if the node path does not start the route path</p>
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber199"><p>should throw an error if the node path does not start the route path</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="4">
-  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber194"><p>should add the route to the node if the paths match</p>
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber211"><p>should add the route to the node if the paths match</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="4">
-  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber207"><p>should insert on a child node, if possible</p>
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber224"><p>should insert on a child node, if possible</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="4">
-  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber223"><p>should add a new child otherwise</p>
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber240"><p>should add a new child otherwise</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="4">
-  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber240"><p>should reassign children as needed</p>
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber257"><p>should reassign children as needed</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="4">
-  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber258"><p>should insert correctly on route patterns, regardless of param names</p>
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber275"><p>should insert correctly on route patterns, regardless of param names</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -516,26 +573,26 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/test/Node.test.js.html#lineNumber279"><p>#find</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/test/Node.test.js.html#lineNumber296"><p>#find</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">3</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="4">
-  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber297"><p>should return a match from its routes, if it exists</p>
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber314"><p>should return a match from its routes, if it exists</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="4">
-  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber307"><p>should return undefined if request matches the path, but the route doesnt exist</p>
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber324"><p>should return undefined if request matches the path, but the route doesnt exist</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="4">
-  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber317"><p>should return a match from its children</p>
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Node.test.js.html#lineNumber336"><p>should return a match from its children</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -543,7 +600,7 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/test/Node.test.js.html#lineNumber328"><p>#toObject</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/test/Node.test.js.html#lineNumber347"><p>#toObject</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   
@@ -555,7 +612,7 @@
   <td data-ice="testDescription" style="padding-left: 10px"><span class="toggle closed"></span><span><a href="test-file/test/Request.test.js.html#lineNumber17"><p>Request</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">29</td>
+  <td data-ice="testCount">31</td>
 </tr>
 
 
@@ -741,20 +798,41 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/Request.test.js.html#lineNumber201"><p>streaming body</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/Request.test.js.html#lineNumber201"><p>#toString</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">2</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Request.test.js.html#lineNumber206"><p>should be an instance of transform stream</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Request.test.js.html#lineNumber202"><p>should include method, path, headers, and body</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Request.test.js.html#lineNumber210"><p>should be readable and writable</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Request.test.js.html#lineNumber217"><p>should strip out all but the last 4 chars of the auth header</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/Request.test.js.html#lineNumber234"><p>streaming body</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">2</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Request.test.js.html#lineNumber239"><p>should be an instance of transform stream</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Request.test.js.html#lineNumber243"><p>should be readable and writable</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -765,7 +843,7 @@
   <td data-ice="testDescription" style="padding-left: 10px"><span class="toggle closed"></span><span><a href="test-file/test/Response.test.js.html#lineNumber19"><p>Response</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">19</td>
+  <td data-ice="testCount">22</td>
 </tr>
 
 
@@ -931,7 +1009,43 @@
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Response.test.js.html#lineNumber167"><p>should return a reference to the assigned balue if we setBody to a non-stream value</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Response.test.js.html#lineNumber167"><p>should return a reference to the assigned value if we setBody to a non-stream value</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/Response.test.js.html#lineNumber174"><p>#toString</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">1</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Response.test.js.html#lineNumber175"><p>should include statusCode, headers, and body</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/Response.test.js.html#lineNumber184"><p>ended</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">2</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Response.test.js.html#lineNumber188"><p>should default the value to false</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Response.test.js.html#lineNumber192"><p>should be set to true when setEnd is called</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -942,7 +1056,7 @@
   <td data-ice="testDescription" style="padding-left: 10px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber20"><p>A Route</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">44</td>
+  <td data-ice="testCount">56</td>
 </tr>
 
 
@@ -951,132 +1065,77 @@
   <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber31"><p>constructor</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">9</td>
+  <td data-ice="testCount">12</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber37"><p>should throw if options is undefined</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber38"><p>should throw if options is undefined</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber43"><p>should throw if options is not an object</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber44"><p>should throw if options is not an object</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber49"><p>should throw if handler is not defined;</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber50"><p>should throw if handler is not defined;</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber55"><p>should throw if handler is not a function</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber56"><p>should throw if handler is not a function</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber61"><p>should not throw if options.path is undefined</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber62"><p>should throw if error handler is provided but not a function</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber67"><p>should throw if options.path is not a string</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber68"><p>should not throw if error handler is not provided</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber73"><p>should not throw if options.method is undefined</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber74"><p>should not throw if options.path is undefined</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber79"><p>should throw if options.method is not a string</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber80"><p>should throw if options.path is not a string</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber85"><p>should throw if options.method is not an allowed method value</p>
-</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td></td>
-</tr>
-
-
-<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber93"><p>properties</p>
-</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">11</td>
-</tr>
-
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber95">test/Route.test.js</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td></td>
-</tr>
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber99">test/Route.test.js</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td></td>
-</tr>
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber106"><p>should normalize root path</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber86"><p>should not throw if options.methods is undefined</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber111"><p>should normalize trailing slashes</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber92"><p>should throw if options.methods is not a string</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber116"><p>should normalize trailing slashes</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber98"><p>should throw if options.methods is not an allowed method value</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber121"><p>should lowercase path parts that are NOT route params</p>
-</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td></td>
-</tr>
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber126"><p>should normalize method name</p>
-</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td></td>
-</tr>
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber131"><p>should default method to ALL</p>
-</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td></td>
-</tr>
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber136"><p>should default path to all</p>
-</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td></td>
-</tr>
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber141"><p>should extend with arbitrary parameters</p>
-</a></span></td>
-  <td data-ice="testTarget" class="test-target">-</td>
-  <td></td>
-</tr>
-<tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber148"><p>should not allow arbitrary parameters to overwrite internal state</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber104"><p>should throw if options.methods contains a method value in the array that is not allowed</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -1084,44 +1143,135 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber155"><p>isMatch</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber112"><p>properties</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">14</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber114">test/Route.test.js</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber131">test/Route.test.js</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber138"><p>should normalize root path</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber143"><p>should normalize trailing slashes</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber148"><p>should normalize trailing slashes</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber153"><p>should lowercase path parts that are NOT route params</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber158"><p>should normalize method name</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber163"><p>should turn a single method into an array</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber168"><p>should be able to take in an array of methods</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber173"><p>should normalize an array of methods</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber178"><p>should default method to ALL</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber183"><p>should default path to all</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber188"><p>should extend with arbitrary parameters</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber195"><p>should not allow arbitrary parameters to overwrite internal state</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber202"><p>isMatch</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">6</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber156"><p>should throw if the input is not a request object</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber203"><p>should throw if the input is not a request object</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber162"><p>should return true if a request is an exact match for the route</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber209"><p>should return true if a request is an exact match for the route</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber172"><p>should return true for any method if the route is to match all methods</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber219"><p>should return true for any method if the route is to match all methods</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber188"><p>should return true for any method if the route is to match all paths</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber235"><p>should return true for any method if the route is to match all paths</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber204"><p>should return false if a the method is wrong</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber251"><p>should return false if a the method is wrong</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber214"><p>should return false if a the path is wrong</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber261"><p>should return false if a the path is wrong</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -1129,32 +1279,32 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber225"><p>#execute</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber272"><p>#execute</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">18</td>
+  <td data-ice="testCount">24</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber229"><p>should throw if options is not defined</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber276"><p>should throw if options is not defined</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber235"><p>should throw if options is not an object</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber282"><p>should throw if options is not an object</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber241"><p>should throw if the input is not a request object</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber288"><p>should throw if the input is not a request object</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber247"><p>should throw if the second input is not a response object</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/Route.test.js.html#lineNumber294"><p>should throw if the second input is not a response object</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -1162,26 +1312,26 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber259"><p>on non-match</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber306"><p>on non-match</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">3</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber269"><p>should return a promise</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber316"><p>should return a promise</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber273"><p>should resolve the promise without executing the handler</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber320"><p>should resolve the promise without executing the handler</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber279"><p>should pass properties on options to handler</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber326"><p>should pass properties on options to handler</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -1189,56 +1339,56 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber298"><p>on match</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber345"><p>on match</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
-  <td data-ice="testCount">11</td>
+  <td data-ice="testCount">17</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber308"><p>should return a promise</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber355"><p>should return a promise</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber312"><p>should resolve the promise, executing the handler if the request is a match</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber359"><p>should resolve the promise, executing the handler if the request is a match</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber318"><p>should pass the request and response to the handler</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber365"><p>should pass the request and response to the handler</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber324"><p>should catch any thrown errors and reject the promise with them</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber371"><p>should catch any thrown errors and reject the promise with them</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber333"><p>should resolve with the return value if the handler does not return a promise</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber380"><p>should resolve with the return value if the handler does not return a promise</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber341"><p>should resolve if the handler resolves</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber388"><p>should resolve if the handler resolves</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber350"><p>should reject if the handler rejects</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber397"><p>should reject if the handler rejects and there is no error handler</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber360"><p>should propagate mutations on the request and response that occur within the handler</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Route.test.js.html#lineNumber407"><p>should propagate mutations on the request and response that occur within the handler</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -1246,26 +1396,71 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber379"><p>routeParams</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber426"><p>route with an error handler</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td data-ice="testCount">6</td>
+</tr>
+
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Route.test.js.html#lineNumber436"><p>if the handler does not throw then error handler should not be run</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Route.test.js.html#lineNumber443"><p>if the handler resolves then error handler should not be run</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Route.test.js.html#lineNumber452"><p>if the handler throws then error handler should be run</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Route.test.js.html#lineNumber466"><p>should pass request, response, error to the error handler</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Route.test.js.html#lineNumber479"><p>should resolve if the handler rejects and the error handler resolves</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+<tr data-ice="testIt" style="display: none;" data-test-depth="4">
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Route.test.js.html#lineNumber495"><p>should reject if the handler rejects and the error handler rejects</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+  <td></td>
+</tr>
+
+
+<tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="3">
+  <td data-ice="testDescription" style="padding-left: 40px"><span class="toggle closed"></span><span><a href="test-file/test/Route.test.js.html#lineNumber508"><p>routeParams</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">3</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="4">
-  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Route.test.js.html#lineNumber388"><p>should create a routeParams property on the request</p>
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Route.test.js.html#lineNumber517"><p>should create a routeParams property on the request</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="4">
-  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Route.test.js.html#lineNumber399"><p>should overwrite an existing routeParams property</p>
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Route.test.js.html#lineNumber528"><p>should overwrite an existing routeParams property</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="4">
-  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Route.test.js.html#lineNumber411"><p>should represent each match from the route path on the routeParams property</p>
+  <td data-ice="testDescription" style="padding-left: 50px"><span><a href="test-file/test/Route.test.js.html#lineNumber540"><p>should represent each match from the route path on the routeParams property</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -1324,26 +1519,26 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/Router.test.js.html#lineNumber120"><p>#match</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/Router.test.js.html#lineNumber126"><p>#match</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">3</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Router.test.js.html#lineNumber121"><p>should find the route on its routeTree</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Router.test.js.html#lineNumber127"><p>should find the route on its routeTree</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Router.test.js.html#lineNumber128"><p>should attach the matched route info to the request</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Router.test.js.html#lineNumber135"><p>should attach the matched route info to the request</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Router.test.js.html#lineNumber141"><p>should attach an empty match info if there is not matched route</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Router.test.js.html#lineNumber148"><p>should throw an error if there is not matched route</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
@@ -1351,20 +1546,20 @@
 
 
 <tr class="test-describe" data-ice="testDescribe" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/Router.test.js.html#lineNumber149"><p>#execute</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span class="toggle closed"></span><span><a href="test-file/test/Router.test.js.html#lineNumber157"><p>#execute</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td data-ice="testCount">2</td>
 </tr>
 
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Router.test.js.html#lineNumber150"><p>should invoke execute on the matched route, if it exists</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Router.test.js.html#lineNumber158"><p>should invoke execute on the matched route, if it exists</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>
 </tr>
 <tr data-ice="testIt" style="display: none;" data-test-depth="3">
-  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Router.test.js.html#lineNumber165"><p>should not throw if the matched route doesnt exist</p>
+  <td data-ice="testDescription" style="padding-left: 40px"><span><a href="test-file/test/Router.test.js.html#lineNumber173"><p>should not throw if the matched route doesnt exist</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
   <td></td>

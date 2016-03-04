@@ -75,7 +75,7 @@ class Router {
    * @example
    * router.addRoute({
    *  path : &apos;/cases/:caseId&apos;,
-   *  method : &apos;get&apos;,
+   *  methods : &apos;get&apos;,
    *  handler : ({request, response}) =&gt; {
    *    return Database.getCaseById(request.routeParams.caseId).then((caseInstance) =&gt; {
    *      request.setBody(caseInstance);
@@ -105,15 +105,23 @@ class Router {
    * the middleware does not throw an error; the matchedRoute key will simply be undefined.
    *
    * @example
-   * app.use(router.match);
+   * app.then(router.match);
    *
    * @param {object} options - The request &amp; response used by app middleware.
    * @returns {void}
+   * @throws an error with a code of 404 if no match is found
    */
   match(options) {
     const request = options.request;
 
     request.matchedRoute = this._routesTree.find(request);
+
+    if (request.matchedRoute == null) {
+      const error = new Error(`No route matched ${request.path}`);
+      error.name = &apos;PathNotFound&apos;;
+      error.statusCode = 404;
+      throw error;
+    }
   }
 
   /**
@@ -121,7 +129,7 @@ class Router {
    * be executed. If `request.matchedRoute` is not defined, the middleware does nothing.
    *
    * @example
-   * app.use(router.execute);
+   * app.then(router.execute);
    *
    * @param {object} options - The request &amp; response used by app middleware.
    * @returns {void}

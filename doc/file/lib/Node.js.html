@@ -47,7 +47,7 @@
 const _           = require(&apos;lodash&apos;);
 const utils       = require(&apos;./utils&apos;);
 const Route       = require(&apos;./Route&apos;);
-const METHOODS    = require(&apos;./METHODS&apos;);
+const METHODS     = require(&apos;./METHODS&apos;);
 const RouteParser = require(&apos;route-parser&apos;);
 
 /**
@@ -85,7 +85,7 @@ class Node {
 
     this.addRoute({
       path    : this.path,
-      method  : METHOODS.OPTIONS,
+      methods : METHODS.OPTIONS,
       handler : (options) =&gt; {
         const response = options.response;
 
@@ -132,13 +132,16 @@ class Node {
     if (!this.isSame(route)) {
       throw new TypeError(&apos;route path must match node path.&apos;);
     }
-    if (route.method === METHOODS.ALL) {
+    if (_.contains(route.methods, METHODS.ALL)) {
       throw new TypeError(&apos;cannot register route with method ALL on node.&apos;);
     }
-    if (this._routes.has(route.method)) {
-      throw new TypeError(`duplicate method &quot;${route.method}&quot; added for path &quot;${route.path}&quot;`);
-    }
-    this._routes.set(route.method, route);
+    _.forEach(route.methods, (method) =&gt; {
+      if (this._routes.has(method)) {
+        throw new TypeError(`duplicate method &quot;${method}&quot; added for path &quot;${route.path}&quot;`);
+      }
+      this._routes.set(method, route);
+
+    });
   }
 
   /**
@@ -252,13 +255,20 @@ class Node {
    *
    * @param {Request} request - The request to find a matching route against
    * @returns {Route} - The matching route.
+   * @throws an error with a code of 405 if no method match is made
    */
   find(request) {
     let match;
     if (this._parsePath(request.path)) {
       match = this._routes.get(request.method);
-      if (match) {
+      if (match != null) {
         return match;
+      }
+      else {
+        const error = new Error(`Invalid method ${request.method} for path ${request.path}`);
+        error.name = &apos;MethodNotFound&apos;;
+        error.statusCode = 405;
+        throw error;
       }
     }
 
@@ -279,8 +289,8 @@ class Node {
    */
   toObject() {
     const pojo = {
-      methods     : _.map(this.getRoutes(), (route) =&gt; {
-        return route.method;
+      methods : _.map(this.getRoutes(), (route) =&gt; {
+        return route.methods;
       }),
       childRoutes : _.map(this.getChildren(), (childNode) =&gt; {
         return childNode.path;

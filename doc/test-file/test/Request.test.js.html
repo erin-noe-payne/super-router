@@ -157,8 +157,8 @@ describe(&apos;Request&apos;, () =&gt; {
           hello : &apos;world&apos;,
           HeY   : &apos;BuDdY&apos;
         },
-        path    : &apos;/&apos;,
-        method  : &apos;get&apos;
+        path   : &apos;/&apos;,
+        method : &apos;get&apos;
       });
     });
 
@@ -239,6 +239,39 @@ describe(&apos;Request&apos;, () =&gt; {
 
     it(&apos;header values case should be preserved&apos;, () =&gt; {
       expect(request.getHeader(&apos;hey&apos;)).to.equal(&apos;BuDdY&apos;);
+    });
+
+  });
+
+  describe(&apos;#toString&apos;, () =&gt; {
+    it(&apos;should include method, path, headers, and body&apos;, () =&gt; {
+      request = new Request({
+        headers : {
+          hello : &apos;world&apos;,
+        },
+        path   : &apos;/a/b/c&apos;,
+        method : &apos;get&apos;
+      });
+      request.body = {
+        a : 1,
+        b : 2
+      };
+      expect(request.toString().replace(/\s+/g, &apos;&apos;)).to.eql(&apos;Request:{&quot;method&quot;:&quot;GET&quot;,&quot;path&quot;:&quot;/a/b/c&quot;,&quot;headers&quot;:{&quot;hello&quot;:&quot;world&quot;},&quot;body&quot;:{&quot;a&quot;:1,&quot;b&quot;:2}}&apos;);
+    });
+
+    it(&apos;should strip out all but the last 4 chars of the auth header&apos;, () =&gt; {
+      request = new Request({
+        headers : {
+          hello : &apos;world&apos;,
+          authorization : &apos;abcdefghijklmnopqrstuvwxyz&apos;
+        },
+        path   : &apos;/a/b/c&apos;,
+        method : &apos;get&apos;
+      });
+      request.body = {};
+      expect(request.toString().replace(/\s+/g, &apos;&apos;)).to.eql(&apos;Request:{&quot;method&quot;:&quot;GET&quot;,&quot;path&quot;:&quot;/a/b/c&quot;,&quot;headers&quot;:{&quot;hello&quot;:&quot;world&quot;,&quot;authorization&quot;:&quot;...wxyz&quot;},&quot;body&quot;:{}}&apos;);
+      expect(request.headers.authorization).to.equal(&apos;abcdefghijklmnopqrstuvwxyz&apos;); // make sure it didn&apos;t modify
+
     });
 
   });

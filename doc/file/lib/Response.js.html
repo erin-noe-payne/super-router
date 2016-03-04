@@ -56,7 +56,8 @@ class Response {
     this.setBody();
 
     this._headers   = new Map();
-    this.statusCode = 200;
+    this._statusCode = 200;
+    this.ended = false;
   }
 
   /**
@@ -176,6 +177,34 @@ class Response {
       this._body.end(body);
       this._lastAssignedBody = body;
     }
+  }
+
+  /**
+   * Sets the ended property to signal an early return of the Response
+   * @returns {void}
+   */
+  end() {
+    this.ended = true;
+  }
+
+  /**
+   * Returns a string representation of the response
+   *
+   * @returns {string} - representation of the response
+   */
+  toString() {
+
+    const copyOfHeaders = _.clone(this.headers);
+    const authInfo = copyOfHeaders.authorization;
+    if (authInfo != null) {
+      copyOfHeaders.authorization = `...${authInfo.slice(-4)}`;
+    }
+
+    return `Response: ${JSON.stringify({
+      statusCode : this.statusCode,
+      headers    : this.headers,
+      body       : this.getBody()
+    }, null, 2)}`;
   }
 
 }

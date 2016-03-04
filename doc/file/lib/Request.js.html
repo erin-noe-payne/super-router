@@ -197,6 +197,27 @@ class Request {
   set body(val) {
     this._body = val;
   }
+
+  /**
+   * Returns a string representation of the request
+   *
+   * @returns {string} - representation of the request
+   */
+  toString() {
+
+    const copyOfHeaders = _.clone(this.headers);
+    const authInfo = copyOfHeaders.authorization;
+    if (authInfo != null) {
+      copyOfHeaders.authorization = `...${authInfo.slice(-4)}`;
+    }
+
+    return `Request: ${JSON.stringify({
+      method  : this.method,
+      path    : this.path,
+      headers : copyOfHeaders,
+      body    : this.body
+    }, null, 2)}`;
+  }
 }
 
 module.exports = Request;

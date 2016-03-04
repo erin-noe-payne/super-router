@@ -100,7 +100,7 @@ handlers is the core of request processing.</p>
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/lib/Route.js~Route.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(options: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>, path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, method: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span><a href="class/lib/Route.js~Route.html">Route</a></span></span>
+           <span data-ice="name"><span><a href="class/lib/Route.js~Route.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(options: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>, path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, method: <span>String </span> | <span> Array</span>): <span><a href="class/lib/Route.js~Route.html">Route</a></span></span>
         </p>
       </div>
       <div>
@@ -123,6 +123,32 @@ handlers is the core of request processing.</p>
   <tbody>
   
   <tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      <span class="kind" data-ice="kind">get</span>
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/lib/Route.js~Route.html#instance-get-errorHandler">errorHandler</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>: <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Returns the error handler.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
     <td>
       <span class="access" data-ice="access">public</span>
       
@@ -159,7 +185,7 @@ handlers is the core of request processing.</p>
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/lib/Route.js~Route.html#instance-get-method">method</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>: <span>*</span></span>
+           <span data-ice="name"><span><a href="class/lib/Route.js~Route.html#instance-get-methods">methods</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>: <span>*</span></span>
         </p>
       </div>
       <div>
@@ -276,11 +302,11 @@ handlers is the core of request processing.</p>
     
     
     
-    <span data-ice="name">constructor</span><span data-ice="signature">(options: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>, path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, method: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span><a href="class/lib/Route.js~Route.html">Route</a></span></span>
+    <span data-ice="name">constructor</span><span data-ice="signature">(options: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>, path: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, method: <span>String </span> | <span> Array</span>): <span><a href="class/lib/Route.js~Route.html">Route</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/Route.js.html#lineNumber28">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/Route.js.html#lineNumber29">source</a></span></span>
     </span>
   </h3>
 
@@ -314,6 +340,13 @@ handlers is the core of request processing.</p>
       <td data-ice="description"><p>The handler function to be executed if the route is matched.</p>
 </td>
     </tr>
+<tr data-ice="property" data-depth="1">
+      <td data-ice="name" data-depth="1">options.errorHandler</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The handler function to be executed if the route throws an error.</p>
+</td>
+    </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">path</td>
       <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
@@ -325,10 +358,10 @@ handlers is the core of request processing.</p>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">method</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="type"><span>String </span> | <span> Array</span></td>
       <td data-ice="appendix"><ul><li>optional</li>
 <li>default: &apos;*&apos;</li></ul></td>
-      <td data-ice="description"><p>The method that the route should be executed against. If not provided, mathes
+      <td data-ice="description"><p>The method(s) that the route should be executed against. If not provided, mathes
  all methods.</p>
 </td>
     </tr>
@@ -367,6 +400,58 @@ handlers is the core of request processing.</p>
 <div data-ice="memberDetails"><h2 data-ice="title">Public Members</h2>
 
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-get-errorHandler">
+    <span class="access" data-ice="access">public</span>
+    
+    <span class="kind" data-ice="kind">get</span>
+    
+    
+    <span data-ice="name">errorHandler</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>: <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/lib/Route.js.html#lineNumber87">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Returns the error handler.</p>
+</div>
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>The error handler.</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-get-handler">
     <span class="access" data-ice="access">public</span>
     
@@ -377,7 +462,7 @@ handlers is the core of request processing.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/Route.js.html#lineNumber73">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/Route.js.html#lineNumber78">source</a></span></span>
     </span>
   </h3>
 
@@ -419,17 +504,17 @@ handlers is the core of request processing.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-get-method">
+  <h3 data-ice="anchor" id="instance-get-methods">
     <span class="access" data-ice="access">public</span>
     
     <span class="kind" data-ice="kind">get</span>
     
     
-    <span data-ice="name">method</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>: <span>*</span></span>
+    <span data-ice="name">methods</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>: <span>*</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/Route.js.html#lineNumber64">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/Route.js.html#lineNumber69">source</a></span></span>
     </span>
   </h3>
 
@@ -481,7 +566,7 @@ handlers is the core of request processing.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/Route.js.html#lineNumber55">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/Route.js.html#lineNumber60">source</a></span></span>
     </span>
   </h3>
 
@@ -536,7 +621,7 @@ handlers is the core of request processing.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/Route.js.html#lineNumber125">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/Route.js.html#lineNumber177">source</a></span></span>
     </span>
   </h3>
 
@@ -624,7 +709,7 @@ execution is complete.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/Route.js.html#lineNumber107">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/Route.js.html#lineNumber159">source</a></span></span>
     </span>
   </h3>
 

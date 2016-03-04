@@ -209,12 +209,35 @@ describe(&apos;Response&apos;, () =&gt; {
         expect(response.getBody()).to.equal(response.body);
       });
 
-      it(&apos;should return a reference to the assigned balue if we setBody to a non-stream value&apos;, () =&gt; {
+      it(&apos;should return a reference to the assigned value if we setBody to a non-stream value&apos;, () =&gt; {
         response.setBody(&apos;hello world&apos;);
         expect(response.getBody()).to.equal(&apos;hello world&apos;);
       });
     });
+  });
 
+  describe(&apos;#toString&apos;, () =&gt; {
+    it(&apos;should include statusCode, headers, and body&apos;, () =&gt; {
+      response.setHeader(&apos;hello&apos;, &apos;world&apos;);
+      response.setBody(&apos;hi&apos;);
+      response.statusCode = 222;
+      expect(response.toString().replace(/\s+/g, &apos;&apos;)).to.equal(&apos;Response:{&quot;statusCode&quot;:222,&quot;headers&quot;:{&quot;hello&quot;:&quot;world&quot;},&quot;body&quot;:&quot;hi&quot;}&apos;);
+    });
+
+  });
+
+  describe(&apos;ended&apos;, () =&gt; {
+    beforeEach(() =&gt; {
+      response = new Response();
+    });
+    it(&apos;should default the value to false&apos;, () =&gt; {
+      expect(response.ended).to.be.false;
+    });
+
+    it(&apos;should be set to true when setEnd is called&apos;, () =&gt; {
+      response.end();
+      expect(response.ended).to.be.true;
+    });
   });
 
 

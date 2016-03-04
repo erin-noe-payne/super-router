@@ -64,9 +64,10 @@ class Route {
    *
    * @param {Object} options - The options object
    * @param {Function} options.handler - The handler function to be executed if the route is matched.
+   * @param {Function} options.errorHandler - The handler function to be executed if the route throws an error.
    * @param {String} [path=&apos;*all&apos;] - The path pattern that the route should be executed against. If not provided,
    *  matches all paths.
-   * @param {String} [method=&apos;*&apos;] - The method that the route should be executed against. If not provided, mathes
+   * @param {String | Array} [method=&apos;*&apos;] - The method(s) that the route should be executed against. If not provided, mathes
    *  all methods.
    * @returns {Route} - The new route instance.
    */
@@ -77,18 +78,22 @@ class Route {
     if (!_.isFunction(options.handler)) {
       throw new TypeError(&apos;handler must be a function.&apos;);
     }
+    if (!_.isUndefined(options.errorHandler) &amp;&amp; !_.isFunction(options.errorHandler)) {
+      throw new TypeError(&apos;errorHandler must be a function.&apos;);
+    }
     if (options.path &amp;&amp; !_.isString(options.path)) {
       throw new TypeError(&apos;path must be a string.&apos;);
     }
-    if (options.method &amp;&amp; !utils.isValidMethod(options.method)) {
+    if (options.methods &amp;&amp; !utils.isValidMethodArray(options.methods)) {
       throw new TypeError(&apos;method must be a valid method string.&apos;);
     }
 
     _.extend(this, options);
 
     this._path    = utils.normalizePath(options.path || &apos;*all&apos;);
-    this._method  = utils.normalizeMethod(options.method || METHODS.ALL);
+    this._methods = this._convertAndNormalizeMethods(options.methods || METHODS.ALL);
     this._handler = options.handler;
+    this._errorHandler = options.errorHandler;
     this._parsed  = new RouteParser(this._path);
   }
 
@@ -106,8 +111,8 @@ class Route {
    *
    * @returns {String} - The route method.
    */
-  get method() {
-    return this._method;
+  get methods() {
+    return this._methods;
   }
 
   /**
@@ -120,6 +125,15 @@ class Route {
   }
 
   /**
+   * Returns the error handler.
+   *
+   * @returns {Function} - The error handler.
+   */
+  get errorHandler() {
+    return this._errorHandler;
+  }
+
+  /**
    * Tests if the given method matches this route
    *
    * @param {String} method - The input method
@@ -127,7 +141,45 @@ class Route {
    * @private
    */
   _isMethodMatch(method) {
-    return (this.method === METHODS.ALL) || (this.method === utils.normalizeMethod(method));
+    return (_.contains(this.methods, METHODS.ALL)) || (_.difference(this._convertAndNormalizeMethods(method), this.methods).length === 0);
+  }
+
+  /**
+   * Converts and normalize method(s) to an array
+   *
+   * @param {Array | String} methodArray - The input method
+   * @returns {Array} - Array of methods
+   * @private
+   */
+  _convertAndNormalizeMethods(methodArray) {
+    return this._normalizeAllMethods(this._convertMethodsToArray(methodArray));
+  }
+
+  /**
+   * Converts method(s) to an array
+   *
+   * @param {Array | String} methodArray - The input method
+   * @returns {Array} - Array of methods
+   * @private
+   */
+  _convertMethodsToArray(methodArray) {
+    if (!_.isArray(methodArray)) {
+      methodArray = [methodArray];
+    }
+    return methodArray;
+  }
+
+  /**
+   * Normalizes all methods in an array
+   *
+   * @param {Array} methodArray - The input method
+   * @returns {Array} - Array of normalized methods
+   * @private
+   */
+  _normalizeAllMethods(methodArray) {
+    return _.map(methodArray, function (method) {
+      return utils.normalizeMethod(method);
+    });
   }
 
   /**
@@ -188,7 +240,17 @@ class Route {
     }
     try {
       request.routeParams = this._parsePath(request.path);
-      return Q(this.handler(options));
+
+      return Q().then(() =&gt; {
+        return this.handler(options);
+      }).catch((error) =&gt; {
+        if (this.errorHandler) {
+          return this.errorHandler({ request, response, error });
+        }
+        else {
+          throw error;
+        }
+      });
     }
     catch (err) {
       return Q.reject(err);

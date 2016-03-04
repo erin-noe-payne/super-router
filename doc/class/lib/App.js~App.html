@@ -100,6 +100,32 @@
     <td>
       <div>
         <p>
+           <span data-ice="name"><span><a href="class/lib/App.js~App.html#instance-method-catch">catch</a></span></span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Adds a middleware route as a &apos;catch&apos;.</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
            <span data-ice="name"><span><a href="class/lib/App.js~App.html#instance-method-processRequest">processRequest</a></span></span><span data-ice="signature">(request: <span><a href="class/lib/Request.js~Request.html">Request</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span>&lt;<span><a href="class/lib/Response.js~Response.html">Response</a></span>&gt;</span>
         </p>
       </div>
@@ -126,39 +152,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/lib/App.js~App.html#instance-method-use">use</a></span></span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
+           <span data-ice="name"><span><a href="class/lib/App.js~App.html#instance-method-then">then</a></span></span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Adds a middleware route.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/lib/App.js~App.html#instance-method-useError">useError</a></span></span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Adds an error-handling middleware route.</p>
+        <div data-ice="description"><p>Adds a middleware route as a &apos;then&apos;.</p>
 </div>
       </div>
     </td>
@@ -180,6 +180,76 @@
 <div data-ice="methodDetails"><h2 data-ice="title">Public Methods</h2>
 
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-catch">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">catch</span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/lib/App.js.html#lineNumber34">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Adds a middleware route as a &apos;catch&apos;.</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">route</td>
+      <td data-ice="type"><span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The middleware route. If a function is provided, it will be
+ used as the handler. If a plain object is provided, it will be run through the Route constructor.</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/lib/App.js~App.html">App</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>app instance for chaining</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-method-processRequest">
     <span class="access" data-ice="access">public</span>
     
@@ -190,7 +260,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/App.js.html#lineNumber105">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/App.js.html#lineNumber100">source</a></span></span>
     </span>
   </h3>
 
@@ -251,31 +321,24 @@ will reject with the last error thrown.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-use">
+  <h3 data-ice="anchor" id="instance-method-then">
     <span class="access" data-ice="access">public</span>
     
     
     
     
-    <span data-ice="name">use</span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
+    <span data-ice="name">then</span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/lib/App.js.html#lineNumber46">source</a></span></span>
+      <span data-ice="source"><span><a href="file/lib/App.js.html#lineNumber23">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Adds a middleware route. When a request is processed, middleware functions are executed with
-the request and response in the order they were registered. Middleware can optionally specify path
-and method filters. If not supplied, the middleware will be executed against all requests. If just
-a function is provided, it is used as the middleware handler.</p>
-<p>If a middleware returns a promise, the app will wait for that promise to resolve or reject before
-moving to the next middleware in the stack.</p>
-<p>If a handler throws an error or rejects its promise, further middleware will be skipped, and the
-chain will move to the error stack.</p>
+  <div data-ice="description"><p>Adds a middleware route as a &apos;then&apos;.</p>
 </div>
 
   
@@ -320,116 +383,7 @@ chain will move to the error stack.</p>
 
   
 
-  <div data-ice="example">
-    <h4>Example:</h4>
-    
-  <div class="example-doc" data-ice="exampleDoc">
-      
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">app.use({
- path : &apos;/a/b&apos;,
- method : &apos;get&apos;,
- handler : ({request, response}) =&gt; {
-   //...
- }
-});
-
-app.use(({request, response}) =&gt; {
-   //...
-});</code></pre>
-    </div>
-</div>
-
   
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-useError">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">useError</span><span data-ice="signature">(route: <span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span>): <span><a href="class/lib/App.js~App.html">App</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/lib/App.js.html#lineNumber84">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Adds an error-handling middleware route. These routes are processed in order, and will only be
-invoked if the previous middleware has thrown or rejected with an error. They are invoked with
-the request, response, and previous error. If just a function is provided, it is used as the
-middleware handler.</p>
-<p>If the middleware returns a promise, the app will wait for that promise to resolve or reject before
-moving to the next middleware in the stack.</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">route</td>
-      <td data-ice="type"><span><a href="class/lib/Route.js~Route.html">Route</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The middleware route. If a function is provided, it will be
- used as the handler. If a plain object is provided, it will be run through the Route constructor.</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tr>
-        <td class="return-type" data-ice="returnType"><span><a href="class/lib/App.js~App.html">App</a></span></td>
-        <td class="return-desc" data-ice="returnDescription"><p>app instance for chaining</p>
-</td>
-      </tr>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  <div data-ice="example">
-    <h4>Example:</h4>
-    
-  <div class="example-doc" data-ice="exampleDoc">
-      
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">app.useError({
- path : &apos;/a/b&apos;,
- method : &apos;get&apos;,
- handler : ({request, response, error}) =&gt; {
-   //...
- }
-});
-
-app.useError(({request, response, error}) =&gt; {
-   //...
-});</code></pre>
-    </div>
-</div>
 
   
 

@@ -52,7 +52,7 @@ const router   = new SuperRouter.Router();
 
 router.addRoute({
   path    : &apos;/cases&apos;,
-  method  : &apos;get&apos;,
+  methods : &apos;get&apos;,
   handler : (opts) =&gt; {
     const request  = opts.request;
     const response = opts.response;
@@ -65,7 +65,7 @@ router.addRoute({
 
 router.addRoute({
   path    : &apos;/cases/:caseId&apos;,
-  method  : &apos;get&apos;,
+  methods : &apos;get&apos;,
   handler : (opts) =&gt; {
     const request  = opts.request;
     const response = opts.response;
@@ -76,7 +76,7 @@ router.addRoute({
   }
 });
 
-app.use({
+app.then({
   path : &apos;/cases/externalId/:externalId(/*restOfRoute)&apos;,
   handler : (opts) =&gt; {
     const request  = opts.request;
@@ -87,9 +87,9 @@ app.use({
     });
   }
 });
-app.use(router.match);
-app.use(router.execute);
-app.use((opts) =&gt; {
+app.then(router.match);
+app.then(router.execute);
+app.then((opts) =&gt; {
   const request  = opts.request;
   const response = opts.response;
 

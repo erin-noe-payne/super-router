@@ -117,12 +117,12 @@ describe(&apos;Node &apos;, () =&gt; {
         node.path = &apos;/asdfa&apos;;
       }).to.throw(&apos;Cannot set property&apos;);
     });
-    
+
     it(&apos;should add an options route&apos;, () =&gt; {
       const node = new Node({ path : &apos;/user&apos; });
       expect(node.getRoutes()).to.have.length(1);
       const optsRoute = node.getRoutes()[0];
-      expect(optsRoute.method).to.equal(&apos;OPTIONS&apos;);
+      expect(optsRoute.methods).to.eql([&apos;OPTIONS&apos;]);
     });
   });
 
@@ -133,7 +133,7 @@ describe(&apos;Node &apos;, () =&gt; {
     beforeEach(() =&gt; {
       route = {
         path    : &apos;/user&apos;,
-        method  : &apos;get&apos;,
+        methods : &apos;get&apos;,
         handler : () =&gt; {
 
         }
@@ -164,8 +164,25 @@ describe(&apos;Node &apos;, () =&gt; {
         }).to.throw(&apos;duplicate method &quot;GET&quot; added for path &quot;/user&quot;&apos;);
       });
 
+      it(&apos;should throw if the method is already defined using an array of methods for this node&apos;, () =&gt; {
+        route.methods = [&apos;get&apos;, &apos;post&apos;];
+        node.addRoute(route);
+        expect(() =&gt; {
+          route.methods = &apos;get&apos;;
+          node.addRoute(route);
+        }).to.throw(&apos;duplicate method &quot;GET&quot; added for path &quot;/user&quot;&apos;);
+      });
+
+      it(&apos;should throw if one of the methods in array is already defined for this node&apos;, () =&gt; {
+        node.addRoute(route);
+        expect(() =&gt; {
+          route.methods = [&apos;get&apos;, &apos;post&apos;];
+          node.addRoute(route);
+        }).to.throw(&apos;duplicate method &quot;GET&quot; added for path &quot;/user&quot;&apos;);
+      });
+
       it(&apos;should throw if the route method is ALL&apos;, () =&gt; {
-        route.method = &apos;*&apos;;
+        route.methods = &apos;*&apos;;
 
         expect(() =&gt; {
           node.addRoute(route);
@@ -215,7 +232,7 @@ describe(&apos;Node &apos;, () =&gt; {
         it(&apos;should throw an error if the route path is not contained in the nodes path&apos;, () =&gt; {
           const route = new Route({
             path    : &apos;/&apos;,
-            method  : &apos;get&apos;,
+            methods : &apos;get&apos;,
             handler : sinon.spy()
           });
 
@@ -227,7 +244,7 @@ describe(&apos;Node &apos;, () =&gt; {
         it(&apos;should throw an error if the node path does not start the route path&apos;, () =&gt; {
           const route = new Route({
             path    : &apos;/b/c&apos;,
-            method  : &apos;get&apos;,
+            methods : &apos;get&apos;,
             handler : sinon.spy()
           });
 
@@ -240,7 +257,7 @@ describe(&apos;Node &apos;, () =&gt; {
           sandbox.spy(root, &apos;addRoute&apos;);
           const route = new Route({
             path    : &apos;/&apos;,
-            method  : &apos;get&apos;,
+            methods : &apos;get&apos;,
             handler : sinon.spy()
           });
           root.insert(route);
@@ -252,7 +269,7 @@ describe(&apos;Node &apos;, () =&gt; {
         it(&apos;should insert on a child node, if possible&apos;, () =&gt; {
           const route = new Route({
             path    : &apos;/a/b/c/e&apos;,
-            method  : &apos;get&apos;,
+            methods : &apos;get&apos;,
             handler : sinon.spy()
           });
           sinon.spy(a, &apos;insert&apos;);
@@ -268,7 +285,7 @@ describe(&apos;Node &apos;, () =&gt; {
         it(&apos;should add a new child otherwise&apos;, () =&gt; {
           const route   = new Route({
             path    : &apos;/a/b&apos;,
-            method  : &apos;get&apos;,
+            methods : &apos;get&apos;,
             handler : sinon.spy()
           });
           sinon.spy(a, &apos;insert&apos;);
@@ -285,7 +302,7 @@ describe(&apos;Node &apos;, () =&gt; {
         it(&apos;should reassign children as needed&apos;, () =&gt; {
           const route  = new Route({
             path    : &apos;/a/b&apos;,
-            method  : &apos;get&apos;,
+            methods : &apos;get&apos;,
             handler : sinon.spy()
           });
 
@@ -299,17 +316,17 @@ describe(&apos;Node &apos;, () =&gt; {
           });
           expect(ab.getChildren()).to.eql([abc, abd]);
         });
-        
+
         it(&apos;should insert correctly on route patterns, regardless of param names&apos;, () =&gt; {
           const node = new Node({ path : &apos;/users/:id&apos; });
           const route1 = new Route({
             path    : &apos;/users/:id&apos;,
-            method  : &apos;get&apos;,
+            methods : &apos;get&apos;,
             handler : sinon.spy()
           });
           const route2 = new Route({
             path    : &apos;/users/:userId&apos;,
-            method  : &apos;put&apos;,
+            methods : &apos;put&apos;,
             handler : sinon.spy()
           });
           node.insert(route1);
@@ -326,14 +343,14 @@ describe(&apos;Node &apos;, () =&gt; {
         beforeEach(() =&gt; {
           rootGet = new Route({
             path    : &apos;/&apos;,
-            method  : &apos;get&apos;,
+            methods : &apos;get&apos;,
             handler : sinon.spy()
           });
           root.addRoute(rootGet);
 
           aGet = new Route({
             path    : &apos;/a&apos;,
-            method  : &apos;get&apos;,
+            methods : &apos;get&apos;,
             handler : sinon.spy()
           });
           a.addRoute(aGet);
@@ -356,7 +373,9 @@ describe(&apos;Node &apos;, () =&gt; {
             headers : {}
           });
 
-          expect(root.find(request)).to.be.null;
+          expect(() =&gt; {
+            root.find(request);
+          }).to.throw(&apos;Invalid method&apos;);
         });
 
         it(&apos;should return a match from its children&apos;, () =&gt; {

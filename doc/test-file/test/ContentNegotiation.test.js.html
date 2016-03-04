@@ -97,18 +97,15 @@ describe(&apos;Content Negotiation Middleware&apos;, () =&gt; {
 
       });
 
-      it(&apos;should throw an error if parsing fails&apos;, (done) =&gt; {
+      it(&apos;should throw an error if parsing fails&apos;, () =&gt; {
         request.body.end(&apos;this is not json&apos;);
-        ContentNegotiation.request({ request }).catch((error) =&gt; {
-          expect(error.message).to.equal(&apos;failed to parse json in request&apos;);
-          done();
-        });
+        return expect(ContentNegotiation.request({ request })).to.be.rejectedWith(&apos;InvalidJSON&apos;);
       });
 
-      it(&apos;should set the body to null if nothing is streamed in&apos;, (done) =&gt; {
+      it(&apos;should set the body to {} if nothing is streamed in&apos;, (done) =&gt; {
         request.body.end();
         ContentNegotiation.request({ request }).then(() =&gt; {
-          expect(request.body).to.be.null;
+          expect(request.body).to.eql({});
           done();
         });
 
