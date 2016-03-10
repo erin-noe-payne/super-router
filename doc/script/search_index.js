@@ -1722,6 +1722,24 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
+    "",
+    "test-file/test/utils.test.js.html#lineNumber16",
+    "Utils",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utils.test.js.html#lineNumber17",
+    "Utils normalizePath",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utils.test.js.html#lineNumber31",
+    "Utils normalizePath ",
+    "test"
+  ],
+  [
     "lib/app.js",
     "file/lib/App.js.html",
     "lib/App.js",
@@ -1867,13 +1885,13 @@ window.esdocSearchIndex = [
   ],
   [
     "lib/request.js~request#method",
-    "class/lib/Request.js~Request.html#instance-set-method",
+    "class/lib/Request.js~Request.html#instance-get-method",
     "lib/Request.js~Request#method",
     "member"
   ],
   [
     "lib/request.js~request#method",
-    "class/lib/Request.js~Request.html#instance-get-method",
+    "class/lib/Request.js~Request.html#instance-set-method",
     "lib/Request.js~Request#method",
     "member"
   ],
@@ -1885,13 +1903,13 @@ window.esdocSearchIndex = [
   ],
   [
     "lib/request.js~request#path",
-    "class/lib/Request.js~Request.html#instance-get-path",
+    "class/lib/Request.js~Request.html#instance-set-path",
     "lib/Request.js~Request#path",
     "member"
   ],
   [
     "lib/request.js~request#path",
-    "class/lib/Request.js~Request.html#instance-set-path",
+    "class/lib/Request.js~Request.html#instance-get-path",
     "lib/Request.js~Request#path",
     "member"
   ],
@@ -2121,6 +2139,12 @@ window.esdocSearchIndex = [
     "test/router.test.js",
     "test-file/test/Router.test.js.html",
     "test/Router.test.js",
+    "testFile"
+  ],
+  [
+    "test/utils.test.js",
+    "test-file/test/utils.test.js.html",
+    "test/utils.test.js",
     "testFile"
   ]
 ]
