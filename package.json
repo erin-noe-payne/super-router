@@ -7,25 +7,28 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "esdoc": "^0.4.1",
+    "esdoc": "^0.4.6",
     "isstream": "^0.1.2",
-    "lodash": "^3.9.3",
+    "lodash": "^4.6.1",
     "q": "^1.4.1",
     "route-parser": "0.0.4"
   },
   "scripts": {
     "test": "mocha test/**/*.js -w",
     "ci-test": "mocha test/**/*.js",
+    "update-check": "ncu",
+    "update": "ncu -u",
     "lint": "eslint lib test",
     "doc": "istanbul cover ./node_modules/.bin/_mocha -- test -R spec && esdoc -c esdoc.json && gh-pages -d . -s '{doc,coverage}/**/*'"
   },
   "devDependencies": {
     "chai": "^3.0.0",
     "chai-as-promised": "^5.1.0",
-    "eslint": "^1.7.3",
-    "gh-pages": "^0.4.0",
+    "eslint": "^2.3.0",
+    "gh-pages": "^0.11.0",
     "istanbul": "^0.4.0",
     "mocha": "^2.2.5",
+    "npm-check-updates": "^2.5.8",
     "proxyquire": "^1.7.3",
     "sinon": "^1.17.2",
     "sinon-chai": "^2.8.0",
@@ -40,6 +43,10 @@
     {
       "name": "Chris Langager",
       "email": "christopher.langager@gmail.com"
+    },
+    {
+      "name": "Frank Hassanabad",
+      "email": "frankhassanabad@gmail.com"
     }
   ]
 }

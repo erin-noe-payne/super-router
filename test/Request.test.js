@@ -217,7 +217,7 @@ describe('Request', () => {
     it('should strip out all but the last 4 chars of the auth header', () => {
       request = new Request({
         headers : {
-          hello : 'world',
+          hello         : 'world',
           authorization : 'abcdefghijklmnopqrstuvwxyz'
         },
         path   : '/a/b/c',
