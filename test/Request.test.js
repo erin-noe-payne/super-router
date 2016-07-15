@@ -214,7 +214,7 @@ describe('Request', () => {
       expect(request.toString().replace(/\s+/g, '')).to.eql('Request:{"method":"GET","path":"/a/b/c","headers":{"hello":"world"},"body":{"a":1,"b":2}}');
     });
 
-    it('should strip out all but the last 4 chars of the auth header', () => {
+    it('should not print out sensitive header info by default', () => {
       request = new Request({
         headers : {
           hello         : 'world',
@@ -223,12 +223,40 @@ describe('Request', () => {
         path   : '/a/b/c',
         method : 'get'
       });
-      request.body = {};
-      expect(request.toString().replace(/\s+/g, '')).to.eql('Request:{"method":"GET","path":"/a/b/c","headers":{"hello":"world","authorization":"...wxyz"},"body":{}}');
+      request.body = {
+        user     : 'bob',
+        password : '1234'
+      };
+      request.sensitive = {
+        headers : ['authorization'],
+        body    : ['password']
+      };
+      expect(request.toString().replace(/\s+/g, '')).to.eql('Request:{"method":"GET","path":"/a/b/c","headers":{"hello":"world","authorization":"**********"},"body":{"user":"bob","password":"**********"}}');
       expect(request.headers.authorization).to.equal('abcdefghijklmnopqrstuvwxyz'); // make sure it didn't modify
-
+      expect(request.body.password).to.equal('1234'); // make sure it didn't modify
     });
+  });
 
+  it('can turn off sensitive filtering', () => {
+    request = new Request({
+      headers : {
+        hello         : 'world',
+        authorization : 'abcdefghijklmnopqrstuvwxyz'
+      },
+      path   : '/a/b/c',
+      method : 'get'
+    });
+    request.body = {
+      user     : 'bob',
+      password : '1234'
+    };
+    request.sensitive = {
+      headers : ['authorization'],
+      body    : ['password']
+    };
+    expect(request.toString({ hideSensitive : false }).replace(/\s+/g, '')).to.eql('Request:{"method":"GET","path":"/a/b/c","headers":{"hello":"world","authorization":"abcdefghijklmnopqrstuvwxyz"},"body":{"user":"bob","password":"1234"}}');
+    expect(request.headers.authorization).to.equal('abcdefghijklmnopqrstuvwxyz'); // make sure it didn't modify
+    expect(request.body.password).to.equal('1234'); // make sure it didn't modify
   });
 
   describe('streaming body', () => {
