@@ -254,6 +254,7 @@ describe('Request', () => {
       headers : ['authorization'],
       body    : ['password']
     };
+
     expect(request.toString({ hideSensitive : false }).replace(/\s+/g, '')).to.eql('Request:{"method":"GET","path":"/a/b/c","headers":{"hello":"world","authorization":"abcdefghijklmnopqrstuvwxyz"},"body":{"user":"bob","password":"1234"}}');
     expect(request.headers.authorization).to.equal('abcdefghijklmnopqrstuvwxyz'); // make sure it didn't modify
     expect(request.body.password).to.equal('1234'); // make sure it didn't modify
