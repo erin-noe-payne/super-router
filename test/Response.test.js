@@ -193,6 +193,20 @@ describe('Response', () => {
       expect(JSON.parse(response.getBody()).password).to.equal('1234'); // make sure it didn't modify
     });
 
+    it('should not print out sensitive info when the response._lastAssignedBody is already an object', () => {
+      response = new Response();
+      response.setHeader('authorization', 'abcdefghijklmnopqrstuvwxyz');
+      response.setBody({ 'user' : 'bob', 'password' : '1234' });
+      response.statusCode = 200;
+      response.sensitive = {
+        headers : ['authorization'],
+        body    : ['password']
+      };
+      expect(response.toString().replace(/\s+/g, '')).to.eql('Response:{"statusCode":200,"headers":{"authorization":"**********"},"body":{"user":"bob","password":"**********"}}');
+      expect(response.headers.authorization).to.equal('abcdefghijklmnopqrstuvwxyz'); // make sure it didn't modify
+      expect(response.getBody().password).to.equal('1234'); // make sure it didn't modify
+    });
+
     it('should include the entire string body when response._lastAssignedBody is not valid json', () => {
       response = new Response();
       response.setHeader('authorization', 'abcdefghijklmnopqrstuvwxyz');
