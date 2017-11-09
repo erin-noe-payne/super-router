@@ -179,6 +179,48 @@ describe('Response', () => {
       expect(response.toString().replace(/\s+/g, '')).to.equal('Response:{"statusCode":222,"headers":{"hello":"world"},"body":"hi"}');
     });
 
+    it('should not print out sensitive header info by default', () => {
+      response = new Response();
+      response.setHeader('authorization', 'abcdefghijklmnopqrstuvwxyz');
+      response.setBody('{"user" : "bob", "password" : "1234" }');
+      response.statusCode = 200;
+      response.sensitive = {
+        headers : ['authorization'],
+        body    : ['password']
+      };
+      expect(response.toString().replace(/\s+/g, '')).to.eql('Response:{"statusCode":200,"headers":{"authorization":"**********"},"body":{"user":"bob","password":"**********"}}');
+      expect(response.headers.authorization).to.equal('abcdefghijklmnopqrstuvwxyz'); // make sure it didn't modify
+      expect(JSON.parse(response.getBody()).password).to.equal('1234'); // make sure it didn't modify
+    });
+
+    it('should include the entire string body when response._lastAssignedBody is not valid json', () => {
+      response = new Response();
+      response.setHeader('authorization', 'abcdefghijklmnopqrstuvwxyz');
+      const stringBody = 'NOT VALID JSON! {"user" : "bob", "password" : "1234" }';
+      response.setBody(stringBody);
+      response.statusCode = 200;
+      response.sensitive = {
+        headers : ['authorization'],
+        body    : ['password']
+      };
+      expect(response.toString().replace(/\s+/g, '')).to.eql('Response:{"statusCode":200,"headers":{"authorization":"**********"},"body":"NOTVALIDJSON!{\\"user\\":\\"bob\\",\\"password\\":\\"1234\\"}"}');
+      expect(response.headers.authorization).to.equal('abcdefghijklmnopqrstuvwxyz'); // make sure it didn't modify
+      expect(response.getBody()).to.eql(stringBody); // make sure it didn't modify
+    });
+
+    it('can turn off sensitive filtering', () => {
+      response = new Response();
+      response.setHeader('authorization', 'abcdefghijklmnopqrstuvwxyz');
+      response.setBody('{"user" : "bob", "password" : "1234" }');
+      response.statusCode = 200;
+      response.sensitive = {
+        headers : ['authorization'],
+        body    : ['password']
+      };
+      expect(response.toString({ hideSensitive : false }).replace(/\s+/g, '')).to.eql('Response:{"statusCode":200,"headers":{"authorization":"abcdefghijklmnopqrstuvwxyz"},"body":"{\\"user\\":\\"bob\\",\\"password\\":\\"1234\\"}"}');
+      expect(response.headers.authorization).to.equal('abcdefghijklmnopqrstuvwxyz'); // make sure it didn't modify
+    });
+
   });
 
   describe('ended', () => {
